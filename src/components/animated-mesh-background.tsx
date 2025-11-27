@@ -14,51 +14,60 @@ export function AnimatedMeshBackground() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Set canvas size
+    // Set canvas size with device pixel ratio for crisp rendering
     const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      canvas.style.width = `${window.innerWidth}px`;
+      canvas.style.height = `${window.innerHeight}px`;
+      ctx.scale(dpr, dpr);
     };
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
-    // Mesh gradient configuration
+    // Pure grayscale mesh gradient - minimalistic
     const colors = {
       dark: [
-        "oklch(0.09 0 0)",
-        "oklch(0.12 0 0)",
-        "oklch(0.60 0.24 25)",
-        "oklch(0.55 0.18 220)",
-        "oklch(0.15 0 0)",
+        "rgba(250, 250, 250, 0.035)",
+        "rgba(248, 248, 248, 0.03)",
+        "rgba(246, 246, 246, 0.028)",
+        "rgba(245, 245, 245, 0.025)",
+        "rgba(243, 243, 243, 0.022)",
+        "rgba(240, 240, 240, 0.02)",
       ],
       light: [
-        "oklch(0.98 0 0)",
-        "oklch(1 0 0)",
-        "oklch(0.55 0.22 25)",
-        "oklch(0.45 0.15 220)",
-        "oklch(0.94 0 0)",
+        "rgba(25, 25, 25, 0.025)",
+        "rgba(22, 22, 22, 0.022)",
+        "rgba(20, 20, 20, 0.02)",
+        "rgba(18, 18, 18, 0.018)",
+        "rgba(16, 16, 16, 0.016)",
+        "rgba(15, 15, 15, 0.015)",
       ],
     };
 
     const isDark = document.documentElement.classList.contains("dark");
     const currentColors = isDark ? colors.dark : colors.light;
 
-    // Create gradient points
+    // Create gradient points with smooth, large radius
+    const displayWidth = window.innerWidth;
+    const displayHeight = window.innerHeight;
+    
     const points = Array.from({ length: 5 }, (_, i) => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
+      x: Math.random() * displayWidth,
+      y: Math.random() * displayHeight,
       vx: (Math.random() - 0.5) * 0.5,
       vy: (Math.random() - 0.5) * 0.5,
-      radius: Math.random() * 300 + 200,
+      radius: Math.random() * 350 + 250,
       color: currentColors[i % currentColors.length] ?? currentColors[0] ?? "",
     }));
 
-    // Animate points
+    // Animate points with smooth, slow movement
     points.forEach((point) => {
       gsap.to(point, {
-        x: `+=${(Math.random() - 0.5) * 200}`,
-        y: `+=${(Math.random() - 0.5) * 200}`,
-        duration: Math.random() * 10 + 10,
+        x: `+=${(Math.random() - 0.5) * displayWidth * 0.3}`,
+        y: `+=${(Math.random() - 0.5) * displayHeight * 0.3}`,
+        duration: Math.random() * 15 + 15,
         repeat: -1,
         yoyo: true,
         ease: "sine.inOut",
@@ -69,7 +78,7 @@ export function AnimatedMeshBackground() {
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw gradient circles with blur
+      // Draw soft gradient circles with smooth blur
       ctx.filter = "blur(80px)";
       points.forEach((point) => {
         const gradient = ctx.createRadialGradient(
@@ -81,6 +90,8 @@ export function AnimatedMeshBackground() {
           point.radius,
         );
         gradient.addColorStop(0, point.color);
+        gradient.addColorStop(0.4, point.color.replace(/[\d.]+\)$/, "0.008)"));
+        gradient.addColorStop(0.7, point.color.replace(/[\d.]+\)$/, "0.003)"));
         gradient.addColorStop(1, "transparent");
 
         ctx.fillStyle = gradient;
@@ -106,7 +117,7 @@ export function AnimatedMeshBackground() {
   return (
     <canvas
       ref={canvasRef}
-      className="pointer-events-none fixed inset-0 -z-10 opacity-30"
+      className="pointer-events-none fixed inset-0 -z-10 opacity-80 dark:opacity-90"
       aria-hidden="true"
     />
   );

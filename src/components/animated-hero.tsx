@@ -109,37 +109,40 @@ export function AnimatedHero({ title, subtitle, description }: AnimatedHeroProps
   }, []);
 
   return (
-    <section ref={heroRef} className="container mx-auto px-4 py-24 text-center">
-      <h1
-        ref={titleRef}
-        className="mb-8 text-5xl font-extrabold uppercase tracking-tight text-foreground sm:text-7xl md:text-8xl"
-        style={{ perspective: "1000px" }}
-      >
-        {title}
-      </h1>
-      
-      {/* Accent Line */}
-      <div className="mb-8 flex justify-center">
-        <div
-          ref={accentLineRef}
-          className="h-1 w-32 bg-linear-to-r from-transparent via-primary to-transparent sm:w-48"
-        />
-      </div>
-
-      <p
-        ref={subtitleRef}
-        className="text-2xl font-bold uppercase tracking-wide text-foreground/90 sm:text-3xl"
-      >
-        {subtitle}
-      </p>
-      {description && (
-        <p
-          ref={descriptionRef}
-          className="mx-auto mt-8 max-w-3xl text-lg font-medium leading-relaxed text-foreground/80 sm:text-xl"
+    <section ref={heroRef} className="relative w-full py-24 text-center">
+      {/* Content */}
+      <div className="container mx-auto px-4">
+        <h1
+          ref={titleRef}
+          className="mb-8 text-5xl font-extrabold uppercase tracking-tight text-foreground sm:text-7xl md:text-8xl"
+          style={{ perspective: "1000px" }}
         >
-          {description}
+          {title}
+        </h1>
+        
+        {/* Accent Line */}
+        <div className="mb-8 flex justify-center">
+          <div
+            ref={accentLineRef}
+            className="h-1 w-32 bg-linear-to-r from-transparent via-primary to-transparent sm:w-48"
+          />
+        </div>
+
+        <p
+          ref={subtitleRef}
+          className="text-2xl font-bold uppercase tracking-wide text-foreground/90 sm:text-3xl"
+        >
+          {subtitle}
         </p>
-      )}
+        {description && (
+          <p
+            ref={descriptionRef}
+            className="mx-auto mt-8 max-w-3xl text-lg font-medium leading-relaxed text-foreground/80 sm:text-xl"
+          >
+            {description}
+          </p>
+        )}
+      </div>
     </section>
   );
 }

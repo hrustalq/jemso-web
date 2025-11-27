@@ -2,6 +2,7 @@ import { api } from "~/trpc/server";
 import { AnimatedSectionHeader } from "~/components/animated-section-header";
 import { AnimatedCategoryCard } from "~/components/animated-category-card";
 import { ScrollReveal } from "~/components/scroll-reveal";
+import { SectionMeshBackground } from "~/components/section-mesh-background";
 
 export async function CategoriesSection() {
   const categories = await api.blog.categories.list({
@@ -9,8 +10,9 @@ export async function CategoriesSection() {
   });
 
   return (
-    <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16" style={{ minHeight: 'calc(100vh - var(--header-height) - var(--safe-top))' }}>
-      <div className="container mx-auto px-3 sm:px-4 w-full">
+    <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16 relative" style={{ minHeight: 'calc(100vh - var(--header-height) - var(--safe-top))' }}>
+      <SectionMeshBackground variant="red" intensity="low" />
+      <div className="container mx-auto px-3 sm:px-4 w-full relative z-10">
         <ScrollReveal animation="fadeIn">
           <AnimatedSectionHeader
             title="Направления"

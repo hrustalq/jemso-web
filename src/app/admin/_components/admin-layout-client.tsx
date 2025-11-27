@@ -223,4 +223,3 @@ export function AdminLayoutClient({ children }: AdminLayoutClientProps) {
     </div>
   );
 }
-

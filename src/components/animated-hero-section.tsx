@@ -150,43 +150,15 @@ export function AnimatedHeroSection() {
       },
       "-=0.2"
     );
-
-    // Shimmer effect
-    gsap.to(".hero-shimmer", {
-      x: "200%",
-      duration: 3,
-      repeat: -1,
-      ease: "power2.inOut",
-      repeatDelay: 2,
-    });
   }, []);
 
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden rounded-3xl border border-border/40 bg-linear-to-br from-primary/20 via-primary/10 to-background p-6 sm:p-8 md:p-12 lg:p-16 text-center"
+      className="p-6 sm:p-8 md:p-12 lg:p-16 text-center"
     >
-      {/* Fixed Background Image Layer */}
-      <div className="absolute inset-0 z-0">
-        <div 
-          className="absolute inset-0 rounded-3xl bg-cover bg-center bg-no-repeat opacity-10 dark:opacity-5"
-          style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?q=80&w=2940&auto=format&fit=crop')",
-            backgroundAttachment: "fixed",
-          }}
-        />
-      </div>
-
-      {/* Background pattern */}
-      <div className="absolute inset-0 z-0 opacity-30">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-size-[4rem_4rem]" />
-      </div>
-
-      {/* Shimmer effect */}
-      <div className="hero-shimmer absolute left-0 top-0 z-0 h-full w-1/3 -translate-x-full bg-linear-to-r from-transparent via-white/10 to-transparent" />
-
       {/* Content */}
-      <div className="relative z-10 mx-auto max-w-4xl space-y-8">
+      <div className="mx-auto max-w-4xl space-y-8">
         {/* Title */}
         <h1
           ref={titleRef}
@@ -281,10 +253,6 @@ export function AnimatedHeroSection() {
           </Button>
         </div>
       </div>
-
-      {/* Decorative elements */}
-      <div className="pointer-events-none absolute -right-20 -top-20 z-0 h-64 w-64 rounded-full bg-primary/20 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-20 -left-20 z-0 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
     </section>
   );
 }

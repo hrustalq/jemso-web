@@ -2,6 +2,7 @@ import { api } from "~/trpc/server";
 import { AnimatedSectionHeader } from "~/components/animated-section-header";
 import { AnimatedEventCard } from "~/components/animated-event-card";
 import { ScrollReveal } from "~/components/scroll-reveal";
+import { SectionMeshBackground } from "~/components/section-mesh-background";
 
 export async function EventsSection() {
   // Fetch both upcoming and past events in parallel
@@ -34,8 +35,9 @@ export async function EventsSection() {
   const hasEvents = serializedUpcomingEvents.length > 0 || serializedPastEvents.length > 0;
 
   return (
-    <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16" style={{ minHeight: 'calc(100vh - var(--header-height) - var(--safe-top))' }}>
-      <div className="container mx-auto px-3 sm:px-4 w-full">
+    <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16 relative" style={{ minHeight: 'calc(100vh - var(--header-height) - var(--safe-top))' }}>
+      <SectionMeshBackground variant="purple" intensity="low" />
+      <div className="container mx-auto px-3 sm:px-4 w-full relative z-10">
         <ScrollReveal animation="slideInLeft">
           <AnimatedSectionHeader
             title="Мероприятия"

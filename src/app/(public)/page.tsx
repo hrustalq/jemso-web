@@ -6,6 +6,7 @@ import { AnimatedSectionHeader } from "~/components/animated-section-header";
 import { AnimatedPlanCard } from "~/components/animated-plan-card";
 import { AnimatedShopPreview } from "~/components/animated-shop-preview";
 import { ScrollReveal } from "~/components/scroll-reveal";
+import { SectionMeshBackground } from "~/components/section-mesh-background";
 import { CategoriesSection } from "./_components/categories-section";
 import { CategoriesSectionSkeleton } from "./_components/categories-section-skeleton";
 import { EventsSection } from "./_components/events-section";
@@ -30,8 +31,9 @@ export default async function Home() {
     <HydrateClient>
       <main className="snap-y snap-mandatory overflow-y-auto" style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top))' }}>
         {/* Hero Section */}
-        <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16" style={{ minHeight: 'calc(100vh - var(--header-height) - var(--safe-top))' }}>
-          <div className="container mx-auto px-3 sm:px-4 w-full">
+        <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16 relative" style={{ minHeight: 'calc(100vh - var(--header-height) - var(--safe-top))' }}>
+          <SectionMeshBackground variant="multi" intensity="medium" />
+          <div className="container mx-auto px-3 sm:px-4 w-full relative z-10">
             <AnimatedHeroSection />
           </div>
         </section>
@@ -47,8 +49,9 @@ export default async function Home() {
         </Suspense>
 
         {/* News Section */}
-        <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16" style={{ minHeight: 'calc(100vh - var(--header-height) - var(--safe-top))' }}>
-          <div className="container mx-auto px-3 sm:px-4 w-full">
+        <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16 relative" style={{ minHeight: 'calc(100vh - var(--header-height) - var(--safe-top))' }}>
+          <SectionMeshBackground variant="slate" intensity="low" />
+          <div className="container mx-auto px-3 sm:px-4 w-full relative z-10">
             <ScrollReveal animation="slideInRight">
             <AnimatedSectionHeader
               title="Последние новости"
@@ -71,8 +74,9 @@ export default async function Home() {
 
         {/* Subscription Plans Section */}
         {plans.items.length > 0 && (
-          <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16" style={{ minHeight: 'calc(100vh - var(--header-height) - var(--safe-top))' }}>
-            <div className="container mx-auto px-3 sm:px-4 w-full">
+          <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16 relative" style={{ minHeight: 'calc(100vh - var(--header-height) - var(--safe-top))' }}>
+            <SectionMeshBackground variant="purple" intensity="low" />
+            <div className="container mx-auto px-3 sm:px-4 w-full relative z-10">
               <ScrollReveal animation="scaleIn">
                 <div className="mb-8 sm:mb-12 text-center px-2">
                   <h2 className="mb-3 sm:mb-4 text-2xl sm:text-3xl font-bold text-foreground md:text-4xl">
@@ -98,8 +102,9 @@ export default async function Home() {
         )}
 
         {/* Shop Section */}
-        <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16" style={{ minHeight: 'calc(100vh - var(--header-height) - var(--safe-top))' }}>
-          <div className="container mx-auto px-3 sm:px-4 w-full">
+        <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16 relative" style={{ minHeight: 'calc(100vh - var(--header-height) - var(--safe-top))' }}>
+          <SectionMeshBackground variant="pink" intensity="low" />
+          <div className="container mx-auto px-3 sm:px-4 w-full relative z-10">
             <ScrollReveal animation="blurIn">
               <AnimatedSectionHeader
                 title="Магазин JEMSO"
