@@ -114,16 +114,16 @@ export function CategoryForm({ category }: CategoryFormProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Category Details</CardTitle>
+          <CardTitle>Детали категории</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Category Name *</Label>
+            <Label htmlFor="name">Название категории *</Label>
             <Input
               id="name"
               value={name}
               onChange={(e) => handleNameChange(e.target.value)}
-              placeholder="Technology"
+              placeholder="Технологии"
               required
               disabled={isLoading}
             />
@@ -141,29 +141,29 @@ export function CategoryForm({ category }: CategoryFormProps) {
             />
             {category && (
               <p className="text-xs text-muted-foreground">
-                Slug cannot be changed after creation
+                Slug нельзя изменить после создания
               </p>
             )}
             {!category && (
               <p className="text-xs text-muted-foreground">
-                Auto-generated from name. Can be customized.
+                Автоматически генерируется из названия. Можно настроить.
               </p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">Описание</Label>
             <Textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="A brief description of this category"
+              placeholder="Краткое описание этой категории"
               disabled={isLoading}
               rows={3}
               maxLength={500}
             />
             <p className="text-xs text-muted-foreground">
-              {description.length}/500 characters
+              {description.length}/500 символов
             </p>
           </div>
         </CardContent>
@@ -171,11 +171,11 @@ export function CategoryForm({ category }: CategoryFormProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Appearance</CardTitle>
+          <CardTitle>Внешний вид</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="coverImage">Cover Image URL</Label>
+            <Label htmlFor="coverImage">URL обложки изображения</Label>
             <Input
               id="coverImage"
               type="url"
@@ -185,12 +185,12 @@ export function CategoryForm({ category }: CategoryFormProps) {
               disabled={isLoading}
             />
             <p className="text-xs text-muted-foreground">
-              Image for category page hero section and card background
+              Изображение для героя страницы категории и фона карточки
             </p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="coverVideo">Cover Video URL</Label>
+            <Label htmlFor="coverVideo">URL обложки видео</Label>
             <Input
               id="coverVideo"
               type="url"
@@ -200,12 +200,12 @@ export function CategoryForm({ category }: CategoryFormProps) {
               disabled={isLoading}
             />
             <p className="text-xs text-muted-foreground">
-              Compressed video for category card hover preview (recommended: &lt;5MB, MP4/WebM)
+              Сжатое видео для предпросмотра карточки категории при наведении (рекомендуется: &lt;5МБ, MP4/WebM)
             </p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="icon">Icon Identifier</Label>
+            <Label htmlFor="icon">Идентификатор иконки</Label>
             <Input
               id="icon"
               value={icon}
@@ -215,12 +215,12 @@ export function CategoryForm({ category }: CategoryFormProps) {
               maxLength={50}
             />
             <p className="text-xs text-muted-foreground">
-              Icon name for navigation (optional)
+              Название иконки для навигации (необязательно)
             </p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="color">Theme Color</Label>
+            <Label htmlFor="color">Цвет темы</Label>
             <div className="flex gap-2">
               <Input
                 id="color"
@@ -239,7 +239,7 @@ export function CategoryForm({ category }: CategoryFormProps) {
               />
             </div>
             <p className="text-xs text-muted-foreground">
-              Color for category branding
+              Цвет для брендирования категории
             </p>
           </div>
         </CardContent>
@@ -247,11 +247,11 @@ export function CategoryForm({ category }: CategoryFormProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Settings</CardTitle>
+          <CardTitle>Настройки</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="order">Display Order</Label>
+            <Label htmlFor="order">Порядок отображения</Label>
             <Input
               id="order"
               type="number"
@@ -262,15 +262,15 @@ export function CategoryForm({ category }: CategoryFormProps) {
               min="0"
             />
             <p className="text-xs text-muted-foreground">
-              Lower numbers appear first in navigation
+              Меньшие числа отображаются первыми в навигации
             </p>
           </div>
 
           <div className="flex items-center justify-between space-x-2">
             <div className="space-y-0.5">
-              <Label htmlFor="showInNav">Show in Navigation</Label>
+              <Label htmlFor="showInNav">Показывать в навигации</Label>
               <p className="text-xs text-muted-foreground">
-                Display this category in main navigation
+                Отображать эту категорию в основной навигации
               </p>
             </div>
             <Switch
@@ -283,9 +283,9 @@ export function CategoryForm({ category }: CategoryFormProps) {
 
           <div className="flex items-center justify-between space-x-2">
             <div className="space-y-0.5">
-              <Label htmlFor="featured">Featured Category</Label>
+              <Label htmlFor="featured">Рекомендуемая категория</Label>
               <p className="text-xs text-muted-foreground">
-                Highlight this category in featured sections
+                Выделить эту категорию в рекомендуемых разделах
               </p>
             </div>
             <Switch
@@ -305,11 +305,11 @@ export function CategoryForm({ category }: CategoryFormProps) {
           onClick={() => router.back()}
           disabled={isLoading}
         >
-          Cancel
+          Отмена
         </Button>
         <Button type="submit" disabled={isLoading}>
           {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {category ? "Update Category" : "Create Category"}
+          {category ? "Обновить категорию" : "Создать категорию"}
         </Button>
       </div>
     </form>

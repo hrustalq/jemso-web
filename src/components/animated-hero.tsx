@@ -17,7 +17,7 @@ export function AnimatedHero({ title, subtitle, description }: AnimatedHeroProps
   const descriptionRef = useRef<HTMLParagraphElement>(null);
 
   useGSAP(() => {
-    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+    const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
 
     // Title animation
     if (titleRef.current) {
@@ -25,12 +25,12 @@ export function AnimatedHero({ title, subtitle, description }: AnimatedHeroProps
         titleRef.current,
         {
           opacity: 0,
-          y: 30,
+          y: 25,
         },
         {
           opacity: 1,
           y: 0,
-          duration: 0.8,
+          duration: 0.5,
         }
       );
     }
@@ -41,14 +41,14 @@ export function AnimatedHero({ title, subtitle, description }: AnimatedHeroProps
         subtitleRef.current,
         {
           opacity: 0,
-          y: 20,
+          y: 15,
         },
         {
           opacity: 1,
           y: 0,
-          duration: 0.6,
+          duration: 0.4,
         },
-        "-=0.4"
+        "-=0.3"
       );
     }
 
@@ -58,14 +58,14 @@ export function AnimatedHero({ title, subtitle, description }: AnimatedHeroProps
         descriptionRef.current,
         {
           opacity: 0,
-          y: 20,
+          y: 15,
         },
         {
           opacity: 1,
           y: 0,
-          duration: 0.6,
+          duration: 0.4,
         },
-        "-=0.4"
+        "-=0.3"
       );
     }
   }, []);

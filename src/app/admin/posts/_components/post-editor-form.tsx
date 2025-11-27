@@ -130,14 +130,14 @@ export function PostEditorForm({ mode, post }: PostEditorFormProps) {
         {/* Title */}
         <Card>
           <CardHeader>
-            <CardTitle>Post Title</CardTitle>
+            <CardTitle>Заголовок статьи</CardTitle>
             <CardDescription>
-              Enter a compelling title for your post
+              Введите привлекательный заголовок для вашей статьи
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Input
-              placeholder="Enter post title..."
+              placeholder="Введите заголовок статьи..."
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="text-2xl font-bold h-auto py-3"
@@ -148,9 +148,9 @@ export function PostEditorForm({ mode, post }: PostEditorFormProps) {
         {/* Block Editor */}
         <Card>
           <CardHeader>
-            <CardTitle>Content</CardTitle>
+            <CardTitle>Контент</CardTitle>
             <CardDescription>
-              Build your post content using blocks
+              Создайте контент статьи используя блоки
             </CardDescription>
           </CardHeader>
           <CardContent className="pl-12">
@@ -161,7 +161,7 @@ export function PostEditorForm({ mode, post }: PostEditorFormProps) {
         {/* SEO & Metadata */}
         <Card>
           <CardHeader>
-            <CardTitle>SEO & Metadata</CardTitle>
+            <CardTitle>SEO и метаданные</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
@@ -182,32 +182,32 @@ export function PostEditorForm({ mode, post }: PostEditorFormProps) {
                     variant="outline"
                     onClick={() => setAutoSlug(true)}
                   >
-                    Auto
+                    Авто
                   </Button>
                 )}
               </div>
               <p className="text-xs text-muted-foreground mt-1">
-                URL-friendly version of the title
+                URL-дружественная версия заголовка
               </p>
             </div>
 
             <div>
-              <Label htmlFor="excerpt">Excerpt</Label>
+              <Label htmlFor="excerpt">Краткое описание</Label>
               <Textarea
                 id="excerpt"
-                placeholder="Brief description of your post..."
+                placeholder="Краткое описание вашей статьи..."
                 value={excerpt}
                 onChange={(e) => setExcerpt(e.target.value)}
                 rows={3}
                 className="mt-1"
               />
               <p className="text-xs text-muted-foreground mt-1">
-                {excerpt.length}/500 characters
+                {excerpt.length}/500 символов
               </p>
             </div>
 
             <div>
-              <Label htmlFor="coverImage">Cover Image URL</Label>
+              <Label htmlFor="coverImage">URL обложки</Label>
               <Input
                 id="coverImage"
                 type="url"
@@ -226,11 +226,11 @@ export function PostEditorForm({ mode, post }: PostEditorFormProps) {
         {/* Actions */}
         <Card>
           <CardHeader>
-            <CardTitle>Publish</CardTitle>
+            <CardTitle>Публикация</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <Label htmlFor="published">Published</Label>
+              <Label htmlFor="published">Опубликовано</Label>
               <Switch
                 id="published"
                 checked={published}
@@ -253,12 +253,12 @@ export function PostEditorForm({ mode, post }: PostEditorFormProps) {
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Saving...
+                    Сохранение...
                   </>
                 ) : (
                   <>
                     <Save className="mr-2 h-4 w-4" />
-                    {mode === "create" ? "Create Post" : "Update Post"}
+                    {mode === "create" ? "Создать статью" : "Обновить статью"}
                   </>
                 )}
               </Button>
@@ -271,7 +271,7 @@ export function PostEditorForm({ mode, post }: PostEditorFormProps) {
                 >
                   <Link href={`/blog/${post.slug}`}>
                     <Eye className="mr-2 h-4 w-4" />
-                    View Post
+                    Посмотреть статью
                   </Link>
                 </Button>
               )}
@@ -283,7 +283,7 @@ export function PostEditorForm({ mode, post }: PostEditorFormProps) {
               >
                 <Link href="/admin/posts">
                   <ArrowLeft className="mr-2 h-4 w-4" />
-                  Back to Posts
+                  Назад к статьям
                 </Link>
               </Button>
             </div>
@@ -293,18 +293,18 @@ export function PostEditorForm({ mode, post }: PostEditorFormProps) {
         {/* Post Info */}
         <Card>
           <CardHeader>
-            <CardTitle>Post Information</CardTitle>
+            <CardTitle>Информация о статье</CardTitle>
           </CardHeader>
           <CardContent className="text-sm space-y-2 text-muted-foreground">
             <div>
-              <strong>Blocks:</strong> {blocks.length}
+              <strong>Блоков:</strong> {blocks.length}
             </div>
             <div>
-              <strong>Status:</strong> {published ? "Published" : "Draft"}
+              <strong>Статус:</strong> {published ? "Опубликовано" : "Черновик"}
             </div>
             {excerpt && (
               <div>
-                <strong>Excerpt:</strong> {excerpt.length} chars
+                <strong>Описание:</strong> {excerpt.length} симв.
               </div>
             )}
           </CardContent>
@@ -313,15 +313,15 @@ export function PostEditorForm({ mode, post }: PostEditorFormProps) {
         {/* Tips */}
         <Card>
           <CardHeader>
-            <CardTitle>Tips</CardTitle>
+            <CardTitle>Советы</CardTitle>
           </CardHeader>
           <CardContent className="text-sm space-y-2 text-muted-foreground">
             <ul className="list-disc list-inside space-y-1">
-              <li>Use headings to structure your content</li>
-              <li>Add images to make posts more engaging</li>
-              <li>Include callouts for important information</li>
-              <li>Use code blocks for technical content</li>
-              <li>Drag blocks to reorder them</li>
+              <li>Используйте заголовки для структурирования контента</li>
+              <li>Добавляйте изображения для привлекательности статей</li>
+              <li>Используйте выноски для важной информации</li>
+              <li>Используйте блоки кода для технического контента</li>
+              <li>Перетаскивайте блоки для изменения порядка</li>
             </ul>
           </CardContent>
         </Card>
@@ -329,4 +329,3 @@ export function PostEditorForm({ mode, post }: PostEditorFormProps) {
     </div>
   );
 }
-

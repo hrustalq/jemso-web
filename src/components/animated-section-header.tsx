@@ -25,10 +25,10 @@ export function AnimatedSectionHeader({
     const elements = headerRef.current.children;
     gsap.from(elements, {
       opacity: 0,
-      x: -30,
-      duration: 0.6,
-      ease: "power3.out",
-      stagger: 0.2,
+      x: -20,
+      duration: 0.4,
+      ease: "power2.out",
+      stagger: 0.08,
     });
   }, []);
 

@@ -35,7 +35,7 @@ export function SubscriptionSettings() {
     return (
       <Alert variant="destructive">
         <AlertCircle className="h-4 w-4" />
-        <AlertDescription>Failed to load user data</AlertDescription>
+        <AlertDescription>Не удалось загрузить данные пользователя</AlertDescription>
       </Alert>
     );
   }
@@ -52,9 +52,9 @@ export function SubscriptionSettings() {
           <CreditCard className="h-5 w-5 text-primary" />
         </div>
         <div className="flex-1">
-          <h3 className="text-lg font-medium">Subscription Management</h3>
+          <h3 className="text-lg font-medium">Управление подпиской</h3>
           <p className="text-sm text-muted-foreground">
-            Manage your subscription plan and billing
+            Управляйте тарифным планом и оплатой
           </p>
         </div>
       </div>
@@ -81,13 +81,15 @@ export function SubscriptionSettings() {
                   }
                 >
                   {isTrialing
-                    ? "Trial"
-                    : user.subscription.status.charAt(0).toUpperCase() +
-                      user.subscription.status.slice(1)}
+                    ? "Пробный период"
+                    : user.subscription.status === "active"
+                      ? "Активна"
+                      : user.subscription.status.charAt(0).toUpperCase() +
+                        user.subscription.status.slice(1)}
                 </Badge>
               </div>
               <p className="mt-1 text-sm text-muted-foreground">
-                Your current plan
+                Ваш текущий план
               </p>
             </div>
           </div>
@@ -101,9 +103,9 @@ export function SubscriptionSettings() {
                 <Calendar className="h-4 w-4 text-muted-foreground" />
               </div>
               <div>
-                <p className="text-sm font-medium">Start Date</p>
+                <p className="text-sm font-medium">Дата начала</p>
                 <p className="text-sm text-muted-foreground">
-                  {new Date(user.subscription.startDate).toLocaleDateString()}
+                  {new Date(user.subscription.startDate).toLocaleDateString('ru-RU')}
                 </p>
               </div>
             </div>
@@ -114,9 +116,9 @@ export function SubscriptionSettings() {
                   <Calendar className="h-4 w-4 text-muted-foreground" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium">End Date</p>
+                  <p className="text-sm font-medium">Дата окончания</p>
                   <p className="text-sm text-muted-foreground">
-                    {new Date(user.subscription.endDate).toLocaleDateString()}
+                    {new Date(user.subscription.endDate).toLocaleDateString('ru-RU')}
                   </p>
                 </div>
               </div>
@@ -128,11 +130,11 @@ export function SubscriptionSettings() {
                   <Zap className="h-4 w-4 text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium">Trial Ends</p>
+                  <p className="text-sm font-medium">Конец пробного периода</p>
                   <p className="text-sm text-muted-foreground">
                     {new Date(
                       user.subscription.trialEndsAt
-                    ).toLocaleDateString()}
+                    ).toLocaleDateString('ru-RU')}
                   </p>
                 </div>
               </div>
@@ -143,9 +145,9 @@ export function SubscriptionSettings() {
                 <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
               </div>
               <div>
-                <p className="text-sm font-medium">Auto-Renew</p>
+                <p className="text-sm font-medium">Автопродление</p>
                 <p className="text-sm text-muted-foreground">
-                  {user.subscription.autoRenew ? "Enabled" : "Disabled"}
+                  {user.subscription.autoRenew ? "Включено" : "Отключено"}
                 </p>
               </div>
             </div>
@@ -156,7 +158,7 @@ export function SubscriptionSettings() {
             <>
               <Separator />
               <div>
-                <h5 className="mb-3 text-sm font-semibold">Plan Features</h5>
+                <h5 className="mb-3 text-sm font-semibold">Функции плана</h5>
                 <div className="grid gap-2">
                   {user.subscription.features.map((feature) => (
                     <div
@@ -170,7 +172,7 @@ export function SubscriptionSettings() {
                           <span className="ml-1 text-muted-foreground">
                             ({feature.value}
                             {feature.type === "numeric" && feature.slug.includes("storage")
-                              ? "GB"
+                              ? "ГБ"
                               : ""})
                           </span>
                         )}
@@ -185,10 +187,10 @@ export function SubscriptionSettings() {
           {/* Actions */}
           <div className="flex gap-4">
             <Button variant="outline" disabled>
-              Manage Billing
+              Управление оплатой
             </Button>
             <Button variant="outline" disabled>
-              Cancel Subscription
+              Отменить подписку
             </Button>
           </div>
         </div>
@@ -196,8 +198,7 @@ export function SubscriptionSettings() {
         <Alert>
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            You don&apos;t have an active subscription. Browse available plans
-            below.
+            У вас нет активной подписки. Просмотрите доступные планы ниже.
           </AlertDescription>
         </Alert>
       )}
@@ -206,9 +207,9 @@ export function SubscriptionSettings() {
       {plans && plans.items.length > 0 && (
         <>
           <div className="mt-8">
-            <h4 className="text-lg font-semibold">Available Plans</h4>
+            <h4 className="text-lg font-semibold">Доступные планы</h4>
             <p className="text-sm text-muted-foreground">
-              Upgrade or change your subscription plan
+              Обновите или измените тарифный план
             </p>
           </div>
 
@@ -230,7 +231,7 @@ export function SubscriptionSettings() {
                     <div className="flex items-center justify-between">
                       <h5 className="text-lg font-semibold">{plan.name}</h5>
                       {isCurrentPlan && (
-                        <Badge variant="default">Current</Badge>
+                        <Badge variant="default">Текущий</Badge>
                       )}
                     </div>
                     {plan.description && (
@@ -245,13 +246,13 @@ export function SubscriptionSettings() {
                       ${plan.price.toString()}
                     </span>
                     <span className="text-sm text-muted-foreground">
-                      /{plan.billingInterval}
+                      /{plan.billingInterval === "month" ? "месяц" : plan.billingInterval === "year" ? "год" : plan.billingInterval}
                     </span>
                   </div>
 
                   {plan.trialDays > 0 && (
                     <Badge variant="outline" className="w-fit">
-                      {plan.trialDays} days free trial
+                      {plan.trialDays} дней бесплатно
                     </Badge>
                   )}
 
@@ -261,10 +262,10 @@ export function SubscriptionSettings() {
                     disabled={isCurrentPlan}
                   >
                     {isCurrentPlan ? (
-                      "Current Plan"
+                      "Текущий план"
                     ) : (
                       <>
-                        Select Plan
+                        Выбрать план
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </>
                     )}

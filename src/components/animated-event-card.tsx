@@ -53,7 +53,7 @@ export function AnimatedEventCard({ events }: AnimatedEventCardProps) {
     cards.forEach((card) => {
       gsap.set(card, { 
         opacity: 0, 
-        y: 50,
+        y: 30,
         willChange: "transform, opacity"
       });
     });
@@ -62,7 +62,7 @@ export function AnimatedEventCard({ events }: AnimatedEventCardProps) {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: cardsRef.current,
-        start: "top bottom-=100",
+        start: "top bottom-=50",
         once: true, // Only animate once
       },
     });
@@ -72,12 +72,12 @@ export function AnimatedEventCard({ events }: AnimatedEventCardProps) {
       tl.to(card, {
         opacity: 1,
         y: 0,
-        duration: 0.6,
-        ease: "power3.out",
+        duration: 0.4,
+        ease: "power2.out",
         onComplete: () => {
           gsap.set(card, { willChange: "auto" });
         }
-      }, index * 0.15);
+      }, index * 0.08);
     });
 
     // Hover animations removed - cards stay in place

@@ -139,17 +139,17 @@ export function PlanForm({ plan }: PlanFormProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Basic Information</CardTitle>
+          <CardTitle>Основная информация</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="name">Plan Name *</Label>
+              <Label htmlFor="name">Название плана *</Label>
               <Input
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Pro Plan"
+                placeholder="Про план"
                 required
                 disabled={isLoading}
               />
@@ -167,19 +167,19 @@ export function PlanForm({ plan }: PlanFormProps) {
               />
               {plan && (
                 <p className="text-xs text-muted-foreground">
-                  Slug cannot be changed
+                  Slug нельзя изменить
                 </p>
               )}
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">Описание</Label>
             <Textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Perfect for growing teams..."
+              placeholder="Идеально подходит для растущих команд..."
               disabled={isLoading}
               rows={3}
             />
@@ -192,19 +192,19 @@ export function PlanForm({ plan }: PlanFormProps) {
               onCheckedChange={setIsActive}
               disabled={isLoading}
             />
-            <Label htmlFor="isActive">Plan is active</Label>
+            <Label htmlFor="isActive">План активен</Label>
           </div>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>Pricing</CardTitle>
+          <CardTitle>Цены</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-3">
             <div className="space-y-2">
-              <Label htmlFor="price">Price *</Label>
+              <Label htmlFor="price">Цена *</Label>
               <Input
                 id="price"
                 type="number"
@@ -218,7 +218,7 @@ export function PlanForm({ plan }: PlanFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="currency">Currency</Label>
+              <Label htmlFor="currency">Валюта</Label>
               <Input
                 id="currency"
                 value={currency}
@@ -229,7 +229,7 @@ export function PlanForm({ plan }: PlanFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="billingPeriod">Billing Period *</Label>
+              <Label htmlFor="billingPeriod">Период оплаты *</Label>
               <select
                 id="billingPeriod"
                 value={billingPeriod}
@@ -239,15 +239,15 @@ export function PlanForm({ plan }: PlanFormProps) {
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 disabled={isLoading}
               >
-                <option value="month">Monthly</option>
-                <option value="year">Yearly</option>
-                <option value="lifetime">Lifetime</option>
+                <option value="month">Ежемесячно</option>
+                <option value="year">Ежегодно</option>
+                <option value="lifetime">Навсегда</option>
               </select>
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="trialDays">Trial Days</Label>
+            <Label htmlFor="trialDays">Пробных дней</Label>
             <Input
               id="trialDays"
               type="number"
@@ -257,7 +257,7 @@ export function PlanForm({ plan }: PlanFormProps) {
               disabled={isLoading}
             />
             <p className="text-xs text-muted-foreground">
-              Set to 0 for no trial period
+              Установите 0 для отключения пробного периода
             </p>
           </div>
         </CardContent>
@@ -265,7 +265,7 @@ export function PlanForm({ plan }: PlanFormProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Features</CardTitle>
+          <CardTitle>Функции</CardTitle>
         </CardHeader>
         <CardContent>
           {features && features.length > 0 ? (
@@ -298,7 +298,7 @@ export function PlanForm({ plan }: PlanFormProps) {
                         {isSelected && feature.featureType === "numeric" && (
                           <Input
                             type="number"
-                            placeholder="Value"
+                            placeholder="Значение"
                             value={isSelected.value ?? ""}
                             onChange={(e) =>
                               updateFeatureValue(feature.id, e.target.value)
@@ -315,7 +315,7 @@ export function PlanForm({ plan }: PlanFormProps) {
             </div>
           ) : (
             <p className="text-sm text-muted-foreground">
-              No features available. Create features first.
+              Нет доступных функций. Сначала создайте функции.
             </p>
           )}
         </CardContent>
@@ -328,11 +328,11 @@ export function PlanForm({ plan }: PlanFormProps) {
           onClick={() => router.back()}
           disabled={isLoading}
         >
-          Cancel
+          Отмена
         </Button>
         <Button type="submit" disabled={isLoading}>
           {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {plan ? "Update Plan" : "Create Plan"}
+          {plan ? "Обновить план" : "Создать план"}
         </Button>
       </div>
     </form>

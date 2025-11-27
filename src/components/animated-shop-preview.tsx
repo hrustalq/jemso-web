@@ -22,15 +22,15 @@ export function AnimatedShopPreview() {
     gsap.fromTo(cards, 
       {
         opacity: 0,
-        y: 30,
+        y: 20,
       },
       {
         opacity: 1,
         y: 0,
-        duration: 0.8,
-        stagger: 0.15,
-        ease: "power3.out",
-        delay: 0.2,
+        duration: 0.5,
+        stagger: 0.08,
+        ease: "power2.out",
+        delay: 0.1,
       }
     );
 
@@ -38,14 +38,14 @@ export function AnimatedShopPreview() {
     gsap.fromTo(ctaRef.current,
       {
         opacity: 0,
-        scale: 0.95,
+        scale: 0.96,
       },
       {
         opacity: 1,
         scale: 1,
-        duration: 0.8,
-        ease: "power3.out",
-        delay: 0.6,
+        duration: 0.5,
+        ease: "power2.out",
+        delay: 0.3,
       }
     );
   }, { scope: sectionRef });

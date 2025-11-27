@@ -61,7 +61,7 @@ export function ProfileSettings() {
     return (
       <Alert variant="destructive">
         <AlertCircle className="h-4 w-4" />
-        <AlertDescription>Failed to load user data</AlertDescription>
+        <AlertDescription>Не удалось загрузить данные пользователя</AlertDescription>
       </Alert>
     );
   }
@@ -75,9 +75,9 @@ export function ProfileSettings() {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-medium">Profile Information</h3>
+        <h3 className="text-lg font-medium">Информация профиля</h3>
         <p className="text-sm text-muted-foreground">
-          Update your account profile information
+          Обновите информацию вашего профиля
         </p>
       </div>
 
@@ -86,7 +86,7 @@ export function ProfileSettings() {
       {updateProfile.isSuccess && (
         <Alert variant="success">
           <CheckCircle2 className="h-4 w-4" />
-          <AlertDescription>Profile updated successfully</AlertDescription>
+          <AlertDescription>Профиль успешно обновлен</AlertDescription>
         </Alert>
       )}
 
@@ -105,7 +105,7 @@ export function ProfileSettings() {
             <AvatarFallback className="text-lg">{initials}</AvatarFallback>
           </Avatar>
           <div className="flex-1 space-y-2">
-            <Label htmlFor="image">Profile Picture URL</Label>
+            <Label htmlFor="image">URL изображения профиля</Label>
             <div className="flex gap-2">
               <Input
                 id="image"
@@ -123,18 +123,18 @@ export function ProfileSettings() {
               </Button>
             </div>
             <p className="text-xs text-muted-foreground">
-              Enter an image URL or upload a photo (upload coming soon)
+              Введите URL изображения или загрузите фото (загрузка скоро будет доступна)
             </p>
           </div>
         </div>
 
         {/* Name */}
         <div className="space-y-2">
-          <Label htmlFor="name">Name</Label>
+          <Label htmlFor="name">Имя</Label>
           <Input
             id="name"
             type="text"
-            placeholder="Your name"
+            placeholder="Ваше имя"
             value={name}
             onChange={(e) => {
               setName(e.target.value);
@@ -162,10 +162,10 @@ export function ProfileSettings() {
             <div className="flex items-center gap-2">
               <Badge variant="default" className="bg-green-600">
                 <CheckCircle2 className="mr-1 h-3 w-3" />
-                Verified
+                Подтвержден
               </Badge>
               <span className="text-xs text-muted-foreground">
-                {new Date(user.emailVerified).toLocaleDateString()}
+                {new Date(user.emailVerified).toLocaleDateString('ru-RU')}
               </span>
             </div>
           )}
@@ -173,14 +173,14 @@ export function ProfileSettings() {
 
         {/* Account Info */}
         <div className="rounded-lg border border-border bg-muted/50 p-4 space-y-2">
-          <h4 className="text-sm font-medium">Account Information</h4>
+          <h4 className="text-sm font-medium">Информация об аккаунте</h4>
           <div className="grid gap-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Account Created</span>
-              <span>{new Date(user.createdAt).toLocaleDateString()}</span>
+              <span className="text-muted-foreground">Аккаунт создан</span>
+              <span>{new Date(user.createdAt).toLocaleDateString('ru-RU')}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Roles</span>
+              <span className="text-muted-foreground">Роли</span>
               <div className="flex gap-1">
                 {user.roles.map((role) => (
                   <Badge key={role.id} variant="outline">
@@ -206,7 +206,7 @@ export function ProfileSettings() {
             }}
             disabled={!hasChanges || updateProfile.isPending}
           >
-            Cancel
+            Отмена
           </Button>
           <Button
             type="submit"
@@ -215,10 +215,10 @@ export function ProfileSettings() {
             {updateProfile.isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Saving...
+                Сохранение...
               </>
             ) : (
-              "Save Changes"
+              "Сохранить изменения"
             )}
           </Button>
         </div>

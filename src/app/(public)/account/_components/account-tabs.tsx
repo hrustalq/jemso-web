@@ -14,19 +14,19 @@ export function AccountTabs() {
       <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4">
         <TabsTrigger value="profile" className="gap-2">
           <User className="h-4 w-4" />
-          <span className="hidden sm:inline">Profile</span>
+          <span className="hidden sm:inline">Профиль</span>
         </TabsTrigger>
         <TabsTrigger value="security" className="gap-2">
           <Lock className="h-4 w-4" />
-          <span className="hidden sm:inline">Security</span>
+          <span className="hidden sm:inline">Безопасность</span>
         </TabsTrigger>
         <TabsTrigger value="notifications" className="gap-2">
           <Bell className="h-4 w-4" />
-          <span className="hidden sm:inline">Notifications</span>
+          <span className="hidden sm:inline">Уведомления</span>
         </TabsTrigger>
         <TabsTrigger value="subscription" className="gap-2">
           <CreditCard className="h-4 w-4" />
-          <span className="hidden sm:inline">Subscription</span>
+          <span className="hidden sm:inline">Подписка</span>
         </TabsTrigger>
       </TabsList>
 

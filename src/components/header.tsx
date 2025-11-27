@@ -72,8 +72,18 @@ export async function Header() {
               paddingRight: 'max(1rem, var(--safe-right))' 
             }}
           >
-            {/* Left Section: Social Links */}
+            {/* Left Section: Burger Menu (mobile) / Social Links (desktop) */}
             <div className="flex items-center gap-2">
+              {/* Hamburger Menu - Left on mobile, right on desktop */}
+              <div className="md:hidden">
+                <HeaderNav 
+                  categories={categories}
+                  staticNavItems={staticNavItems}
+                  session={session} 
+                />
+              </div>
+              
+              {/* Social Links - Hidden on mobile, visible on tablet+ */}
               {socialLinks.map((social) => (
                 <Link
                   key={social.icon}
@@ -107,25 +117,43 @@ export async function Header() {
               {session?.user ? (
                 <UserMenu user={session.user} />
               ) : (
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="hidden h-9 gap-2 transition-colors duration-300 hover:bg-primary hover:text-primary-foreground sm:flex" 
-                  asChild
-                >
-                  <Link href="/auth/sign-in">
-                    <User className="h-4 w-4" />
-                    <span className="text-sm">Мой профиль</span>
-                  </Link>
-                </Button>
+                <>
+                  {/* Mobile: Icon only */}
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="flex h-9 w-9 items-center justify-center p-0 transition-colors duration-300 hover:bg-primary hover:text-primary-foreground sm:hidden" 
+                    asChild
+                  >
+                    <Link href="/auth/sign-in">
+                      <User className="h-4 w-4" />
+                      <span className="sr-only">Мой профиль</span>
+                    </Link>
+                  </Button>
+                  
+                  {/* Desktop: Icon + Text */}
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="hidden h-9 gap-2 transition-colors duration-300 hover:bg-primary hover:text-primary-foreground sm:flex" 
+                    asChild
+                  >
+                    <Link href="/auth/sign-in">
+                      <User className="h-4 w-4" />
+                      <span className="text-sm">Мой профиль</span>
+                    </Link>
+                  </Button>
+                </>
               )}
 
-              {/* Hamburger Menu - Always visible */}
-              <HeaderNav 
-                categories={categories}
-                staticNavItems={staticNavItems}
-                session={session} 
-              />
+              {/* Hamburger Menu - Hidden on mobile (shown on left), visible on desktop */}
+              <div className="hidden md:block">
+                <HeaderNav 
+                  categories={categories}
+                  staticNavItems={staticNavItems}
+                  session={session} 
+                />
+              </div>
             </div>
           </div>
         </div>

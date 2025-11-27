@@ -43,10 +43,10 @@ export function AnimatedCardGrid({ posts, showTags = false }: AnimatedCardGridPr
     const cards = gridRef.current.querySelectorAll(".blog-card");
     gsap.from(cards, {
       opacity: 0,
-      y: 50,
-      duration: 0.6,
-      ease: "power3.out",
-      stagger: 0.1,
+      y: 30,
+      duration: 0.4,
+      ease: "power2.out",
+      stagger: 0.06,
     });
   }, [posts]);
 

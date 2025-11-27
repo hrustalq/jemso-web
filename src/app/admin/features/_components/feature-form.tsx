@@ -97,16 +97,16 @@ export function FeatureForm({ feature }: FeatureFormProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Feature Details</CardTitle>
+          <CardTitle>Детали функции</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Feature Name *</Label>
+            <Label htmlFor="name">Название функции *</Label>
             <Input
               id="name"
               value={name}
               onChange={(e) => handleNameChange(e.target.value)}
-              placeholder="API Access"
+              placeholder="Доступ к API"
               required
               disabled={isLoading}
             />
@@ -124,30 +124,30 @@ export function FeatureForm({ feature }: FeatureFormProps) {
             />
             {feature && (
               <p className="text-xs text-muted-foreground">
-                Slug cannot be changed after creation
+                Slug нельзя изменить после создания
               </p>
             )}
             {!feature && (
               <p className="text-xs text-muted-foreground">
-                Auto-generated from name. Can be customized.
+                Автоматически генерируется из названия. Можно настроить.
               </p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">Описание</Label>
             <Textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Provides programmatic access to the API"
+              placeholder="Предоставляет программный доступ к API"
               disabled={isLoading}
               rows={3}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="featureType">Feature Type *</Label>
+            <Label htmlFor="featureType">Тип функции *</Label>
             <select
               id="featureType"
               value={featureType}
@@ -157,28 +157,28 @@ export function FeatureForm({ feature }: FeatureFormProps) {
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               disabled={isLoading || !!feature}
             >
-              <option value="boolean">Boolean (Yes/No)</option>
-              <option value="numeric">Numeric (e.g., storage limit, API calls)</option>
-              <option value="text">Text (custom value)</option>
+              <option value="boolean">Булевый (Да/Нет)</option>
+              <option value="numeric">Числовой (например, лимит хранилища, API-вызовы)</option>
+              <option value="text">Текст (пользовательское значение)</option>
             </select>
             {feature && (
               <p className="text-xs text-muted-foreground">
-                Feature type cannot be changed after creation
+                Тип функции нельзя изменить после создания
               </p>
             )}
             {!feature && (
               <div className="mt-2 space-y-1 text-xs text-muted-foreground">
                 <p>
-                  <strong>Boolean:</strong> Feature is either included or not (e.g.,{" "}
-                  Premium Support)
+                  <strong>Булевый:</strong> Функция либо включена, либо нет (например,{" "}
+                  Премиум поддержка)
                 </p>
                 <p>
-                  <strong>Numeric:</strong> Feature has a numeric value (e.g., 50GB{" "}
-                  Storage, 1000 API Calls)
+                  <strong>Числовой:</strong> Функция имеет числовое значение (например, 50ГБ{" "}
+                  Хранилища, 1000 API-вызовов)
                 </p>
                 <p>
-                  <strong>Text:</strong> Feature has a custom text value (e.g.,{" "}
-                  Priority Queue Access)
+                  <strong>Текст:</strong> Функция имеет пользовательское текстовое значение (например,{" "}
+                  Приоритетный доступ к очереди)
                 </p>
               </div>
             )}
@@ -193,11 +193,11 @@ export function FeatureForm({ feature }: FeatureFormProps) {
           onClick={() => router.back()}
           disabled={isLoading}
         >
-          Cancel
+          Отмена
         </Button>
         <Button type="submit" disabled={isLoading}>
           {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {feature ? "Update Feature" : "Create Feature"}
+          {feature ? "Обновить функцию" : "Создать функцию"}
         </Button>
       </div>
     </form>

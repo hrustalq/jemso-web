@@ -37,41 +37,41 @@ export function ScrollReveal({
                 case "fadeIn":
                   gsap.from(element, {
                     opacity: 0,
-                    y: 30,
-                    duration: 0.6,
-                    ease: "power3.out",
+                    y: 20,
+                    duration: 0.4,
+                    ease: "power2.out",
                   });
                   break;
                 case "slideInLeft":
                   gsap.from(element, {
                     opacity: 0,
-                    x: -50,
-                    duration: 0.6,
-                    ease: "power3.out",
+                    x: -30,
+                    duration: 0.4,
+                    ease: "power2.out",
                   });
                   break;
                 case "slideInRight":
                   gsap.from(element, {
                     opacity: 0,
-                    x: 50,
-                    duration: 0.6,
-                    ease: "power3.out",
+                    x: 30,
+                    duration: 0.4,
+                    ease: "power2.out",
                   });
                   break;
                 case "scaleIn":
                   gsap.from(element, {
                     opacity: 0,
-                    scale: 0.8,
-                    duration: 0.6,
-                    ease: "back.out(1.7)",
+                    scale: 0.9,
+                    duration: 0.4,
+                    ease: "power2.out",
                   });
                   break;
                 case "blurIn":
                   gsap.from(element, {
                     opacity: 0,
-                    filter: "blur(20px)",
-                    duration: 0.8,
-                    ease: "power3.out",
+                    filter: "blur(10px)",
+                    duration: 0.5,
+                    ease: "power2.out",
                     clearProps: "filter",
                   });
                   break;

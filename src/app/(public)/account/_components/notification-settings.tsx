@@ -71,9 +71,9 @@ export function NotificationSettings() {
           <Bell className="h-5 w-5 text-primary" />
         </div>
         <div className="flex-1">
-          <h3 className="text-lg font-medium">Notification Preferences</h3>
+          <h3 className="text-lg font-medium">Настройки уведомлений</h3>
           <p className="text-sm text-muted-foreground">
-            Manage how you receive notifications and updates
+            Управляйте способом получения уведомлений и обновлений
           </p>
         </div>
       </div>
@@ -84,7 +84,7 @@ export function NotificationSettings() {
         <Alert variant="success">
           <CheckCircle2 className="h-4 w-4" />
           <AlertDescription>
-            Notification preferences updated successfully
+            Настройки уведомлений успешно обновлены
           </AlertDescription>
         </Alert>
       )}
@@ -105,11 +105,11 @@ export function NotificationSettings() {
             <div className="flex items-center gap-2">
               <Mail className="h-4 w-4 text-muted-foreground" />
               <Label htmlFor="emailNotifications" className="cursor-pointer">
-                Email Notifications
+                Email-уведомления
               </Label>
             </div>
             <p className="text-sm text-muted-foreground">
-              Receive email notifications for important account activity
+              Получать email-уведомления о важных событиях в аккаунте
             </p>
           </div>
           <Switch
@@ -129,11 +129,11 @@ export function NotificationSettings() {
             <div className="flex items-center gap-2">
               <AlertCircle className="h-4 w-4 text-muted-foreground" />
               <Label htmlFor="securityAlerts" className="cursor-pointer">
-                Security Alerts
+                Уведомления о безопасности
               </Label>
             </div>
             <p className="text-sm text-muted-foreground">
-              Get notified about important security events and login attempts
+              Получать уведомления о важных событиях безопасности и попытках входа
             </p>
           </div>
           <Switch
@@ -153,11 +153,11 @@ export function NotificationSettings() {
             <div className="flex items-center gap-2">
               <Mail className="h-4 w-4 text-muted-foreground" />
               <Label htmlFor="marketingEmails" className="cursor-pointer">
-                Marketing Emails
+                Маркетинговые email
               </Label>
             </div>
             <p className="text-sm text-muted-foreground">
-              Receive emails about new features, tips, and special offers
+              Получать письма о новых функциях, советах и специальных предложениях
             </p>
           </div>
           <Switch
@@ -177,11 +177,11 @@ export function NotificationSettings() {
             <div className="flex items-center gap-2">
               <Mail className="h-4 w-4 text-muted-foreground" />
               <Label htmlFor="newsletterSubscribed" className="cursor-pointer">
-                Newsletter Subscription
+                Подписка на рассылку
               </Label>
             </div>
             <p className="text-sm text-muted-foreground">
-              Subscribe to our newsletter for regular updates and insights
+              Подписаться на нашу рассылку для получения регулярных обновлений и новостей
             </p>
           </div>
           <Switch
@@ -203,7 +203,7 @@ export function NotificationSettings() {
           onClick={handleReset}
           disabled={!hasChanges || updatePreferences.isPending}
         >
-          Cancel
+          Отмена
         </Button>
         <Button
           onClick={handleSave}
@@ -212,10 +212,10 @@ export function NotificationSettings() {
           {updatePreferences.isPending ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Saving...
+              Сохранение...
             </>
           ) : (
-            "Save Preferences"
+            "Сохранить настройки"
           )}
         </Button>
       </div>

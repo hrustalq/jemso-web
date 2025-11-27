@@ -48,7 +48,7 @@ export function AnimatedCategoryCard({ categories }: AnimatedCategoryCardProps) 
     cards.forEach((card) => {
       gsap.set(card, { 
         opacity: 0, 
-        y: 80,
+        y: 40,
         willChange: "transform, opacity"
       });
     });
@@ -57,7 +57,7 @@ export function AnimatedCategoryCard({ categories }: AnimatedCategoryCardProps) 
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: cardsRef.current,
-        start: "top bottom-=100",
+        start: "top bottom-=50",
         once: true,
       },
     });
@@ -67,12 +67,12 @@ export function AnimatedCategoryCard({ categories }: AnimatedCategoryCardProps) 
       tl.to(card, {
         opacity: 1,
         y: 0,
-        duration: 0.8,
-        ease: "power3.out",
+        duration: 0.5,
+        ease: "power2.out",
         onComplete: () => {
           gsap.set(card, { willChange: "auto" });
         }
-      }, index * 0.15);
+      }, index * 0.1);
     });
 
     return () => {

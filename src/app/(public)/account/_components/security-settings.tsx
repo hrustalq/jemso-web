@@ -36,18 +36,18 @@ export function SecuritySettings() {
     setPasswordError("");
 
     if (newPassword !== confirmPassword) {
-      setPasswordError("Passwords do not match");
+      setPasswordError("Пароли не совпадают");
       return;
     }
 
     if (newPassword.length < 8) {
-      setPasswordError("Password must be at least 8 characters long");
+      setPasswordError("Пароль должен содержать минимум 8 символов");
       return;
     }
 
     if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(newPassword)) {
       setPasswordError(
-        "Password must contain uppercase, lowercase, and number"
+        "Пароль должен содержать заглавную букву, строчную букву и цифру"
       );
       return;
     }
@@ -97,9 +97,9 @@ export function SecuritySettings() {
             <Key className="h-5 w-5 text-primary" />
           </div>
           <div className="flex-1">
-            <h3 className="text-lg font-medium">Change Password</h3>
+            <h3 className="text-lg font-medium">Изменить пароль</h3>
             <p className="text-sm text-muted-foreground">
-              Update your password to keep your account secure
+              Обновите пароль для защиты вашего аккаунта
             </p>
           </div>
         </div>
@@ -110,8 +110,7 @@ export function SecuritySettings() {
           <Alert variant="success">
             <CheckCircle2 className="h-4 w-4" />
             <AlertDescription>
-              Password changed successfully. Please sign in again with your new
-              password.
+              Пароль успешно изменен. Пожалуйста, войдите снова с новым паролем.
             </AlertDescription>
           </Alert>
         )}
@@ -125,7 +124,7 @@ export function SecuritySettings() {
 
         <form onSubmit={handlePasswordChange} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="currentPassword">Current Password</Label>
+            <Label htmlFor="currentPassword">Текущий пароль</Label>
             <Input
               id="currentPassword"
               type="password"
@@ -138,7 +137,7 @@ export function SecuritySettings() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="newPassword">New Password</Label>
+            <Label htmlFor="newPassword">Новый пароль</Label>
             <Input
               id="newPassword"
               type="password"
@@ -149,13 +148,12 @@ export function SecuritySettings() {
               required
             />
             <p className="text-xs text-muted-foreground">
-              Must be at least 8 characters with uppercase, lowercase, and
-              number
+              Минимум 8 символов, включая заглавную букву, строчную букву и цифру
             </p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirm New Password</Label>
+            <Label htmlFor="confirmPassword">Подтвердите новый пароль</Label>
             <Input
               id="confirmPassword"
               type="password"
@@ -172,10 +170,10 @@ export function SecuritySettings() {
               {changePassword.isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Updating...
+                  Обновление...
                 </>
               ) : (
-                "Update Password"
+                "Обновить пароль"
               )}
             </Button>
           </div>
@@ -191,9 +189,9 @@ export function SecuritySettings() {
             <Trash2 className="h-5 w-5 text-destructive" />
           </div>
           <div className="flex-1">
-            <h3 className="text-lg font-medium">Delete Account</h3>
+            <h3 className="text-lg font-medium">Удалить аккаунт</h3>
             <p className="text-sm text-muted-foreground">
-              Permanently delete your account and all associated data
+              Безвозвратно удалить ваш аккаунт и все связанные данные
             </p>
           </div>
         </div>
@@ -202,11 +200,10 @@ export function SecuritySettings() {
 
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Warning: This action is irreversible</AlertTitle>
+          <AlertTitle>Предупреждение: Это действие необратимо</AlertTitle>
           <AlertDescription>
-            Deleting your account will permanently remove all your data,
-            including blog posts, comments, and subscriptions. This action
-            cannot be undone.
+            Удаление аккаунта навсегда удалит все ваши данные, включая статьи блога, 
+            комментарии и подписки. Это действие нельзя отменить.
           </AlertDescription>
         </Alert>
 
@@ -217,7 +214,7 @@ export function SecuritySettings() {
               onClick={() => setShowDeleteConfirm(true)}
             >
               <Trash2 className="mr-2 h-4 w-4" />
-              Delete Account
+              Удалить аккаунт
             </Button>
           </div>
         ) : (
@@ -233,7 +230,7 @@ export function SecuritySettings() {
 
             <div className="space-y-2">
               <Label htmlFor="deletePassword">
-                Enter your password to confirm
+                Введите пароль для подтверждения
               </Label>
               <Input
                 id="deletePassword"
@@ -248,7 +245,7 @@ export function SecuritySettings() {
 
             <div className="space-y-2">
               <Label htmlFor="confirmDelete">
-                Type <strong>DELETE</strong> to confirm
+                Введите <strong>DELETE</strong> для подтверждения
               </Label>
               <Input
                 id="confirmDelete"
@@ -273,7 +270,7 @@ export function SecuritySettings() {
                 }}
                 disabled={deleteAccount.isPending}
               >
-                Cancel
+                Отмена
               </Button>
               <Button
                 type="submit"
@@ -285,12 +282,12 @@ export function SecuritySettings() {
                 {deleteAccount.isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Deleting...
+                    Удаление...
                   </>
                 ) : (
                   <>
                     <Trash2 className="mr-2 h-4 w-4" />
-                    Delete Account Permanently
+                    Удалить аккаунт навсегда
                   </>
                 )}
               </Button>

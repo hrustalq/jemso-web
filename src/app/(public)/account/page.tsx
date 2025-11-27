@@ -13,9 +13,9 @@ export default async function AccountPage() {
     <div className="container mx-auto px-4 py-8 pt-24 md:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight">Account Settings</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Настройки аккаунта</h1>
           <p className="mt-2 text-muted-foreground">
-            Manage your account settings and preferences
+            Управление настройками и параметрами вашего аккаунта
           </p>
         </div>
 

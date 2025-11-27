@@ -16,48 +16,34 @@ if (typeof window !== "undefined") {
 export function AnimatedHeroSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
-  const subtitleRef = useRef<HTMLParagraphElement>(null);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
   const accentLineRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
     if (!sectionRef.current) return;
 
-    const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-    // Split title into characters for staggered animation
+    // Simplified title animation - animate as single element
     if (titleRef.current) {
-      const chars = titleRef.current.textContent?.split("") || [];
-      titleRef.current.innerHTML = chars
-        .map((char) => `<span class="inline-block">${char === " " ? "&nbsp;" : char}</span>`)
-        .join("");
-      
-      const charElements = titleRef.current.querySelectorAll("span");
-      
       tl.fromTo(
-        charElements,
+        titleRef.current,
         {
           opacity: 0,
-          y: 100,
-          rotationX: -90,
-          scale: 0.5,
-          transformOrigin: "50% 50%",
+          y: 40,
+          scale: 0.95,
         },
         {
           opacity: 1,
           y: 0,
-          rotationX: 0,
           scale: 1,
-          duration: 1.2,
-          stagger: {
-            each: 0.03,
-            from: "start",
-          },
+          duration: 0.6,
+          ease: "power2.out",
         }
       );
     }
 
-    // Accent line animation
+    // Accent line animation - runs in parallel
     if (accentLineRef.current) {
       tl.fromTo(
         accentLineRef.current,
@@ -68,85 +54,65 @@ export function AnimatedHeroSection() {
         {
           scaleX: 1,
           opacity: 1,
-          duration: 0.8,
-          ease: "power3.inOut",
-        },
-        "-=0.6"
-      );
-    }
-
-    // Subtitle with bounce effect
-    if (subtitleRef.current) {
-      tl.fromTo(
-        subtitleRef.current,
-        {
-          opacity: 0,
-          y: 50,
-          scale: 0.8,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 1,
-          ease: "back.out(1.7)",
-        },
-        "-=0.5"
-      );
-    }
-
-    // Description with fade and slide
-    if (descriptionRef.current) {
-      tl.fromTo(
-        descriptionRef.current,
-        {
-          opacity: 0,
-          y: 30,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
+          duration: 0.5,
+          ease: "power2.inOut",
         },
         "-=0.4"
       );
     }
 
-    // CTA Text animation
+    // Description with fade and slide - more overlap
+    if (descriptionRef.current) {
+      tl.fromTo(
+        descriptionRef.current,
+        {
+          opacity: 0,
+          y: 20,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+        },
+        "-=0.3"
+      );
+    }
+
+    // CTA Text animation - more overlap
     tl.from(
       ".hero-cta-text",
       {
         opacity: 0,
-        y: 20,
-        duration: 0.6,
-        ease: "power3.out",
+        y: 15,
+        duration: 0.4,
+        ease: "power2.out",
       },
       "-=0.3"
     );
 
-    // Benefits grid animation (staggered cards)
+    // Benefits grid animation - reduced stagger, more overlap
     tl.from(
       ".hero-benefits > div",
       {
         opacity: 0,
-        y: 30,
-        scale: 0.9,
-        duration: 0.5,
-        stagger: 0.1,
-        ease: "back.out(1.7)",
+        y: 20,
+        scale: 0.95,
+        duration: 0.4,
+        stagger: 0.05,
+        ease: "power2.out",
         clearProps: "all",
       },
-      "-=0.3"
+      "-=0.2"
     );
 
-    // Buttons animation
+    // Buttons animation - more overlap
     tl.from(
       ".hero-buttons",
       {
         opacity: 0,
-        y: 20,
-        duration: 0.6,
-        ease: "power3.out",
+        y: 15,
+        duration: 0.4,
+        ease: "power2.out",
       },
       "-=0.2"
     );

@@ -54,7 +54,7 @@ export function AnimatedPlanCard({ plans }: AnimatedPlanCardProps) {
     cards.forEach((card) => {
       gsap.set(card, { 
         opacity: 0, 
-        y: 80,
+        y: 40,
         willChange: "transform, opacity"
       });
     });
@@ -63,7 +63,7 @@ export function AnimatedPlanCard({ plans }: AnimatedPlanCardProps) {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: cardsRef.current,
-        start: "top bottom-=100",
+        start: "top bottom-=50",
         once: true, // Only animate once
       },
     });
@@ -73,12 +73,12 @@ export function AnimatedPlanCard({ plans }: AnimatedPlanCardProps) {
       tl.to(card, {
         opacity: 1,
         y: 0,
-        duration: 0.8,
-        ease: "power3.out",
+        duration: 0.5,
+        ease: "power2.out",
         onComplete: () => {
           gsap.set(card, { willChange: "auto" });
         }
-      }, index * 0.2);
+      }, index * 0.1);
     });
 
     // Hover animations with proper cleanup
@@ -95,9 +95,9 @@ export function AnimatedPlanCard({ plans }: AnimatedPlanCardProps) {
       const handleMouseEnter = () => {
         if (hoverTween) hoverTween.kill();
         hoverTween = gsap.to(element, {
-          y: -12,
+          y: -8,
           boxShadow: "0 20px 60px -10px rgba(0, 0, 0, 0.3)",
-          duration: 0.4,
+          duration: 0.3,
           ease: "power2.out",
         });
       };
@@ -107,7 +107,7 @@ export function AnimatedPlanCard({ plans }: AnimatedPlanCardProps) {
         hoverTween = gsap.to(element, {
           y: 0,
           boxShadow: "0 0 0 0 rgba(0, 0, 0, 0)",
-          duration: 0.4,
+          duration: 0.3,
           ease: "power2.out",
         });
       };
