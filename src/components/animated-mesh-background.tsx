@@ -16,6 +16,7 @@ export function AnimatedMeshBackground() {
     if (!ctx) return;
 
     const offset = offsetRef.current;
+    let isAnimating = true;
 
     // Set canvas size with device pixel ratio for crisp rendering
     const resizeCanvas = () => {
@@ -37,7 +38,7 @@ export function AnimatedMeshBackground() {
     const accentColor = isDark ? "rgba(240, 245, 250, 0.02)" : "rgba(10, 70, 130, 0.02)";
 
     // Animate offset for subtle movement
-    gsap.to(offset, {
+    const offsetTween = gsap.to(offset, {
       x: 20,
       y: 20,
       duration: 10,
@@ -48,6 +49,8 @@ export function AnimatedMeshBackground() {
 
     // Draw carbon fiber texture pattern
     const drawCarbonFiber = () => {
+      if (!isAnimating) return;
+
       const displayWidth = window.innerWidth;
       const displayHeight = window.innerHeight;
       
@@ -116,12 +119,32 @@ export function AnimatedMeshBackground() {
 
     drawCarbonFiber();
 
+    // Pause animations when tab is hidden to save resources
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        isAnimating = false;
+        if (animationRef.current) {
+          cancelAnimationFrame(animationRef.current);
+          animationRef.current = undefined;
+        }
+        offsetTween.pause();
+      } else {
+        isAnimating = true;
+        offsetTween.resume();
+        drawCarbonFiber();
+      }
+    };
+    
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     return () => {
+      isAnimating = false;
       window.removeEventListener("resize", resizeCanvas);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
-      gsap.killTweensOf(offset);
+      offsetTween.kill();
     };
   }, []);
 

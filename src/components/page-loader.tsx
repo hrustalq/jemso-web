@@ -67,16 +67,12 @@ export function PageLoader({ variant = "default" }: PageLoaderProps) {
 
   return (
     <div 
-      className="fixed inset-0 flex min-h-screen items-center justify-center bg-background/98 backdrop-blur-md"
+      className="fixed inset-0 z-100 flex min-h-screen items-center justify-center bg-background/98 backdrop-blur-md"
       style={{ 
-        zIndex: 9999, 
-        isolation: 'isolate', 
         minHeight: '100dvh',
         height: '100vh',
         width: '100vw',
-        top: 0,
-        left: 0,
-        position: 'fixed'
+        isolation: 'isolate'
       }}
     >
       <div ref={loaderRef} className="flex flex-col items-center gap-6">

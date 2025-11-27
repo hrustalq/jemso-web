@@ -52,7 +52,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         >
           <CategoryHero category={category} />
 
-          <div className="container mx-auto px-4 py-16 md:px-6 lg:px-8">
+          <div className="container mx-auto px-4 py-10 md:px-6 lg:px-8">
             <div className="space-y-16">
               {/* News Section */}
               <CategoryNews categoryId={category.id} />

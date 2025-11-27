@@ -28,8 +28,8 @@ export default function PublicLayout({
       <Suspense fallback={<HeaderSkeleton />}>
         <Header />
       </Suspense>
-      <div className="flex-1 relative z-10">{children}</div>
-      <div className="relative z-10">
+      <div className="flex-1 relative z-0 min-h-(--content-height)">{children}</div>
+      <div className="relative z-0">
         <Suspense fallback={<FooterSkeleton />}>
           <Footer />
         </Suspense>

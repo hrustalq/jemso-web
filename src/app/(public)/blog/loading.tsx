@@ -28,7 +28,7 @@ export default function BlogLoading() {
   return (
     <main className="fixed inset-0 z-100 min-h-screen overflow-y-auto bg-background/95 backdrop-blur-sm">
       {/* Hero skeleton */}
-      <div className="border-b border-border/40 bg-linear-to-b from-background to-background/95">
+      <div className="border-b border-border/40">
         <div className="container mx-auto px-4 py-16 text-center">
           <div className="mx-auto mb-4 h-12 w-48 animate-pulse rounded bg-muted" />
           <div className="mx-auto h-6 w-64 animate-pulse rounded bg-muted/60" />

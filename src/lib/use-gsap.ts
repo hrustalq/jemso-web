@@ -120,13 +120,17 @@ export function useFloating() {
   useGSAP(() => {
     if (!ref.current) return;
 
-    gsap.to(ref.current, {
+    const animation = gsap.to(ref.current, {
       y: "-=20",
       duration: 2,
       repeat: -1,
       yoyo: true,
       ease: "sine.inOut",
     });
+
+    return () => {
+      animation.kill();
+    };
   }, []);
 
   return ref;

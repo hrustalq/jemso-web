@@ -16,6 +16,9 @@ export function AnimatedHeaderWrapper({ children }: AnimatedHeaderWrapperProps) 
     const navBar = header?.querySelector("[data-nav-bar]") as HTMLElement | null;
     if (!header) return;
 
+    let scrollTriggerInstance: ScrollTrigger | null = null;
+    let showAnim: gsap.core.Tween | null = null;
+
     // Initial header animation
     gsap.fromTo(
       header,
@@ -35,7 +38,7 @@ export function AnimatedHeaderWrapper({ children }: AnimatedHeaderWrapperProps) 
     // Hide/show navigation bar on scroll
     if (navBar) {
       let lastScroll = 0;
-      const showAnim = gsap.fromTo(
+      showAnim = gsap.fromTo(
         navBar,
         {
           height: navBar.offsetHeight,
@@ -50,7 +53,7 @@ export function AnimatedHeaderWrapper({ children }: AnimatedHeaderWrapperProps) 
         }
       );
 
-      ScrollTrigger.create({
+      scrollTriggerInstance = ScrollTrigger.create({
         start: "top top",
         end: "max",
         onUpdate: (self) => {
@@ -58,11 +61,11 @@ export function AnimatedHeaderWrapper({ children }: AnimatedHeaderWrapperProps) 
           
           // Scrolling down and past 100px
           if (currentScroll > 100 && currentScroll > lastScroll) {
-            showAnim.play();
+            showAnim?.play();
           } 
           // Scrolling up or at top
           else if (currentScroll < lastScroll || currentScroll < 50) {
-            showAnim.reverse();
+            showAnim?.reverse();
           }
           
           lastScroll = currentScroll;
@@ -71,11 +74,17 @@ export function AnimatedHeaderWrapper({ children }: AnimatedHeaderWrapperProps) 
     }
 
     return () => {
+      // Kill only this component's tweens and ScrollTrigger
       gsap.killTweensOf(header);
       if (navBar) {
         gsap.killTweensOf(navBar);
       }
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      if (showAnim) {
+        showAnim.kill();
+      }
+      if (scrollTriggerInstance) {
+        scrollTriggerInstance.kill();
+      }
       
       // Ensure elements are in default state on cleanup
       if (header) {

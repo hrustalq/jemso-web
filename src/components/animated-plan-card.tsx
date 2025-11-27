@@ -81,12 +81,18 @@ export function AnimatedPlanCard({ plans }: AnimatedPlanCardProps) {
       }, index * 0.2);
     });
 
-    // Hover animations
+    // Hover animations with proper cleanup
+    const hoverHandlers = new Map<HTMLElement, {
+      enter: () => void;
+      leave: () => void;
+      tween: gsap.core.Tween | null;
+    }>();
+
     cards.forEach((card) => {
       const element = card as HTMLElement;
       let hoverTween: gsap.core.Tween | null = null;
 
-      element.addEventListener("mouseenter", () => {
+      const handleMouseEnter = () => {
         if (hoverTween) hoverTween.kill();
         hoverTween = gsap.to(element, {
           y: -12,
@@ -94,9 +100,9 @@ export function AnimatedPlanCard({ plans }: AnimatedPlanCardProps) {
           duration: 0.4,
           ease: "power2.out",
         });
-      });
+      };
 
-      element.addEventListener("mouseleave", () => {
+      const handleMouseLeave = () => {
         if (hoverTween) hoverTween.kill();
         hoverTween = gsap.to(element, {
           y: 0,
@@ -104,11 +110,31 @@ export function AnimatedPlanCard({ plans }: AnimatedPlanCardProps) {
           duration: 0.4,
           ease: "power2.out",
         });
+      };
+
+      element.addEventListener("mouseenter", handleMouseEnter);
+      element.addEventListener("mouseleave", handleMouseLeave);
+
+      hoverHandlers.set(element, {
+        enter: handleMouseEnter,
+        leave: handleMouseLeave,
+        tween: hoverTween,
       });
     });
 
     return () => {
       tl.kill();
+      
+      // Remove all event listeners and kill their tweens
+      hoverHandlers.forEach((handlers, element) => {
+        element.removeEventListener("mouseenter", handlers.enter);
+        element.removeEventListener("mouseleave", handlers.leave);
+        if (handlers.tween) {
+          handlers.tween.kill();
+        }
+        gsap.killTweensOf(element);
+      });
+      hoverHandlers.clear();
     };
   }, [plans]);
 

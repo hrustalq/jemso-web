@@ -5,8 +5,8 @@ export default async function AboutPage() {
   return (
     <HydrateClient>
       <main className="min-h-(--content-height)" style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top))' }}>
-        <div className="border-b border-border/40 bg-linear-to-b from-background to-background/95">
-          <div className="container mx-auto px-4 py-16 text-center">
+        <div className="border-b border-border/40 pt-6 md:pt-[calc(var(--header-height)+var(--safe-top)+2rem)]">
+          <div className="text-center">
             <h1 className="mb-4 text-5xl font-extrabold uppercase tracking-tight text-foreground sm:text-6xl">
               О нас
             </h1>
@@ -19,7 +19,7 @@ export default async function AboutPage() {
           </div>
         </div>
 
-        <div className="container mx-auto px-4 py-16">
+        <div className="container mx-auto px-4 py-10">
           <div className="mx-auto max-w-4xl space-y-12">
             <section>
               <p className="mb-8 text-lg leading-relaxed text-foreground/90">

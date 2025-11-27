@@ -23,7 +23,7 @@ export default async function BlogPage() {
           subtitle="Истории, инсайты и новости"
         />
 
-        <div className="container mx-auto px-4 py-16">
+        <div className="container mx-auto px-4 py-10">
           {/* Categories */}
           {categories.length > 0 && (
             <AnimatedCategoryTags categories={categories} />

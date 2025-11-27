@@ -26,6 +26,9 @@ export function SectionMeshBackground({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    let isVisible = false;
+    let isAnimating = false;
+
     // Set canvas size to match container with device pixel ratio for crisp rendering
     const resizeCanvas = () => {
       const rect = container.getBoundingClientRect();
@@ -102,20 +105,10 @@ export function SectionMeshBackground({
       color: colors[i % colors.length] ?? colors[0] ?? "",
     }));
 
-    // Animate points with GSAP
-    points.forEach((point, i) => {
-      gsap.to(point, {
-        x: `+=${(Math.random() - 0.5) * displayWidth * 0.3}`,
-        y: `+=${(Math.random() - 0.5) * displayHeight * 0.3}`,
-        duration: 8 + i * 2,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-      });
-    });
-
     // Animation loop
     const animate = () => {
+      if (!isAnimating) return;
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Draw soft gradient circles with smooth blur
@@ -143,9 +136,62 @@ export function SectionMeshBackground({
       animationRef.current = requestAnimationFrame(animate);
     };
 
-    animate();
+    // Start/stop animations based on visibility
+    const startAnimations = () => {
+      if (isAnimating) return;
+      isAnimating = true;
+
+      // Animate points with GSAP
+      points.forEach((point, i) => {
+        gsap.to(point, {
+          x: `+=${(Math.random() - 0.5) * displayWidth * 0.3}`,
+          y: `+=${(Math.random() - 0.5) * displayHeight * 0.3}`,
+          duration: 8 + i * 2,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+        });
+      });
+
+      animate();
+    };
+
+    const stopAnimations = () => {
+      isAnimating = false;
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = undefined;
+      }
+      gsap.killTweensOf(points);
+    };
+
+    // Intersection Observer to pause when off-screen
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isVisible = entry.isIntersecting;
+          if (entry.isIntersecting) {
+            startAnimations();
+          } else {
+            stopAnimations();
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "50px" }
+    );
+
+    observer.observe(container);
+    
+    // Start if already visible
+    if (container.getBoundingClientRect().top < window.innerHeight) {
+      isVisible = true;
+      startAnimations();
+    }
 
     return () => {
+      isAnimating = false;
+      isVisible = false;
+      observer.disconnect();
       resizeObserver.disconnect();
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);

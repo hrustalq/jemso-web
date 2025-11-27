@@ -71,7 +71,7 @@ export const staggerChildren = (
   });
 };
 
-// Floating animation
+// Floating animation - Note: Remember to kill the returned tween when done
 export const floatingAnimation = (element: HTMLElement) => {
   return gsap.to(element, {
     y: "-=20",
@@ -82,7 +82,7 @@ export const floatingAnimation = (element: HTMLElement) => {
   });
 };
 
-// Pulse animation
+// Pulse animation - Note: Remember to kill the returned tween when done
 export const pulseAnimation = (element: HTMLElement) => {
   return gsap.to(element, {
     scale: 1.05,
@@ -136,20 +136,29 @@ export const blurIn = (element: HTMLElement, delay = 0) => {
   });
 };
 
-// Shimmer effect
+// Shimmer effect - Note: Remember to kill the returned tween when done
 export const shimmerEffect = (element: HTMLElement) => {
   const shimmer = document.createElement("div");
   shimmer.className = "absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent";
+  shimmer.setAttribute("data-shimmer", "true");
   element.style.position = "relative";
   element.style.overflow = "hidden";
   element.appendChild(shimmer);
 
-  return gsap.to(shimmer, {
+  const tween = gsap.to(shimmer, {
     x: "200%",
     duration: 1.5,
     ease: "power2.inOut",
     repeat: -1,
     repeatDelay: 2,
   });
+
+  // Store cleanup function on the element
+  (element as HTMLElement & { _cleanupShimmer?: () => void })._cleanupShimmer = () => {
+    tween.kill();
+    shimmer.remove();
+  };
+
+  return tween;
 };
 

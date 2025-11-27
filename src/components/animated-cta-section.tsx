@@ -19,11 +19,18 @@ export function AnimatedCTASection() {
   useGSAP(() => {
     if (!sectionRef.current) return;
 
+    let floatingAnim: gsap.core.Tween | null = null;
+    let shimmerAnim: gsap.core.Tween | null = null;
+    let scrollTriggerInstance: ScrollTrigger | null = null;
+
     const timeline = gsap.timeline({
       scrollTrigger: {
         trigger: sectionRef.current,
         start: "top bottom-=100",
         toggleActions: "play none none none",
+        onEnter: () => {
+          scrollTriggerInstance = ScrollTrigger.getById(timeline.scrollTrigger?.vars.id ?? "") ?? null;
+        },
       },
     });
 
@@ -65,23 +72,56 @@ export function AnimatedCTASection() {
         "-=0.2"
       );
 
-    // Floating animation for the badge
-    gsap.to(".cta-badge", {
-      y: -10,
-      duration: 2,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut",
-    });
+    // Intersection Observer for infinite animations
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // Start infinite animations when visible
+            if (!floatingAnim) {
+              floatingAnim = gsap.to(".cta-badge", {
+                y: -10,
+                duration: 2,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut",
+              });
+            } else {
+              floatingAnim.resume();
+            }
 
-    // Shimmer effect
-    gsap.to(".cta-shimmer", {
-      x: "200%",
-      duration: 3,
-      repeat: -1,
-      ease: "power2.inOut",
-      repeatDelay: 2,
-    });
+            if (!shimmerAnim) {
+              shimmerAnim = gsap.to(".cta-shimmer", {
+                x: "200%",
+                duration: 3,
+                repeat: -1,
+                ease: "power2.inOut",
+                repeatDelay: 2,
+              });
+            } else {
+              shimmerAnim.resume();
+            }
+          } else {
+            // Pause infinite animations when off-screen
+            floatingAnim?.pause();
+            shimmerAnim?.pause();
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+      timeline.kill();
+      floatingAnim?.kill();
+      shimmerAnim?.kill();
+      scrollTriggerInstance?.kill();
+    };
   });
 
   return (
