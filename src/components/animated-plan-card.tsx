@@ -1,0 +1,215 @@
+"use client";
+
+import { useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Check, Sparkles } from "lucide-react";
+import { Card } from "~/components/ui/card";
+import { Button } from "~/components/ui/button";
+import { Badge } from "~/components/ui/badge";
+
+// Register ScrollTrigger plugin
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+interface Feature {
+  feature: {
+    id: string;
+    name: string;
+    slug: string;
+    featureType: string;
+  };
+  value: string | null;
+}
+
+interface Plan {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  price: number;
+  currency: string;
+  billingInterval: string;
+  trialDays: number | null;
+  isPopular?: boolean;
+  features: Feature[];
+}
+
+interface AnimatedPlanCardProps {
+  plans: Plan[];
+}
+
+export function AnimatedPlanCard({ plans }: AnimatedPlanCardProps) {
+  const cardsRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    if (!cardsRef.current) return;
+
+    const cards = cardsRef.current.querySelectorAll(".plan-card");
+    if (cards.length === 0) return;
+
+    // Set initial state
+    cards.forEach((card) => {
+      gsap.set(card, { 
+        opacity: 0, 
+        y: 80,
+        willChange: "transform, opacity"
+      });
+    });
+
+    // Create animation timeline
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: cardsRef.current,
+        start: "top bottom-=100",
+        once: true, // Only animate once
+      },
+    });
+
+    // Animate each card
+    cards.forEach((card, index) => {
+      tl.to(card, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power3.out",
+        onComplete: () => {
+          gsap.set(card, { willChange: "auto" });
+        }
+      }, index * 0.2);
+    });
+
+    // Hover animations
+    cards.forEach((card) => {
+      const element = card as HTMLElement;
+      let hoverTween: gsap.core.Tween | null = null;
+
+      element.addEventListener("mouseenter", () => {
+        if (hoverTween) hoverTween.kill();
+        hoverTween = gsap.to(element, {
+          y: -12,
+          boxShadow: "0 20px 60px -10px rgba(0, 0, 0, 0.3)",
+          duration: 0.4,
+          ease: "power2.out",
+        });
+      });
+
+      element.addEventListener("mouseleave", () => {
+        if (hoverTween) hoverTween.kill();
+        hoverTween = gsap.to(element, {
+          y: 0,
+          boxShadow: "0 0 0 0 rgba(0, 0, 0, 0)",
+          duration: 0.4,
+          ease: "power2.out",
+        });
+      });
+    });
+
+    return () => {
+      tl.kill();
+    };
+  }, [plans]);
+
+  const formatPrice = (price: number, currency: string) => {
+    return new Intl.NumberFormat("ru-RU", {
+      style: "currency",
+      currency: currency,
+      minimumFractionDigits: 0,
+    }).format(price);
+  };
+
+  const getBillingText = (interval: string) => {
+    const map: Record<string, string> = {
+      month: "в месяц",
+      year: "в год",
+      lifetime: "навсегда",
+    };
+    return map[interval] ?? interval;
+  };
+
+  return (
+    <div ref={cardsRef} className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      {plans.map((plan) => (
+        <Card
+          key={plan.id}
+          className={`plan-card relative overflow-hidden border-border/40 bg-card/50 backdrop-blur ${
+            plan.isPopular ? "border-primary shadow-lg shadow-primary/20" : ""
+          }`}
+        >
+          {/* Popular Badge */}
+          {plan.isPopular && (
+            <div className="absolute right-4 top-4">
+              <Badge className="gap-1 bg-primary text-primary-foreground">
+                <Sparkles className="h-3 w-3" />
+                Популярный
+              </Badge>
+            </div>
+          )}
+
+          <div className="space-y-6 p-8">
+            {/* Header */}
+            <div className="space-y-2">
+              <h3 className="text-2xl font-bold text-foreground">{plan.name}</h3>
+              {plan.description && (
+                <p className="text-sm text-muted-foreground">
+                  {plan.description}
+                </p>
+              )}
+            </div>
+
+            {/* Price */}
+            <div className="space-y-1">
+              <div className="flex items-baseline gap-2">
+                <span className="text-4xl font-bold text-foreground">
+                  {formatPrice(plan.price, plan.currency)}
+                </span>
+                <span className="text-muted-foreground">
+                  {getBillingText(plan.billingInterval)}
+                </span>
+              </div>
+              {plan.trialDays && plan.trialDays > 0 && (
+                <p className="text-sm text-primary">
+                  Пробный период {plan.trialDays} дней
+                </p>
+              )}
+            </div>
+
+            {/* Features */}
+            <ul className="space-y-3">
+              {plan.features.map((feature, index) => (
+                <li key={index} className="flex items-start gap-3">
+                  <Check className="h-5 w-5 shrink-0 text-primary" />
+                  <span className="text-sm text-foreground">
+                    {feature.feature.name}
+                    {feature.value && feature.feature.featureType !== "boolean" && (
+                      <span className="ml-1 font-semibold">
+                        ({feature.value})
+                      </span>
+                    )}
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            {/* CTA Button */}
+            <Button
+              className="w-full"
+              variant={plan.isPopular ? "default" : "outline"}
+              size="lg"
+            >
+              Выбрать план
+            </Button>
+          </div>
+
+          {/* Background decoration for popular plan */}
+          {plan.isPopular && (
+            <div className="absolute -right-20 -top-20 h-40 w-40 rounded-full bg-primary/10 blur-3xl" />
+          )}
+        </Card>
+      ))}
+    </div>
+  );
+}
+
