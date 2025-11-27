@@ -9,8 +9,8 @@ export async function CategoriesSection() {
   });
 
   return (
-    <section className="min-h-screen snap-start flex items-center justify-center py-16">
-      <div className="container mx-auto px-4 w-full">
+    <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16" style={{ minHeight: 'calc(100vh - var(--header-height) - var(--safe-top))' }}>
+      <div className="container mx-auto px-3 sm:px-4 w-full">
         <ScrollReveal animation="fadeIn">
           <AnimatedSectionHeader
             title="Направления"

@@ -54,18 +54,18 @@ export default function SignUpPage() {
     setFormError("");
 
     if (password !== confirmPassword) {
-      setFormError("Passwords do not match");
+      setFormError("Пароли не совпадают");
       return;
     }
 
     if (password.length < 8) {
-      setFormError("Password must be at least 8 characters long");
+      setFormError("Пароль должен содержать минимум 8 символов");
       return;
     }
 
     if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
       setFormError(
-        "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+        "Пароль должен содержать хотя бы одну заглавную букву, одну строчную букву и одну цифру"
       );
       return;
     }
@@ -79,15 +79,18 @@ export default function SignUpPage() {
 
   if (success) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12 pt-24">
-        <Card className="w-full max-w-md">
-          <CardHeader>
+      <div 
+        className="flex min-h-(--content-height) items-center justify-center px-4 py-8"
+        style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top) + 2rem)' }}
+      >
+        <Card className="w-full max-w-md shadow-lg">
+          <CardHeader className="space-y-2">
             <CardTitle className="flex items-center gap-2 text-2xl font-bold text-green-600">
               <CheckCircle2 className="h-6 w-6" />
-              Account Created!
+              Аккаунт создан!
             </CardTitle>
             <CardDescription>
-              Your account has been created successfully. Redirecting...
+              Ваш аккаунт успешно создан. Перенаправление...
             </CardDescription>
           </CardHeader>
         </Card>
@@ -96,16 +99,19 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12 pt-24">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
+    <div 
+      className="flex min-h-(--content-height) items-center justify-center px-4 py-8"
+      style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top) + 2rem)' }}
+    >
+      <Card className="w-full max-w-md shadow-lg">
+        <CardHeader className="space-y-2">
+          <CardTitle className="text-2xl font-bold">Регистрация</CardTitle>
           <CardDescription>
-            Enter your details to create a new account
+            Введите данные для создания нового аккаунта
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-5">
             {formError && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
@@ -114,14 +120,15 @@ export default function SignUpPage() {
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="name">Name (Optional)</Label>
+              <Label htmlFor="name">Имя (Необязательно)</Label>
               <Input
                 id="name"
                 type="text"
-                placeholder="John Doe"
+                placeholder="Иван Иванов"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 disabled={signUpMutation.isPending}
+                className="h-11"
               />
             </div>
 
@@ -135,11 +142,12 @@ export default function SignUpPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 disabled={signUpMutation.isPending}
+                className="h-11"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Пароль</Label>
               <Input
                 id="password"
                 type="password"
@@ -148,14 +156,15 @@ export default function SignUpPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 disabled={signUpMutation.isPending}
+                className="h-11"
               />
               <p className="text-xs text-muted-foreground">
-                Must be at least 8 characters with uppercase, lowercase, and number
+                Минимум 8 символов, включая заглавную букву, строчную букву и цифру
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Label htmlFor="confirmPassword">Подтверждение пароля</Label>
               <Input
                 id="confirmPassword"
                 type="password"
@@ -164,26 +173,27 @@ export default function SignUpPage() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
                 disabled={signUpMutation.isPending}
+                className="h-11"
               />
             </div>
           </CardContent>
 
-          <CardFooter className="flex flex-col space-y-4">
+          <CardFooter className="flex flex-col gap-4 pt-2">
             <Button
               type="submit"
-              className="w-full"
+              className="w-full h-11"
               disabled={signUpMutation.isPending}
             >
-              {signUpMutation.isPending ? "Creating account..." : "Sign Up"}
+              {signUpMutation.isPending ? "Создание аккаунта..." : "Зарегистрироваться"}
             </Button>
 
             <div className="text-center text-sm text-muted-foreground">
-              Already have an account?{" "}
+              Уже есть аккаунт?{" "}
               <Link
                 href="/auth/sign-in"
-                className="text-primary hover:underline"
+                className="text-primary font-medium hover:underline"
               >
-                Sign in
+                Войти
               </Link>
             </div>
           </CardFooter>

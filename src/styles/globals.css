@@ -50,10 +50,13 @@
 :root {
   --radius: 0.5rem;
   
-  /* Layout variables */
-  --header-height: 4rem; /* 64px / h-16 */
+  /* Layout variables - Two-layer header with Gran Turismo inspired design */
+  /* Mobile (< 640px): Top bar only h-16 (64px) - Nav bar hidden on mobile */
+  --header-height: 4rem; /* 64px - mobile default (top bar only) */
+  --header-top-bar-height: 4rem; /* 64px - h-16 */
+  --header-nav-bar-height: 0rem; /* Nav bar hidden on mobile */
   
-  /* Safe area insets for mobile devices (notches, rounded corners) */
+  /* Safe area insets for mobile devices (notches, rounded corners, home indicators) */
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -149,6 +152,26 @@
     padding-right: var(--safe-right);
     padding-bottom: var(--safe-bottom);
     padding-left: var(--safe-left);
+  }
+  
+  /* Responsive header heights - Small screens (≥640px) */
+  @media (min-width: 640px) {
+    :root {
+      /* Top bar h-20 (80px) only - Nav bar still hidden until md breakpoint */
+      --header-height: 5rem; /* 80px */
+      --header-top-bar-height: 5rem; /* 80px - h-20 */
+      --header-nav-bar-height: 0rem; /* Nav bar hidden on small screens */
+    }
+  }
+  
+  /* Responsive header heights - Medium screens+ (≥768px) */
+  @media (min-width: 768px) {
+    :root {
+      /* Top bar h-20 (80px) + Nav bar py-4 (32px total) = 112px */
+      --header-height: 7rem; /* 112px */
+      --header-top-bar-height: 5rem; /* 80px - h-20 */
+      --header-nav-bar-height: 2rem; /* 32px - py-4 (16px top + 16px bottom) */
+    }
   }
   
   /* Smooth scroll snapping */

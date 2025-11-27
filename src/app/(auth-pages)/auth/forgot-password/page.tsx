@@ -34,45 +34,47 @@ export default function ForgotPasswordPage() {
 
   if (success) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12 pt-24">
-        <Card className="w-full max-w-md">
-          <CardHeader>
+      <div 
+        className="flex min-h-(--content-height) items-center justify-center bg-background px-4 py-8"
+        style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top) + 2rem)' }}
+      >
+        <Card className="w-full max-w-md shadow-lg">
+          <CardHeader className="space-y-2">
             <CardTitle className="flex items-center gap-2 text-2xl font-bold">
               <CheckCircle2 className="h-6 w-6 text-green-600" />
-              Check Your Email
+              Проверьте email
             </CardTitle>
             <CardDescription>
-              We&apos;ve sent password reset instructions to {email}
+              Мы отправили инструкции по восстановлению пароля на {email}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Alert variant="success">
+            <Alert>
               <CheckCircle2 className="h-4 w-4" />
-              <AlertTitle>Email sent successfully</AlertTitle>
+              <AlertTitle>Email успешно отправлен</AlertTitle>
               <AlertDescription>
-                If an account exists with this email address, you will receive a
-                password reset link shortly. The link will expire in 1 hour.
+                Если аккаунт с таким email существует, вы получите ссылку для сброса пароля в ближайшее время. Ссылка действительна в течение 1 часа.
               </AlertDescription>
             </Alert>
           </CardContent>
-          <CardFooter className="flex flex-col space-y-4">
+          <CardFooter className="flex flex-col gap-4 pt-2">
             <Link href="/auth/sign-in" className="w-full">
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full h-11">
                 <ArrowLeft className="mr-2 h-4 w-4" />
-                Back to Sign In
+                Вернуться к входу
               </Button>
             </Link>
             <div className="text-center text-sm text-muted-foreground">
-              Didn&apos;t receive the email?{" "}
+              Не получили email?{" "}
               <button
                 type="button"
                 onClick={() => {
                   setSuccess(false);
                   forgotPasswordMutation.reset();
                 }}
-                className="text-primary hover:underline"
+                className="text-primary font-medium hover:underline"
               >
-                Try again
+                Попробовать снова
               </button>
             </div>
           </CardFooter>
@@ -82,17 +84,19 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12 pt-24">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Forgot Password</CardTitle>
+    <div 
+      className="flex min-h-(--content-height) items-center justify-center px-4 py-8"
+      style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top) + 2rem)' }}
+    >
+      <Card className="w-full max-w-md shadow-lg">
+        <CardHeader className="space-y-2">
+          <CardTitle className="text-2xl font-bold">Забыли пароль?</CardTitle>
           <CardDescription>
-            Enter your email address and we&apos;ll send you a link to reset
-            your password
+            Введите email и мы отправим вам ссылку для восстановления пароля
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-5">
             {forgotPasswordMutation.isError && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
@@ -112,25 +116,26 @@ export default function ForgotPasswordPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 disabled={forgotPasswordMutation.isPending}
+                className="h-11"
               />
             </div>
           </CardContent>
 
-          <CardFooter className="flex flex-col space-y-4">
+          <CardFooter className="flex flex-col gap-4 pt-2">
             <Button
               type="submit"
-              className="w-full"
+              className="w-full h-11"
               disabled={forgotPasswordMutation.isPending}
             >
               {forgotPasswordMutation.isPending
-                ? "Sending..."
-                : "Send Reset Link"}
+                ? "Отправка..."
+                : "Отправить ссылку"}
             </Button>
 
             <Link href="/auth/sign-in" className="w-full">
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full h-11">
                 <ArrowLeft className="mr-2 h-4 w-4" />
-                Back to Sign In
+                Вернуться к входу
               </Button>
             </Link>
           </CardFooter>

@@ -34,7 +34,11 @@ export default function AuthLoading() {
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-100 flex items-center justify-center bg-background/95 px-4 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-background/95 px-4 backdrop-blur-sm"
+      style={{ 
+        paddingTop: 'calc(var(--header-height) + var(--safe-top))',
+        paddingBottom: 'var(--safe-bottom)'
+      }}
     >
       <div
         ref={cardRef}
@@ -48,7 +52,7 @@ export default function AuthLoading() {
         </div>
 
         {/* Loading skeleton */}
-        <div className="space-y-4">
+        <div className="space-y-5">
           {/* Title skeleton */}
           <div className="h-8 w-3/4 animate-pulse rounded bg-muted" />
           
@@ -57,18 +61,18 @@ export default function AuthLoading() {
           <div className="h-4 w-2/3 animate-pulse rounded bg-muted/60" />
 
           {/* Input skeletons */}
-          <div className="space-y-3 pt-4">
-            <div className="h-10 w-full animate-pulse rounded-md bg-muted" />
-            <div className="h-10 w-full animate-pulse rounded-md bg-muted" />
+          <div className="space-y-3 pt-2">
+            <div className="h-11 w-full animate-pulse rounded-md bg-muted" />
+            <div className="h-11 w-full animate-pulse rounded-md bg-muted" />
           </div>
 
           {/* Button skeleton */}
-          <div className="pt-4">
-            <div className="h-10 w-full animate-pulse rounded-md bg-primary/20" />
+          <div className="pt-2">
+            <div className="h-11 w-full animate-pulse rounded-md bg-primary/20" />
           </div>
 
           {/* Footer skeleton */}
-          <div className="flex justify-center pt-4">
+          <div className="flex justify-center pt-2">
             <div className="h-4 w-48 animate-pulse rounded bg-muted/60" />
           </div>
         </div>

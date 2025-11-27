@@ -28,10 +28,10 @@ export default async function Home() {
 
   return (
     <HydrateClient>
-      <main className="snap-y snap-mandatory overflow-y-auto">
+      <main className="snap-y snap-mandatory overflow-y-auto" style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top))' }}>
         {/* Hero Section */}
-        <section className="min-h-screen snap-start flex items-center justify-center py-16" style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top))' }}>
-          <div className="container mx-auto px-4 w-full">
+        <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16" style={{ minHeight: 'calc(100vh - var(--header-height) - var(--safe-top))' }}>
+          <div className="container mx-auto px-3 sm:px-4 w-full">
             <AnimatedHeroSection />
           </div>
         </section>
@@ -47,8 +47,8 @@ export default async function Home() {
         </Suspense>
 
         {/* News Section */}
-        <section className="min-h-screen snap-start flex items-center justify-center py-16">
-          <div className="container mx-auto px-4 w-full">
+        <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16" style={{ minHeight: 'calc(100vh - var(--header-height) - var(--safe-top))' }}>
+          <div className="container mx-auto px-3 sm:px-4 w-full">
             <ScrollReveal animation="slideInRight">
             <AnimatedSectionHeader
               title="Последние новости"
@@ -71,14 +71,14 @@ export default async function Home() {
 
         {/* Subscription Plans Section */}
         {plans.items.length > 0 && (
-          <section className="min-h-screen snap-start flex items-center justify-center py-16">
-            <div className="container mx-auto px-4 w-full">
+          <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16" style={{ minHeight: 'calc(100vh - var(--header-height) - var(--safe-top))' }}>
+            <div className="container mx-auto px-3 sm:px-4 w-full">
               <ScrollReveal animation="scaleIn">
-                <div className="mb-12 text-center">
-                  <h2 className="mb-4 text-3xl font-bold text-foreground md:text-4xl">
+                <div className="mb-8 sm:mb-12 text-center px-2">
+                  <h2 className="mb-3 sm:mb-4 text-2xl sm:text-3xl font-bold text-foreground md:text-4xl">
                     Выберите свой план
                   </h2>
-                  <p className="mx-auto max-w-2xl text-lg text-foreground/80">
+                  <p className="mx-auto max-w-2xl text-base sm:text-lg text-foreground/80">
                     Подписки JEMSO открывают доступ к премиум контенту,
                     эксклюзивным событиям и специальным предложениям в магазине.
                     Выберите план, который подходит именно вам.
@@ -98,8 +98,8 @@ export default async function Home() {
         )}
 
         {/* Shop Section */}
-        <section className="min-h-screen snap-start flex items-center justify-center py-16">
-          <div className="container mx-auto px-4 w-full">
+        <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16" style={{ minHeight: 'calc(100vh - var(--header-height) - var(--safe-top))' }}>
+          <div className="container mx-auto px-3 sm:px-4 w-full">
             <ScrollReveal animation="blurIn">
               <AnimatedSectionHeader
                 title="Магазин JEMSO"

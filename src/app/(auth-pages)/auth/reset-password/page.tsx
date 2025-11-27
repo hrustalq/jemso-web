@@ -47,7 +47,7 @@ export default function ResetPasswordPage() {
 
   useEffect(() => {
     if (!token) {
-      setFormError("Invalid or missing reset token");
+      setFormError("Недействительный или отсутствующий токен сброса");
     }
   }, [token]);
 
@@ -56,24 +56,24 @@ export default function ResetPasswordPage() {
     setFormError("");
 
     if (password !== confirmPassword) {
-      setFormError("Passwords do not match");
+      setFormError("Пароли не совпадают");
       return;
     }
 
     if (password.length < 8) {
-      setFormError("Password must be at least 8 characters long");
+      setFormError("Пароль должен содержать минимум 8 символов");
       return;
     }
 
     if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
       setFormError(
-        "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+        "Пароль должен содержать хотя бы одну заглавную букву, одну строчную букву и одну цифру"
       );
       return;
     }
 
     if (!token) {
-      setFormError("Invalid reset token");
+      setFormError("Недействительный токен сброса");
       return;
     }
 
@@ -83,12 +83,15 @@ export default function ResetPasswordPage() {
   // Loading state while verifying token
   if (verifyTokenQuery.isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12 pt-24">
-        <Card className="w-full max-w-md">
+      <div 
+        className="flex min-h-(--content-height) items-center justify-center px-4 py-8"
+        style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top) + 2rem)' }}
+      >
+        <Card className="w-full max-w-md shadow-lg">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
             <p className="mt-4 text-sm text-muted-foreground">
-              Verifying reset token...
+              Проверка токена...
             </p>
           </CardContent>
         </Card>
@@ -99,34 +102,36 @@ export default function ResetPasswordPage() {
   // Invalid or expired token
   if (!token || verifyTokenQuery.data?.valid === false) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12 pt-24">
-        <Card className="w-full max-w-md">
-          <CardHeader>
+      <div 
+        className="flex min-h-(--content-height) items-center justify-center px-4 py-8"
+        style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top) + 2rem)' }}
+      >
+        <Card className="w-full max-w-md shadow-lg">
+          <CardHeader className="space-y-2">
             <CardTitle className="flex items-center gap-2 text-2xl font-bold text-destructive">
               <AlertCircle className="h-6 w-6" />
-              Invalid Reset Link
+              Недействительная ссылка
             </CardTitle>
             <CardDescription>
-              This password reset link is invalid or has expired
+              Эта ссылка для сброса пароля недействительна или истекла
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Link expired or invalid</AlertTitle>
+              <AlertTitle>Ссылка истекла или недействительна</AlertTitle>
               <AlertDescription>
-                Password reset links expire after 1 hour. Please request a new
-                one.
+                Ссылки для сброса пароля действительны в течение 1 часа. Пожалуйста, запросите новую.
               </AlertDescription>
             </Alert>
           </CardContent>
-          <CardFooter className="flex flex-col space-y-2">
+          <CardFooter className="flex flex-col gap-3 pt-2">
             <Link href="/auth/forgot-password" className="w-full">
-              <Button className="w-full">Request New Reset Link</Button>
+              <Button className="w-full h-11">Запросить новую ссылку</Button>
             </Link>
             <Link href="/auth/sign-in" className="w-full">
-              <Button variant="outline" className="w-full">
-                Back to Sign In
+              <Button variant="outline" className="w-full h-11">
+                Вернуться к входу
               </Button>
             </Link>
           </CardFooter>
@@ -138,24 +143,26 @@ export default function ResetPasswordPage() {
   // Success state
   if (success) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12 pt-24">
-        <Card className="w-full max-w-md">
-          <CardHeader>
+      <div 
+        className="flex min-h-(--content-height) items-center justify-center px-4 py-8"
+        style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top) + 2rem)' }}
+      >
+        <Card className="w-full max-w-md shadow-lg">
+          <CardHeader className="space-y-2">
             <CardTitle className="flex items-center gap-2 text-2xl font-bold text-green-600">
               <CheckCircle2 className="h-6 w-6" />
-              Password Reset Successful
+              Пароль успешно изменён
             </CardTitle>
             <CardDescription>
-              Your password has been reset successfully
+              Ваш пароль был успешно изменён
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <Alert variant="success">
+          <CardContent className="space-y-4">
+            <Alert>
               <CheckCircle2 className="h-4 w-4" />
-              <AlertTitle>Success!</AlertTitle>
+              <AlertTitle>Успешно!</AlertTitle>
               <AlertDescription>
-                You can now sign in with your new password. Redirecting to sign
-                in page...
+                Теперь вы можете войти с новым паролем. Перенаправление на страницу входа...
               </AlertDescription>
             </Alert>
           </CardContent>
@@ -166,16 +173,19 @@ export default function ResetPasswordPage() {
 
   // Reset password form
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12 pt-24">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Reset Password</CardTitle>
+    <div 
+      className="flex min-h-(--content-height) items-center justify-center px-4 py-8"
+      style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top) + 2rem)' }}
+    >
+      <Card className="w-full max-w-md shadow-lg">
+        <CardHeader className="space-y-2">
+          <CardTitle className="text-2xl font-bold">Сброс пароля</CardTitle>
           <CardDescription>
-            Enter your new password for {verifyTokenQuery.data?.email}
+            Введите новый пароль для {verifyTokenQuery.data?.email}
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-5">
             {formError && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
@@ -184,7 +194,7 @@ export default function ResetPasswordPage() {
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="password">New Password</Label>
+              <Label htmlFor="password">Новый пароль</Label>
               <Input
                 id="password"
                 type="password"
@@ -193,15 +203,15 @@ export default function ResetPasswordPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 disabled={resetPasswordMutation.isPending}
+                className="h-11"
               />
               <p className="text-xs text-muted-foreground">
-                Must be at least 8 characters with uppercase, lowercase, and
-                number
+                Минимум 8 символов, включая заглавную букву, строчную букву и цифру
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm New Password</Label>
+              <Label htmlFor="confirmPassword">Подтверждение пароля</Label>
               <Input
                 id="confirmPassword"
                 type="password"
@@ -210,29 +220,30 @@ export default function ResetPasswordPage() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
                 disabled={resetPasswordMutation.isPending}
+                className="h-11"
               />
             </div>
           </CardContent>
 
-          <CardFooter className="flex flex-col space-y-4">
+          <CardFooter className="flex flex-col gap-4 pt-2">
             <Button
               type="submit"
-              className="w-full"
+              className="w-full h-11"
               disabled={resetPasswordMutation.isPending}
             >
               {resetPasswordMutation.isPending
-                ? "Resetting password..."
-                : "Reset Password"}
+                ? "Сброс пароля..."
+                : "Сбросить пароль"}
             </Button>
 
             <Link href="/auth/sign-in" className="w-full">
               <Button
                 variant="outline"
-                className="w-full"
+                className="w-full h-11"
                 type="button"
                 disabled={resetPasswordMutation.isPending}
               >
-                Cancel
+                Отмена
               </Button>
             </Link>
           </CardFooter>

@@ -106,7 +106,7 @@ export function AnimatedCategoryCard({ categories }: AnimatedCategoryCardProps) 
           onMouseEnter={() => handleMouseEnter(category.id)}
           onMouseLeave={() => handleMouseLeave(category.id)}
         >
-          <Card className="category-card group relative h-[400px] overflow-hidden border-border/40 bg-card transition-all duration-500 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-2">
+          <Card className="category-card group relative h-[350px] sm:h-[400px] overflow-hidden border-border/40 bg-card transition-all duration-500 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10 lg:hover:-translate-y-2">
             {/* Video/Image Background */}
             <div className="absolute inset-0">
               {category.coverVideo ? (
@@ -154,17 +154,17 @@ export function AnimatedCategoryCard({ categories }: AnimatedCategoryCardProps) 
               )}
               
               {/* Gradient Overlay - ensures text readability */}
-              <div className="absolute inset-0 bg-linear-to-t from-background via-background/60 to-background/20 transition-all duration-500 group-hover:from-background/95 group-hover:via-background/70 z-2" />
+              <div className="absolute inset-0 bg-linear-to-t from-background via-background/80 to-background/30 lg:from-background lg:via-background/60 lg:to-background/20 transition-all duration-500 group-hover:from-background/95 group-hover:via-background/70 z-2" />
             </div>
 
             {/* Content */}
-            <div className="relative flex h-full flex-col justify-end p-8 z-10">
+            <div className="relative flex h-full flex-col justify-end p-6 sm:p-8 z-10">
               {/* Stats Badges - Top */}
-              <div className="absolute top-6 right-6 flex flex-col gap-2 z-20">
+              <div className="absolute top-4 right-4 sm:top-6 sm:right-6 flex flex-col gap-2 z-20">
                 {category._count.posts > 0 && (
                   <Badge 
                     variant="secondary" 
-                    className="bg-background/90 backdrop-blur-md text-sm font-medium shadow-xl border border-border/50"
+                    className="bg-background/95 backdrop-blur-md text-xs sm:text-sm font-medium shadow-xl border border-border/50"
                   >
                     {category._count.posts} статей
                   </Badge>
@@ -172,7 +172,7 @@ export function AnimatedCategoryCard({ categories }: AnimatedCategoryCardProps) 
                 {category._count.events > 0 && (
                   <Badge 
                     variant="secondary" 
-                    className="bg-background/90 backdrop-blur-md text-sm font-medium shadow-xl border border-border/50"
+                    className="bg-background/95 backdrop-blur-md text-xs sm:text-sm font-medium shadow-xl border border-border/50"
                   >
                     {category._count.events} событий
                   </Badge>
@@ -180,21 +180,21 @@ export function AnimatedCategoryCard({ categories }: AnimatedCategoryCardProps) 
               </div>
 
               {/* Category Info */}
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {/* Name */}
-                <h3 className="text-3xl font-bold text-foreground drop-shadow-lg transition-all duration-300 group-hover:text-primary group-hover:translate-x-2">
+                <h3 className="text-2xl sm:text-3xl font-bold text-foreground drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] transition-all duration-300 group-hover:text-primary lg:group-hover:translate-x-2">
                   {category.name}
                 </h3>
 
                 {/* Description */}
                 {category.description && (
-                  <p className="line-clamp-3 text-base text-muted-foreground drop-shadow-md transition-all duration-300 group-hover:text-foreground">
+                  <p className="line-clamp-2 sm:line-clamp-3 text-sm sm:text-base text-foreground/90 drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)] transition-all duration-300 group-hover:text-foreground">
                     {category.description}
                   </p>
                 )}
 
-                {/* CTA */}
-                <div className="flex items-center gap-2 text-sm font-medium text-primary drop-shadow-md opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-2">
+                {/* CTA - visible on mobile, animated on desktop */}
+                <div className="flex items-center gap-2 text-sm font-medium text-primary drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)] opacity-100 lg:opacity-0 transition-all duration-300 lg:group-hover:opacity-100 lg:group-hover:translate-x-2">
                   <span>Узнать больше</span>
                   <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </div>

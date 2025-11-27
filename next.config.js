@@ -16,6 +16,11 @@ const config = {
   },
   // Ensure Prisma is properly bundled for serverless
   serverComponentsExternalPackages: ["@prisma/client", "@prisma/engines"],
+  
+  // Enable optimized loading for animations
+  experimental: {
+    optimizePackageImports: ['gsap', '@gsap/react'],
+  },
 };
 
 export default config;

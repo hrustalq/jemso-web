@@ -42,38 +42,40 @@ export default function SignInPage() {
       });
 
       if (result?.error) {
-        setFormError("Invalid email or password");
+        setFormError("Неверный email или пароль");
       } else if (result?.ok) {
         router.push(callbackUrl);
         router.refresh();
       }
-    } catch (error) {
-      setFormError("An error occurred. Please try again.");
+    } catch {
+      setFormError("Произошла ошибка. Пожалуйста, попробуйте снова.");
     } finally {
       setIsLoading(false);
     }
   };
 
   const errorMessages: Record<string, string> = {
-    CredentialsSignin: "Invalid email or password",
-    OAuthAccountNotLinked:
-      "This email is already associated with another account",
-    default: "An error occurred. Please try again.",
+    CredentialsSignin: "Неверный email или пароль",
+    OAuthAccountNotLinked: "Этот email уже связан с другим аккаунтом",
+    default: "Произошла ошибка. Пожалуйста, попробуйте снова.",
   };
 
   const displayError = error ? errorMessages[error] ?? errorMessages.default : formError;
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12 pt-24">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Sign In</CardTitle>
+    <div 
+      className="flex min-h-(--content-height) items-center justify-center px-4 py-8"
+      style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top) + 2rem)' }}
+    >
+      <Card className="w-full max-w-md shadow-lg">
+        <CardHeader className="space-y-2">
+          <CardTitle className="text-2xl font-bold">Вход</CardTitle>
           <CardDescription>
-            Enter your email and password to sign in to your account
+            Введите email и пароль для входа в аккаунт
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-5">
             {displayError && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
@@ -91,17 +93,18 @@ export default function SignInPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 disabled={isLoading}
+                className="h-11"
               />
             </div>
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">Пароль</Label>
                 <Link
                   href="/auth/forgot-password"
                   className="text-sm text-primary hover:underline"
                 >
-                  Forgot password?
+                  Забыли пароль?
                 </Link>
               </div>
               <Input
@@ -112,22 +115,23 @@ export default function SignInPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 disabled={isLoading}
+                className="h-11"
               />
             </div>
           </CardContent>
 
-          <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Signing in..." : "Sign In"}
+          <CardFooter className="flex flex-col gap-4 pt-2">
+            <Button type="submit" className="w-full h-11" disabled={isLoading}>
+              {isLoading ? "Вход..." : "Войти"}
             </Button>
 
             <div className="text-center text-sm text-muted-foreground">
-              Don&apos;t have an account?{" "}
+              Нет аккаунта?{" "}
               <Link
                 href="/auth/sign-up"
-                className="text-primary hover:underline"
+                className="text-primary font-medium hover:underline"
               >
-                Sign up
+                Зарегистрироваться
               </Link>
             </div>
           </CardFooter>

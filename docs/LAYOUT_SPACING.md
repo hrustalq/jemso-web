@@ -28,10 +28,37 @@ The `viewport-fit=cover` attribute is **essential** for iOS Safari to expose saf
 
 ## 🎯 Header Specifications
 
+The header now uses a **two-layer structure** inspired by Gran Turismo:
+
+### Top Bar (Primary Layer)
 - **Position**: Fixed (`fixed top-0`)
-- **Height**: `h-16` (4rem / 64px)
+- **Height**: 
+  - Mobile (< 640px): `h-16` (4rem / 64px)
+  - Small screens+ (≥ 640px): `h-20` (5rem / 80px)
 - **Z-Index**: `z-50`
-- **Animated**: Uses `AnimatedHeaderWrapper` for show/hide on scroll
+- **Content**: Logo, social links, user menu
+- **Behavior**: Always visible
+
+### Navigation Bar (Secondary Layer)
+- **Position**: Below top bar
+- **Height**: 
+  - Mobile/Small (< 768px): Hidden (0px)
+  - Medium+ (≥ 768px): `py-4` (2rem / 32px total)
+- **Content**: Main navigation links
+- **Visibility**: 
+  - **Hidden on mobile and small screens** (< 768px / < md breakpoint)
+  - **Visible on medium+ screens** (≥ 768px)
+- **Behavior**: When visible, hides on scroll down, shows on scroll up
+
+### Total Header Height
+- **Mobile (< 640px)**: 64px (4rem) - Top bar only
+- **Small screens (640-767px)**: 80px (5rem) - Top bar only
+- **Medium+ (≥ 768px)**: 112px (7rem) - Top bar + Nav bar
+
+### Animation
+- Uses `AnimatedHeaderWrapper` with GSAP ScrollTrigger
+- Navigation bar collapses after scrolling 100px down
+- Expands when scrolling up or when within 50px of top
 
 ## 📏 Spacing System
 
@@ -40,10 +67,13 @@ The `viewport-fit=cover` attribute is **essential** for iOS Safari to expose saf
 Added to `globals.css`:
 ```css
 :root {
-  /* Layout variables */
-  --header-height: 4rem; /* 64px / h-16 */
+  /* Layout variables - Two-layer header with Gran Turismo inspired design */
+  /* Mobile (< 640px): Top bar only h-16 (64px) - Nav bar hidden on mobile */
+  --header-height: 4rem; /* 64px - mobile default (top bar only) */
+  --header-top-bar-height: 4rem; /* 64px - h-16 */
+  --header-nav-bar-height: 0rem; /* Nav bar hidden on mobile */
   
-  /* Safe area insets for mobile devices (notches, rounded corners) */
+  /* Safe area insets for mobile devices (notches, rounded corners, home indicators) */
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -52,12 +82,35 @@ Added to `globals.css`:
   /* Content height calculation accounting for header and safe areas */
   --content-height: calc(100vh - var(--header-height) - var(--safe-top) - var(--safe-bottom));
 }
+
+/* Responsive header heights - Small screens (≥640px) */
+@media (min-width: 640px) {
+  :root {
+    /* Top bar h-20 (80px) only - Nav bar still hidden until md breakpoint */
+    --header-height: 5rem; /* 80px */
+    --header-top-bar-height: 5rem; /* 80px - h-20 */
+    --header-nav-bar-height: 0rem; /* Nav bar hidden on small screens */
+  }
+}
+
+/* Responsive header heights - Medium screens+ (≥768px) */
+@media (min-width: 768px) {
+  :root {
+    /* Top bar h-20 (80px) + Nav bar py-4 (32px total) = 112px */
+    --header-height: 7rem; /* 112px */
+    --header-top-bar-height: 5rem; /* 80px - h-20 */
+    --header-nav-bar-height: 2rem; /* 32px - py-4 (16px top + 16px bottom) */
+  }
+}
 ```
 
 These variables provide:
-- **Consistent header height** across the application
+- **Responsive header height** that adapts to screen size
+- **Component-level tracking** for top bar and nav bar separately  
 - **Safe area support** for mobile devices with notches and rounded corners
 - **Automatic content height** calculation that accounts for all viewport constraints
+- **Scroll-aware layout** that works with the collapsible navigation bar
+- **Accurate spacing calculations** based on actual component heights
 
 ### Page Content Spacing
 
@@ -135,7 +188,9 @@ All pages with `container` class now also include `mx-auto` for proper centering
 
 | Property | CSS Value | Use Case |
 |----------|-----------|----------|
-| `--header-height` | `4rem` (64px) | Fixed header height |
+| `--header-height` | `4rem` (64px mobile) / `5rem` (80px sm) / `7rem` (112px md+) | Fixed header height - responsive |
+| `--header-top-bar-height` | `4rem` (64px mobile) / `5rem` (80px sm+) | Top bar height only |
+| `--header-nav-bar-height` | `0rem` (mobile/sm) / `2rem` (32px md+) | Nav bar height - hidden on mobile |
 | `--safe-top` | `env(safe-area-inset-top, 0px)` | Top safe area (notch area) |
 | `--safe-bottom` | `env(safe-area-inset-bottom, 0px)` | Bottom safe area (home indicator) |
 | `--safe-left` | `env(safe-area-inset-left, 0px)` | Left safe area |
@@ -145,7 +200,9 @@ All pages with `container` class now also include `mx-auto` for proper centering
 **Tailwind Classes:**
 | Class | CSS Value | Use Case |
 |-------|-----------|----------|
-| `h-16` | `height: 4rem` | Header height |
+| `h-16 sm:h-20` | `height: 4rem / 5rem` | Header top bar height |
+| `hidden md:block` | `display: none / block` | Nav bar visibility - hidden until md breakpoint |
+| `py-3 sm:py-4` | `padding: 0.75rem / 1rem` | Header nav bar padding (when visible) |
 | `min-h-(--content-height)` | Uses CSS variable | Main content min-height with safe areas |
 
 ## 🔧 Implementation Details

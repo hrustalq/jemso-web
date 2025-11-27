@@ -2,291 +2,422 @@
 
 ## Overview
 
-The header has been optimized for proper adaptive behavior across all screen sizes, ensuring that navigation elements are shown/hidden at appropriate breakpoints without overlapping.
+The header has been redesigned to follow a minimal, clean layout inspired by the Gran Turismo website. It features a three-section structure: social links on the left, centered logo, and user actions on the right with an always-visible hamburger menu for navigation.
+
+## Design Philosophy
+
+The new header prioritizes:
+- **Simplicity**: Clean, minimal design with clear visual hierarchy
+- **Consistency**: Same layout across all screen sizes (no major restructuring)
+- **Accessibility**: All navigation accessible via hamburger menu
+- **Visual Balance**: Three distinct sections creating a balanced composition
+
+## Layout Structure
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ [○][○][○][○]          JEMSO          [👤 My Page][☰]       │  Top Bar
+├─────────────────────────────────────────────────────────────┤
+│     НОВОСТИ   МАГАЗИН   БЛОГ   О НАС   КОНТАКТЫ             │  Nav Bar
+└─────────────────────────────────────────────────────────────┘
+   Left Section         Center          Right Section
+```
+
+### Two-Layer Layout
+
+#### Top Bar (Primary Header)
+1. **Left Section**: Social media links (Facebook, X, YouTube, Instagram)
+2. **Center Section**: Logo (absolutely positioned to always center)
+3. **Right Section**: User menu/auth + Hamburger menu
+
+#### Navigation Bar (Secondary Header)
+- Centered horizontal navigation links
+- Contains main site navigation items
+- **Hidden on mobile and small screens** (< 768px / < md breakpoint)
+- **Visible on medium+ screens** (≥ 768px) to provide quick access to main navigation
 
 ## Breakpoint Strategy
 
 ### Mobile (< 640px)
 **Visible Elements:**
-- Logo (smaller size: `text-lg`)
-- Burger menu button
-- Mobile auth buttons (inside drawer)
+- Centered logo
+- Hamburger menu button
+- Auth buttons in hamburger menu
 
 **Hidden Elements:**
-- Desktop navigation
-- Desktop auth buttons
+- Social media links
+- Desktop "My Page" button
+- **Navigation Bar** (second layer completely hidden)
 
 **Layout:**
 ```
 ┌─────────────────────────────────┐
-│ LOGO          [Spacer]    ☰     │
+│          JEMSO             ☰    │  Top Bar Only
 └─────────────────────────────────┘
 ```
 
-### Small Screens (640px - 1023px)
+**Header Height:** 64px (4rem)
+
+### Small Screens (640px - 767px)
 **Visible Elements:**
-- Logo (medium size: `text-xl`)
-- Desktop auth buttons (Sign In / Sign Up)
-- Burger menu button
+- Centered logo
+- "My Page" button with icon
+- Hamburger menu button
 
 **Hidden Elements:**
-- Desktop navigation
-- Mobile auth buttons (in drawer)
+- Social media links (shown at md breakpoint)
+- **Navigation Bar** (second layer hidden until md breakpoint)
 
 **Layout:**
 ```
 ┌──────────────────────────────────────────┐
-│ LOGO   [Spacer]   [Sign In] [Sign Up] ☰ │
+│       JEMSO       [👤 My Page][☰]       │  Top Bar Only
 └──────────────────────────────────────────┘
 ```
 
-### Large Screens (≥ 1024px)
-**Visible Elements:**
-- Logo (large size: `text-2xl`)
-- Desktop navigation (6 items)
-- Desktop auth buttons OR User menu
+**Header Height:** 80px (5rem)
 
-**Hidden Elements:**
-- Burger menu button
-- Mobile drawer
+### Medium Screens (768px+)
+**Visible Elements:**
+- Social media links (4 circular buttons)
+- Centered logo
+- "My Page" button with icon and text
+- Hamburger menu button
+- **Navigation Bar** (second layer with main nav links)
 
 **Layout:**
 ```
-┌───────────────────────────────────────────────────────────────┐
-│ LOGO  [Nav1][Nav2][Nav3][Nav4][Nav5][Nav6]  [Sign In][Sign Up]│
-└───────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│ [○][○][○][○]          JEMSO          [👤 My Page][☰]       │  Top Bar
+├─────────────────────────────────────────────────────────────┤
+│     НОВОСТИ   МАГАЗИН   БЛОГ   О НАС   КОНТАКТЫ             │  Nav Bar
+└─────────────────────────────────────────────────────────────┘
 ```
 
-### Extra Large Screens (≥ 1280px)
-Same as large screens but with:
-- Increased navigation item padding (`px-3` instead of `px-2`)
-- Increased gap between items (`gap-2` instead of `gap-1`)
+**Header Height:** 112px (7rem)
 
 ## Tailwind Breakpoints Used
 
 ```css
 /* Mobile-first approach */
 base:       0px    /* Default - mobile */
-sm:       640px    /* Small tablets */
-md:       768px    /* Tablets */
-lg:      1024px    /* Laptops/Desktops */
-xl:      1280px    /* Large desktops */
+sm:       640px    /* Small screens */
+md:       768px    /* Medium screens (tablets) */
+lg:      1024px    /* Large screens */
+xl:      1280px    /* Extra large screens */
 ```
 
 ## Component Breakdown
 
-### Header Component
-```typescript
-// Logo - Responsive sizing
-text-lg      sm:text-xl      lg:text-2xl
-
-// Desktop Navigation - Hidden until large screens
-hidden lg:flex
-
-// Desktop Auth Buttons - Hidden until small screens
-hidden sm:flex
-
-// Burger Button Container - Hidden on large screens
-lg:hidden
-
-// Spacer - Only on mobile/tablet to push auth to right
-flex-1 lg:hidden
-```
-
-### HeaderNav Component (Mobile Menu)
-```typescript
-// Button Size
-h-10 w-10
-
-// Sheet Width
-w-[280px] sm:w-[320px]
-
-// Auth Buttons (inside drawer) - Hidden on small screens+
-sm:hidden
-```
-
-## CSS Classes Reference
-
 ### Header Container
 ```tsx
-<header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-  <div className="container mx-auto flex h-16 items-center gap-2 px-4 sm:gap-4">
+<header className="fixed top-0 z-50 w-full bg-background/95 backdrop-blur">
+  <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:h-20">
 ```
 
 **Key Classes:**
-- `sticky top-0 z-50` - Stays at top while scrolling
+- `fixed top-0 z-50` - Fixed positioning at top
 - `bg-background/95 backdrop-blur` - Semi-transparent blur effect
-- `gap-2 sm:gap-4` - Responsive spacing between items
-- `h-16` - Fixed height for consistency
+- `justify-between` - Spreads left and right sections apart
+- `h-16 sm:h-20` - Responsive fixed height (64px/80px)
 
-### Logo
+### Left Section: Social Links
 ```tsx
-<Link className="flex shrink-0 items-center transition-colors hover:text-primary">
-  <span className="text-lg font-bold uppercase tracking-wider sm:text-xl lg:text-2xl">
+<div className="flex items-center gap-2">
+  <Link className="hidden h-9 w-9 items-center justify-center rounded-full border md:flex">
 ```
 
 **Key Classes:**
-- `shrink-0` - Prevents logo from shrinking
-- `text-lg sm:text-xl lg:text-2xl` - Responsive font sizing
-- `uppercase tracking-wider` - Brand styling
+- `hidden md:flex` - Only visible on medium+ screens
+- `h-9 w-9` - Square dimensions
+- `rounded-full` - Circular buttons
+- `border border-border/40` - Subtle border
 
-### Desktop Navigation
+### Center Section: Logo
 ```tsx
-<nav className="hidden flex-1 justify-center lg:flex">
-  <ul className="flex items-center gap-1 xl:gap-2">
+<Link className="absolute left-1/2 -translate-x-1/2 transition-all duration-300 hover:scale-105 hover:opacity-90">
+  <Image
+    src="/logo.png"
+    alt="JEMSO"
+    width={110}
+    height={37}
+    className="h-[16px] w-auto sm:h-[19px]"
+    priority
+  />
 ```
 
 **Key Classes:**
-- `hidden lg:flex` - Only visible on large screens
-- `flex-1 justify-center` - Takes available space and centers
-- `gap-1 xl:gap-2` - Responsive spacing
+- `absolute left-1/2 -translate-x-1/2` - True centering regardless of siblings
+- `h-[16px] sm:h-[19px]` - Responsive image height (16px/19px)
+- `w-auto` - Maintains aspect ratio
+- `transition-all duration-300 hover:scale-105 hover:opacity-90` - Scale and opacity hover effect
 
-### Navigation Links
+**Why Absolute Positioning?**
+Using absolute positioning ensures the logo stays perfectly centered even when left/right sections have different widths. This creates visual balance.
+
+**Image Optimization:**
+- Uses Next.js Image component for automatic optimization
+- `priority` flag ensures logo loads immediately (above the fold)
+- Responsive sizing with consistent height, auto width for aspect ratio
+- Proportionate size that balances with other header elements
+
+### Right Section: User Actions
 ```tsx
-<Link className="rounded-md px-2 py-2 text-sm font-medium uppercase tracking-wide transition-colors hover:bg-accent hover:text-primary xl:px-3">
+<div className="flex items-center gap-2">
+  {/* My Page Button */}
+  <Button className="hidden h-9 gap-2 sm:flex">
+  
+  {/* Language Selector */}
+  <Button className="hidden h-9 w-9 p-0 sm:flex">
+  
+  {/* Hamburger Menu - Always visible */}
+  <HeaderNav />
 ```
 
 **Key Classes:**
-- `px-2 xl:px-3` - Responsive horizontal padding
-- `hover:bg-accent hover:text-primary` - Hover effects
-- `transition-colors` - Smooth color transitions
+- `gap-2` - Consistent spacing between elements
+- `hidden sm:flex` - My Page and language selector hidden on mobile
+- Hamburger menu has no hiding classes - always visible
 
-### Auth Section
-```tsx
-<div className="flex shrink-0 items-center gap-2">
+## Hamburger Menu (HeaderNav)
+
+### Always Visible
+Unlike the previous design, the hamburger menu is **always visible** at all screen sizes. This simplifies the responsive behavior and provides consistent navigation access.
+
+### Sheet/Drawer Content Structure
+
+```
+┌─────────────────────────┐
+│ МЕНЮ                    │
+├─────────────────────────┤
+│ ┌───────────────────┐   │
+│ │ 👤 User Name      │   │  (If authenticated)
+│ │    user@email.com │   │
+│ └───────────────────┘   │
+│ [👤 Мой профиль]        │
+│ [🚪 Выйти]              │
+│ ─────────────────       │
+├─────────────────────────┤
+│ [Войти]                 │  (If not authenticated)
+│ [Регистрация]           │
+│ ─────────────────       │
+├─────────────────────────┤
+│ ▼ НАПРАВЛЕНИЯ           │
+│   → Дрифт              │
+│   → Дрэг               │
+│   → и т.д.             │
+│ ─────────────────       │
+│ НОВОСТИ                │
+│ МАГАЗИН                │
+│ БЛОГ                   │
+│ О НАС                  │
+│ КОНТАКТЫ               │
+└─────────────────────────┘
 ```
 
-**Key Classes:**
-- `shrink-0` - Prevents auth section from shrinking
-- `gap-2` - Consistent spacing
+### Sheet Responsive Width
+- Mobile: `w-[300px]`
+- Small screens+: `w-[350px]`
 
-### Desktop Auth Buttons
+### User Section (Authenticated)
 ```tsx
-<div className="hidden items-center gap-2 sm:flex">
-  <Button className="text-xs sm:text-sm">
+<div className="mt-6 space-y-3">
+  <div className="flex items-center gap-3 rounded-md bg-accent/50 p-3">
+    {/* User avatar and info */}
+  </div>
+  <div className="flex flex-col gap-2">
+    {/* My Profile and Sign Out buttons */}
+  </div>
+</div>
 ```
 
-**Key Classes:**
-- `hidden sm:flex` - Hidden on mobile, visible from small screens
-- `text-xs sm:text-sm` - Responsive button text size
+**Features:**
+- User avatar with name and email
+- Quick access to profile
+- Prominent sign out button
+- Uses accent background for visual separation
 
-### Burger Button
+### Auth Section (Not Authenticated)
 ```tsx
-<div className="lg:hidden">
-  <Button className="h-10 w-10">
+<div className="mt-6 flex flex-col gap-2">
+  <Button>Войти</Button>
+  <Button variant="outline">Регистрация</Button>
+</div>
 ```
 
-**Key Classes:**
-- `lg:hidden` - Hidden on large screens
-- `h-10 w-10` - Square button size
+**Features:**
+- Two clear CTAs: Sign In (primary) and Sign Up (outline)
+- Full width buttons for easy touch targets
+- Consistent spacing
+
+### Collapsible Categories
+```tsx
+<button onClick={() => setCategoriesOpen(!categoriesOpen)}>
+  <span>НАПРАВЛЕНИЯ</span>
+  {categoriesOpen ? <ChevronDown /> : <ChevronRight />}
+</button>
+
+<div className={cn(
+  "overflow-hidden transition-all duration-300",
+  categoriesOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+)}>
+  {/* Category links with indentation */}
+</div>
+```
+
+**Features:**
+- Smooth expand/collapse animation (300ms)
+- Visual indicator (chevron icon)
+- Indented submenu for hierarchy
+- Uppercase label for emphasis
+
+## Social Media Icons
+
+### Icon Implementation
+Social icons are implemented as inline SVG components for:
+- **Performance**: No external icon library needed
+- **Customization**: Full control over styling
+- **Accessibility**: Semantic SVG with proper labels
+
+```tsx
+const SocialIcon = ({ icon }: { icon: string }) => {
+  const iconPaths: Record<string, string> = {
+    facebook: "...",
+    x: "...",
+    youtube: "...",
+    instagram: "..."
+  };
+  
+  return (
+    <svg className="h-5 w-5" viewBox="0 0 24 24">
+      <path d={iconPaths[icon]} />
+    </svg>
+  );
+};
+```
+
+### Social Links Configuration
+```tsx
+const socialLinks = [
+  { icon: "facebook", href: "#", label: "Facebook" },
+  { icon: "x", href: "#", label: "X (Twitter)" },
+  { icon: "youtube", href: "#", label: "YouTube" },
+  { icon: "instagram", href: "#", label: "Instagram" },
+];
+```
+
+**Easy to extend**: Just add new entries with icon path and href.
+
+## Language Selector
+
+Currently implemented as a placeholder with a flag emoji:
+```tsx
+<Button className="hidden h-9 w-9 p-0 sm:flex">
+  <span className="text-lg">🇷🇺</span>
+</Button>
+```
+
+**Future enhancement**: Can be extended to a dropdown with multiple language options.
 
 ## Responsive Behavior Matrix
 
-| Screen Size | Logo | Desktop Nav | Desktop Auth | Burger | Mobile Auth |
-|-------------|------|-------------|--------------|--------|-------------|
-| < 640px     | SM   | ❌          | ❌           | ✅     | ✅          |
-| 640-1023px  | MD   | ❌          | ✅           | ✅     | ❌          |
-| ≥ 1024px    | LG   | ✅          | ✅           | ❌     | ❌          |
+| Screen Size | Social Links | Logo Size  | Nav Bar | My Page | Menu | Header Height |
+|-------------|--------------|------------|---------|---------|------|---------------|
+| < 640px     | ❌           | 16px       | ❌      | ❌      | ✅   | 64px (4rem)   |
+| 640-767px   | ❌           | 19px       | ❌      | ✅      | ✅   | 80px (5rem)   |
+| ≥ 768px     | ✅           | 19px       | ✅      | ✅      | ✅   | 112px (7rem)  |
 
 Legend:
 - ✅ = Visible
 - ❌ = Hidden
-- SM/MD/LG = Size variant
+- Logo sizes in pixels for precise control
+- Nav Bar = Second navigation layer with main site links
+- Header Height includes all visible layers
 
-## User Menu (Authenticated State)
+## CSS Classes Reference
 
-The user menu avatar is always visible at all screen sizes when authenticated:
-
+### Social Link Button
 ```tsx
-<UserMenu user={session.user} />
+className="group hidden h-9 w-9 items-center justify-center rounded-full border border-border/40 transition-all duration-300 hover:scale-110 hover:border-primary hover:bg-primary/10 hover:text-primary md:flex"
 ```
 
-No responsive classes needed as it's a single element that scales well at all sizes.
+**Purpose**: Circular social media icon buttons with scale and background hover effects
 
-## Mobile Drawer Content
-
-### Structure
-```
-┌─────────────────────────┐
-│ Меню                    │
-├─────────────────────────┤
-│ [Sign In Button]        │  (< 640px only)
-│ [Sign Up Button]        │  (< 640px only)
-│ ─────────────────       │  (< 640px only)
-├─────────────────────────┤
-│ → Новости              │
-│ → Дрифт                │
-│ → Дрэг                 │
-│ → Клуб                 │
-│ → Магазин              │
-│ → Блог                 │
-│ → О нас                │
-│ → Контакты             │
-└─────────────────────────┘
+### Centered Logo
+```tsx
+className="absolute left-1/2 -translate-x-1/2 transition-colors hover:text-primary"
 ```
 
-### Drawer Responsive Width
-- Mobile: `w-[280px]`
-- Small screens+: `w-[320px]`
+**Purpose**: Ensures logo stays perfectly centered regardless of sibling widths
+
+### My Page Button
+```tsx
+className="hidden h-9 gap-2 transition-colors duration-300 hover:bg-primary hover:text-primary-foreground sm:flex"
+```
+
+**Purpose**: User profile button with icon and text, hidden on mobile, with color change hover effect
+
+### Language Selector
+```tsx
+className="hidden h-9 w-9 p-0 sm:flex"
+```
+
+**Purpose**: Square button for flag/language selector, hidden on mobile
+
+### Hamburger Button
+```tsx
+className="h-9 w-9 transition-colors duration-300 hover:bg-primary hover:text-primary-foreground"
+```
+
+**Purpose**: Always-visible menu toggle with color change hover effect, no responsive hiding
 
 ## Performance Considerations
 
-### Layout Shift Prevention
-- Fixed height (`h-16`) prevents layout shift
-- `shrink-0` on logo and auth prevents compression
-- `flex-1` spacer ensures consistent spacing
+### Layout Stability
+- **Fixed height** (`h-16`) prevents layout shift
+- **Absolute positioning** for logo maintains center alignment
+- **Consistent button sizes** (`h-9 w-9`) prevent jumps
 
 ### Smooth Transitions
-All interactive elements have `transition-colors` for smooth hover effects.
+- All interactive elements use smooth 300ms transitions
+- Social buttons: Scale up (110%) with background color on hover
+- Logo: Scale up (105%) with opacity change on hover
+- Navigation links: Scale up (105%) with animated underline on hover
+- Login/Burger-menu buttons: Background changes to primary color with white text on hover
+- Category dropdown uses `duration-300 ease-in-out` for smooth animation
+- Backdrop blur for premium feel without performance impact
 
 ### Z-Index Management
 ```
 Header: z-50 (top layer)
-Dropdown: z-50 (via Radix UI Portal)
-Sheet Overlay: z-50 (via Radix UI)
+Sheet Overlay: auto (Radix UI manages)
+Sheet Content: auto (Radix UI manages)
 ```
-
-## Testing Checklist
-
-- [ ] Mobile (< 640px): Only logo and burger visible
-- [ ] Mobile: Auth buttons inside drawer
-- [ ] Small tablet (640-1023px): Auth buttons visible, burger visible
-- [ ] Small tablet: No desktop navigation
-- [ ] Large desktop (≥ 1024px): Full navigation visible
-- [ ] Large desktop: No burger button
-- [ ] Logo scales properly at all sizes
-- [ ] No overlapping elements at any breakpoint
-- [ ] Smooth transitions between breakpoints
-- [ ] Touch targets are adequate on mobile (44x44px minimum)
-- [ ] Authenticated state works at all breakpoints
-- [ ] User menu dropdown works properly
-- [ ] Mobile drawer opens/closes smoothly
-
-## Common Issues and Solutions
-
-### Issue: Both burger and navigation visible
-**Solution:** Ensure `lg:hidden` is on burger container and `hidden lg:flex` is on navigation.
-
-### Issue: Auth buttons showing twice
-**Solution:** Desktop auth uses `hidden sm:flex`, mobile auth uses `sm:hidden`.
-
-### Issue: Logo too large on mobile
-**Solution:** Use responsive text sizing: `text-lg sm:text-xl lg:text-2xl`.
-
-### Issue: Navigation items cramped
-**Solution:** Use responsive padding and gaps: `px-2 xl:px-3` and `gap-1 xl:gap-2`.
-
-### Issue: Spacer causing issues on desktop
-**Solution:** Add `lg:hidden` to spacer div to remove it on large screens.
 
 ## Accessibility
 
-- All interactive elements have proper ARIA labels
-- Burger button: `aria-label="Open menu"`
-- Minimum touch target size: 40x40px (10 x 10 = 40px)
-- Keyboard navigation supported
-- Focus visible on all interactive elements
-- Semantic HTML structure maintained
+### Semantic HTML
+- `<header>` element for landmark
+- `<nav>` for navigation sections
+- Proper heading hierarchy in sheet
+
+### ARIA Labels
+```tsx
+aria-label="Facebook"
+aria-label="Открыть меню"
+aria-label="Выбрать язык"
+```
+
+### Keyboard Navigation
+- All interactive elements are focusable
+- Sheet can be closed with Escape key
+- Focus trap within open sheet
+- Focus returns to trigger on close
+
+### Touch Targets
+- Minimum size: 36x36px (9 x 4 = 36px with Tailwind's base size)
+- Adequate spacing between interactive elements
+- Full-width buttons in mobile menu
 
 ## Browser Support
 
@@ -298,22 +429,120 @@ Tested and working on:
 
 CSS features used:
 - Flexbox (universally supported)
-- CSS Custom Properties (var)
-- backdrop-filter (fallback provided)
+- Absolute positioning (universally supported)
+- CSS transforms (translate, universally supported)
+- backdrop-filter (fallback provided via opacity)
+- CSS custom properties (var)
 - Tailwind responsive utilities
 
-## Future Improvements
+## Testing Checklist
 
-1. **Mega Menu**: For more navigation items
-2. **Search Bar**: Integrated search on desktop
-3. **Notifications**: Badge on user avatar
-4. **Progressive Disclosure**: Collapsible nav groups
-5. **Sticky Behavior**: Show/hide on scroll
-6. **Loading States**: Skeleton for auth check
+- [ ] Mobile (< 640px): Only logo and hamburger visible
+- [ ] Mobile: Social links hidden
+- [ ] Mobile: My Page hidden
+- [ ] **Mobile: Navigation bar (second layer) completely hidden**
+- [ ] Small screens (640-767px): My Page visible, nav bar still hidden
+- [ ] **Medium+ (≥ 768px): Navigation bar visible with all links**
+- [ ] Medium+ (≥ 768px): All elements visible (social links, nav bar, user menu)
+- [ ] Logo stays perfectly centered at all sizes
+- [ ] Social links appear at md breakpoint
+- [ ] Navigation bar appears at md breakpoint (768px)
+- [ ] User info displays correctly in menu (authenticated)
+- [ ] Auth buttons display correctly in menu (not authenticated)
+- [ ] Categories expand/collapse smoothly in hamburger menu
+- [ ] Touch targets adequate on mobile (min 36x36px)
+- [ ] Hover states work on all interactive elements
+- [ ] Sheet opens/closes smoothly
+- [ ] Focus management works correctly
+- [ ] Keyboard navigation functional
+- [ ] Header height adjusts correctly at each breakpoint
+
+## Common Issues and Solutions
+
+### Issue: Logo not centered
+**Solution:** Ensure parent has `position: relative` and logo uses `absolute left-1/2 -translate-x-1/2`.
+
+### Issue: Social links showing on mobile
+**Solution:** Verify `hidden md:flex` classes are applied to social links container.
+
+### Issue: Navigation bar showing on mobile/overflowing
+**Solution:** Ensure `hidden md:block` is applied to the navigation bar wrapper. It should only be visible on medium+ screens (≥ 768px).
+
+### Issue: Header height not adjusting correctly
+**Solution:** Verify CSS variables are set correctly in `globals.css` with proper media queries for each breakpoint (default, sm, md).
+
+### Issue: Hamburger menu hidden on some screens
+**Solution:** Remove any responsive hiding classes from hamburger button - it should always be visible.
+
+### Issue: Category dropdown animation jerky
+**Solution:** Use `max-h-96` instead of `max-h-full` and add `ease-in-out` timing function.
+
+### Issue: User section cut off in menu
+**Solution:** Ensure sheet content has proper padding and scrollable overflow if needed.
+
+## Comparison with Gran Turismo Design
+
+### Similarities
+- ✅ Three-section layout (left, center, right)
+- ✅ Centered logo with absolute positioning
+- ✅ Social media icons on left
+- ✅ User actions on right
+- ✅ Hamburger menu for main navigation
+- ✅ Clean, minimal aesthetic
+- ✅ Fixed header with backdrop blur
+
+### Adaptations
+- **Social Icons**: Circular bordered buttons vs plain icons
+- **Navigation**: All in hamburger vs some on desktop
+- **Branding**: Custom graphic logo using Next.js Image optimization
+- **Mobile**: Same structure vs simplified
+
+### Rationale
+The design maintains GT's visual principles while adapting to:
+- Our content structure (categories, static pages)
+- Development constraints (text vs graphic logo)
+- User experience patterns for our audience
+
+## Future Enhancements
+
+1. **Animated Logo**: Transition between icon and text versions
+2. **Language Dropdown**: Full multi-language selector
+3. **Notification Badge**: On user menu for updates
+4. **Search Integration**: Quick search in header or menu
+5. **Scroll Behavior**: Hide/show on scroll for more space
+6. **Breadcrumbs**: Show current location in header
+7. **Progress Indicator**: For page loading states
+
+## Migration Notes
+
+### Breaking Changes from Previous Design
+- Desktop navigation removed from header
+- All navigation now via hamburger menu
+- Auth buttons consolidated
+- Social links added (new feature)
+
+### What Stayed the Same
+- Fixed positioning and height
+- Authentication flow
+- User menu functionality
+- Category navigation structure
+- Mobile sheet/drawer behavior
+
+### Update Checklist
+- [x] Header component refactored
+- [x] HeaderNav component updated
+- [x] HeaderSkeleton updated to match
+- [x] Social icon SVGs added
+- [x] Language selector placeholder added
+- [x] Documentation rewritten
+- [x] Navigation bar hidden on mobile (< md breakpoint) to prevent overflow
+- [x] CSS variables updated for responsive header heights
+- [x] Layout spacing documentation updated
+- [ ] Social link hrefs to be filled with actual URLs
+- [ ] Language selector to be implemented fully
 
 ---
 
-**Status**: ✅ Fully Responsive and Production Ready
+**Status**: ✅ Redesigned and Production Ready
 
-The header now properly adapts to all screen sizes with no overlapping elements and optimal use of screen real estate.
-
+The header now follows a clean, GT-inspired layout with three balanced sections and simplified responsive behavior. The navigation bar is hidden on mobile and small screens to prevent overflow, appearing only on medium+ screens. All navigation is accessible via the always-visible hamburger menu on mobile, creating a consistent experience across all devices.

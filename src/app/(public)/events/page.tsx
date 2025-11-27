@@ -26,7 +26,8 @@ export default async function EventsPage() {
 
   return (
     <HydrateClient>
-      <main className="container mx-auto min-h-[var(--content-height)] px-4 py-16" style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top))' }}>
+      <main className="min-h-(--content-height)" style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top))' }}>
+        <div className="container mx-auto px-4 py-16">
         <ScrollReveal animation="fadeIn">
           <div className="mb-12">
             <h1 className="mb-4 text-4xl font-bold text-foreground md:text-5xl">
@@ -64,6 +65,7 @@ export default async function EventsPage() {
             </p>
           </div>
         )}
+        </div>
       </main>
     </HydrateClient>
   );

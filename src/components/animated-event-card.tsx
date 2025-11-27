@@ -154,7 +154,7 @@ export function AnimatedEventCard({ events }: AnimatedEventCardProps) {
   };
 
   return (
-    <div ref={cardsRef} className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div ref={cardsRef} className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
       {events.map((event) => (
         <Link 
           key={event.id} 
@@ -173,7 +173,7 @@ export function AnimatedEventCard({ events }: AnimatedEventCardProps) {
               />
               {event.category && (
                 <Badge
-                  className="absolute right-3 top-3"
+                  className="absolute right-2 top-2 sm:right-3 sm:top-3 text-xs"
                   style={{
                     backgroundColor: event.category.color ?? undefined,
                   }}
@@ -186,7 +186,7 @@ export function AnimatedEventCard({ events }: AnimatedEventCardProps) {
             <div className="relative aspect-video w-full bg-linear-to-br from-primary/20 to-primary/5">
               {event.category && (
                 <Badge
-                  className="absolute right-3 top-3"
+                  className="absolute right-2 top-2 sm:right-3 sm:top-3 text-xs"
                   style={{
                     backgroundColor: event.category.color ?? undefined,
                   }}
@@ -198,13 +198,13 @@ export function AnimatedEventCard({ events }: AnimatedEventCardProps) {
           )}
 
           {/* Content */}
-          <div className="p-6">
-            <h3 className="mb-2 text-xl font-bold text-foreground transition-colors group-hover:text-primary">
+          <div className="p-4 sm:p-6">
+            <h3 className="mb-2 text-lg sm:text-xl font-bold text-foreground transition-colors group-hover:text-primary">
               {event.title}
             </h3>
 
             {event.excerpt && (
-              <p className="mb-6 text-base text-foreground/80 line-clamp-2">
+              <p className="mb-4 sm:mb-6 text-sm sm:text-base text-foreground/80 line-clamp-2">
                 {event.excerpt}
               </p>
             )}
@@ -212,7 +212,7 @@ export function AnimatedEventCard({ events }: AnimatedEventCardProps) {
             <div className="text-sm">
               <button
                 onClick={(e) => handleAddToCalendar(e, event)}
-                className="flex w-full items-center gap-2 rounded-md border border-transparent p-2 -ml-2 cursor-pointer transition-all hover:border-primary/30 hover:bg-primary/5 hover:text-primary group/button"
+                className="flex w-full items-center gap-2 rounded-md border border-transparent p-2 -ml-2 cursor-pointer transition-all hover:border-primary/30 hover:bg-primary/5 hover:text-primary active:bg-primary/10 group/button"
                 title="Добавить в календарь"
               >
                 <Calendar className="h-4 w-4 shrink-0 transition-transform group-hover/button:scale-110" />
@@ -227,7 +227,7 @@ export function AnimatedEventCard({ events }: AnimatedEventCardProps) {
               {event.location && (
                 <button
                   onClick={(e) => handleMapClick(e, event.location!)}
-                  className="flex w-full items-center gap-2 rounded-md border border-transparent p-2 -ml-2 cursor-pointer transition-all hover:border-primary/30 hover:bg-primary/5 hover:text-primary group/button"
+                  className="flex w-full items-center gap-2 rounded-md border border-transparent p-2 -ml-2 cursor-pointer transition-all hover:border-primary/30 hover:bg-primary/5 hover:text-primary active:bg-primary/10 group/button"
                   title="Открыть на карте"
                 >
                   <MapPin className="h-4 w-4 shrink-0 transition-transform group-hover/button:scale-110" />
@@ -236,7 +236,7 @@ export function AnimatedEventCard({ events }: AnimatedEventCardProps) {
               )}
 
               {!isPastEvent(event.endDate) && event.maxParticipants && (
-                <div className="flex items-center gap-2 p-1">
+                <div className="flex items-center gap-2 p-1 text-xs sm:text-sm">
                   <Users className="h-4 w-4 shrink-0" />
                   <span>
                     {event._count.registrations} / {event.maxParticipants} участников

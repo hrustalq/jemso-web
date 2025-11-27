@@ -43,7 +43,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   return (
     <HydrateClient>
-      <main className="min-h-[var(--content-height)]" style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top))' }}>
+      <main className="min-h-(--content-height)" style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top))' }}>
         <CategoryHero category={category} />
         
         <div className="container mx-auto px-4 py-12">

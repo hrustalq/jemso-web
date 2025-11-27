@@ -2,6 +2,9 @@
 
 import { useEffect } from "react";
 import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface AnimatedHeaderWrapperProps {
   children: React.ReactNode;
@@ -10,10 +13,10 @@ interface AnimatedHeaderWrapperProps {
 export function AnimatedHeaderWrapper({ children }: AnimatedHeaderWrapperProps) {
   useEffect(() => {
     const header = document.querySelector("header");
+    const navBar = header?.querySelector("[data-nav-bar]");
     if (!header) return;
 
-    // Use fromTo for explicit control over start and end states
-    // This ensures the header is always visible at the end
+    // Initial header animation
     gsap.fromTo(
       header,
       {
@@ -25,15 +28,61 @@ export function AnimatedHeaderWrapper({ children }: AnimatedHeaderWrapperProps) 
         opacity: 1,
         duration: 0.6,
         ease: "power3.out",
-        clearProps: "all", // Clear inline styles after animation completes
+        clearProps: "all",
       }
     );
 
+    // Hide/show navigation bar on scroll
+    if (navBar) {
+      let lastScroll = 0;
+      const showAnim = gsap.fromTo(
+        navBar,
+        {
+          height: navBar.offsetHeight,
+          opacity: 1,
+        },
+        {
+          height: 0,
+          opacity: 0,
+          duration: 0.3,
+          ease: "power2.inOut",
+          paused: true,
+        }
+      );
+
+      ScrollTrigger.create({
+        start: "top top",
+        end: "max",
+        onUpdate: (self) => {
+          const currentScroll = self.scroll();
+          
+          // Scrolling down and past 100px
+          if (currentScroll > 100 && currentScroll > lastScroll) {
+            showAnim.play();
+          } 
+          // Scrolling up or at top
+          else if (currentScroll < lastScroll || currentScroll < 50) {
+            showAnim.reverse();
+          }
+          
+          lastScroll = currentScroll;
+        },
+      });
+    }
+
     return () => {
       gsap.killTweensOf(header);
-      // Ensure header is visible on cleanup
+      if (navBar) {
+        gsap.killTweensOf(navBar);
+      }
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      
+      // Ensure elements are in default state on cleanup
       if (header) {
         gsap.set(header, { clearProps: "all" });
+      }
+      if (navBar) {
+        gsap.set(navBar, { clearProps: "all" });
       }
     };
   }, []);
