@@ -13,7 +13,7 @@ interface AnimatedHeaderWrapperProps {
 export function AnimatedHeaderWrapper({ children }: AnimatedHeaderWrapperProps) {
   useEffect(() => {
     const header = document.querySelector("header");
-    const navBar = header?.querySelector("[data-nav-bar]");
+    const navBar = header?.querySelector("[data-nav-bar]") as HTMLElement | null;
     if (!header) return;
 
     // Initial header animation
