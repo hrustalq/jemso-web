@@ -6,10 +6,11 @@ import { Plus } from "lucide-react";
 import { Skeleton } from "~/components/ui/skeleton";
 import { CategoryStats } from "./_components/category-stats";
 import { CategoryList } from "./_components/category-list";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "Manage Categories | Admin",
-  description: "Manage blog and event categories",
+export const metadata: Metadata = {
+  title: "Управление категориями | Администратор",
+  description: "Управление категориями блога и событий",
 };
 
 function StatsCardSkeleton() {
@@ -43,15 +44,15 @@ export default function CategoriesPage() {
     <div>
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Categories</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Категории</h1>
           <p className="mt-2 text-muted-foreground">
-            Manage categories for blog posts and events
+            Управление категориями статей блога и событий
           </p>
         </div>
         <Button asChild>
           <Link href="/admin/categories/new">
             <Plus className="mr-2 h-4 w-4" />
-            New Category
+            Новая категория
           </Link>
         </Button>
       </div>
@@ -72,7 +73,7 @@ export default function CategoriesPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>All Categories</CardTitle>
+          <CardTitle>Все категории</CardTitle>
         </CardHeader>
         <CardContent>
           <Suspense fallback={<TableSkeleton />}>
@@ -83,4 +84,3 @@ export default function CategoriesPage() {
     </div>
   );
 }
-

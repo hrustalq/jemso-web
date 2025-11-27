@@ -1,10 +1,11 @@
 import { notFound } from "next/navigation";
 import { db } from "~/server/db";
 import { EventForm } from "../../_components/event-form";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "Edit Event | Admin",
-  description: "Edit event details",
+export const metadata: Metadata = {
+  title: "Редактировать событие | Администратор",
+  description: "Редактирование деталей события",
 };
 
 interface EditEventPageProps {
@@ -32,9 +33,9 @@ export default async function EditEventPage({ params }: EditEventPageProps) {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Edit Event</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Редактировать событие</h1>
         <p className="mt-2 text-muted-foreground">
-          Update event details and settings
+          Обновление деталей и настроек события
         </p>
       </div>
 

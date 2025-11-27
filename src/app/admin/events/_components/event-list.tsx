@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import { ru } from "date-fns/locale";
 import {
   Table,
   TableBody,
@@ -24,21 +25,21 @@ export async function EventList() {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Title</TableHead>
-          <TableHead>Category</TableHead>
-          <TableHead>Start Date</TableHead>
-          <TableHead>End Date</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Registrations</TableHead>
-          <TableHead>Price</TableHead>
-          <TableHead className="text-right">Actions</TableHead>
+          <TableHead>Название</TableHead>
+          <TableHead>Категория</TableHead>
+          <TableHead>Дата начала</TableHead>
+          <TableHead>Дата окончания</TableHead>
+          <TableHead>Статус</TableHead>
+          <TableHead>Регистрации</TableHead>
+          <TableHead>Цена</TableHead>
+          <TableHead className="text-right">Действия</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {events.length === 0 ? (
           <TableRow>
             <TableCell colSpan={8} className="text-center">
-              No events found. Create your first event!
+              События не найдены. Создайте первое событие!
             </TableCell>
           </TableRow>
         ) : (
@@ -60,29 +61,29 @@ export async function EventList() {
                   )}
                 </TableCell>
                 <TableCell className="text-sm">
-                  {format(new Date(event.startDate), "MMM d, yyyy")}
+                  {format(new Date(event.startDate), "d MMM yyyy", { locale: ru })}
                 </TableCell>
                 <TableCell className="text-sm">
-                  {format(new Date(event.endDate), "MMM d, yyyy")}
+                  {format(new Date(event.endDate), "d MMM yyyy", { locale: ru })}
                 </TableCell>
                 <TableCell>
                   <div className="flex gap-1">
                     <Badge variant={event.published ? "default" : "secondary"}>
-                      {event.published ? "Published" : "Draft"}
+                      {event.published ? "Опубликовано" : "Черновик"}
                     </Badge>
                     {isUpcoming && (
                       <Badge variant="outline" className="bg-blue-500/10">
-                        Upcoming
+                        Предстоящее
                       </Badge>
                     )}
                     {isPast && (
                       <Badge variant="outline" className="bg-gray-500/10">
-                        Past
+                        Прошедшее
                       </Badge>
                     )}
                     {isFull && (
                       <Badge variant="outline" className="bg-red-500/10">
-                        Full
+                        Заполнено
                       </Badge>
                     )}
                   </div>
@@ -102,7 +103,7 @@ export async function EventList() {
                 <TableCell>
                   {event.price.toNumber() === 0 ? (
                     <Badge variant="outline" className="bg-green-500/10">
-                      Free
+                      Бесплатно
                     </Badge>
                   ) : (
                     <span className="font-medium">
@@ -125,4 +126,3 @@ export async function EventList() {
     </Table>
   );
 }
-

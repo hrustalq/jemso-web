@@ -89,7 +89,7 @@ export function EventForm({ event }: EventFormProps) {
     setError("");
 
     if (!startDate || !endDate) {
-      setError("Start date and end date are required");
+      setError("Дата начала и дата окончания обязательны");
       return;
     }
 
@@ -142,16 +142,16 @@ export function EventForm({ event }: EventFormProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Basic Information</CardTitle>
+          <CardTitle>Основная информация</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="title">Event Title *</Label>
+            <Label htmlFor="title">Название события *</Label>
             <Input
               id="title"
               value={title}
               onChange={(e) => handleTitleChange(e.target.value)}
-              placeholder="Annual Tech Conference 2025"
+              placeholder="Ежегодная технологическая конференция 2025"
               required
               disabled={isLoading}
             />
@@ -169,50 +169,50 @@ export function EventForm({ event }: EventFormProps) {
             />
             {event && (
               <p className="text-xs text-muted-foreground">
-                Slug cannot be changed after creation
+                Slug нельзя изменить после создания
               </p>
             )}
             {!event && (
               <p className="text-xs text-muted-foreground">
-                Auto-generated from title. Can be customized.
+                Генерируется автоматически из названия. Можно настроить.
               </p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="excerpt">Short Description</Label>
+            <Label htmlFor="excerpt">Краткое описание</Label>
             <Textarea
               id="excerpt"
               value={excerpt}
               onChange={(e) => setExcerpt(e.target.value)}
-              placeholder="A brief description of the event (500 characters max)"
+              placeholder="Краткое описание события (максимум 500 символов)"
               disabled={isLoading}
               maxLength={500}
               rows={2}
             />
             <p className="text-xs text-muted-foreground">
-              {excerpt.length}/500 characters
+              {excerpt.length}/500 символов
             </p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="content">Full Description *</Label>
+            <Label htmlFor="content">Полное описание *</Label>
             <Textarea
               id="content"
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="Full event description and details..."
+              placeholder="Полное описание события и детали..."
               disabled={isLoading}
               rows={6}
               required
             />
             <p className="text-xs text-muted-foreground">
-              For rich content editing, use the block editor after creating the event
+              Для редактирования расширенного контента используйте блочный редактор после создания события
             </p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="coverImage">Cover Image URL</Label>
+            <Label htmlFor="coverImage">URL обложки</Label>
             <Input
               id="coverImage"
               type="url"
@@ -224,7 +224,7 @@ export function EventForm({ event }: EventFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="categoryId">Category</Label>
+            <Label htmlFor="categoryId">Категория</Label>
             <select
               id="categoryId"
               value={categoryId}
@@ -232,7 +232,7 @@ export function EventForm({ event }: EventFormProps) {
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               disabled={isLoading}
             >
-              <option value="">No category</option>
+              <option value="">Без категории</option>
               {categoriesData?.map((category) => (
                 <option key={category.id} value={category.id}>
                   {category.name}
@@ -248,19 +248,19 @@ export function EventForm({ event }: EventFormProps) {
               onCheckedChange={setPublished}
               disabled={isLoading}
             />
-            <Label htmlFor="published">Published</Label>
+            <Label htmlFor="published">Опубликовано</Label>
           </div>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>Event Schedule</CardTitle>
+          <CardTitle>Расписание события</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="startDate">Start Date & Time *</Label>
+              <Label htmlFor="startDate">Дата и время начала *</Label>
               <Input
                 id="startDate"
                 type="datetime-local"
@@ -272,7 +272,7 @@ export function EventForm({ event }: EventFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="endDate">End Date & Time *</Label>
+              <Label htmlFor="endDate">Дата и время окончания *</Label>
               <Input
                 id="endDate"
                 type="datetime-local"
@@ -288,35 +288,35 @@ export function EventForm({ event }: EventFormProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Location</CardTitle>
+          <CardTitle>Местоположение</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="location">Location</Label>
+            <Label htmlFor="location">Место проведения</Label>
             <Input
               id="location"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              placeholder="Tech Convention Center, San Francisco"
+              placeholder="Технологический центр, Москва"
               disabled={isLoading}
             />
             <p className="text-xs text-muted-foreground">
-              Physical address or &ldquo;Online Event&rdquo;
+              Физический адрес или &ldquo;Онлайн событие&rdquo;
             </p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="locationUrl">Location URL</Label>
+            <Label htmlFor="locationUrl">URL местоположения</Label>
             <Input
               id="locationUrl"
               type="url"
               value={locationUrl}
               onChange={(e) => setLocationUrl(e.target.value)}
-              placeholder="https://meet.google.com/xyz or Google Maps link"
+              placeholder="https://meet.google.com/xyz или ссылка на Google Maps"
               disabled={isLoading}
             />
             <p className="text-xs text-muted-foreground">
-              Meeting link for online events or map link for physical events
+              Ссылка на встречу для онлайн событий или ссылка на карту для физических событий
             </p>
           </div>
         </CardContent>
@@ -324,11 +324,11 @@ export function EventForm({ event }: EventFormProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Registration & Pricing</CardTitle>
+          <CardTitle>Регистрация и цены</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="maxParticipants">Maximum Participants</Label>
+            <Label htmlFor="maxParticipants">Максимум участников</Label>
             <Input
               id="maxParticipants"
               type="number"
@@ -339,13 +339,13 @@ export function EventForm({ event }: EventFormProps) {
               disabled={isLoading}
             />
             <p className="text-xs text-muted-foreground">
-              Leave empty for unlimited participants
+              Оставьте пустым для неограниченного количества участников
             </p>
           </div>
 
           <div className="grid gap-4 md:grid-cols-3">
             <div className="space-y-2 md:col-span-2">
-              <Label htmlFor="price">Price *</Label>
+              <Label htmlFor="price">Цена *</Label>
               <Input
                 id="price"
                 type="number"
@@ -358,12 +358,12 @@ export function EventForm({ event }: EventFormProps) {
                 disabled={isLoading}
               />
               <p className="text-xs text-muted-foreground">
-                Set to 0 for free events
+                Установите 0 для бесплатных событий
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="currency">Currency *</Label>
+              <Label htmlFor="currency">Валюта *</Label>
               <select
                 id="currency"
                 value={currency}
@@ -389,14 +389,13 @@ export function EventForm({ event }: EventFormProps) {
           onClick={() => router.back()}
           disabled={isLoading}
         >
-          Cancel
+          Отмена
         </Button>
         <Button type="submit" disabled={isLoading}>
           {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {event ? "Update Event" : "Create Event"}
+          {event ? "Обновить событие" : "Создать событие"}
         </Button>
       </div>
     </form>
   );
 }
-

@@ -1,50 +1,51 @@
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "Settings | Admin",
-  description: "Admin panel settings",
+export const metadata: Metadata = {
+  title: "Настройки | Администратор",
+  description: "Настройки панели администратора",
 };
 
 export default function AdminSettingsPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Настройки</h1>
         <p className="mt-2 text-muted-foreground">
-          Configure admin panel settings
+          Конфигурация настроек панели администратора
         </p>
       </div>
 
       <div className="grid gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>General Settings</CardTitle>
+            <CardTitle>Общие настройки</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              General settings configuration coming soon...
+              Конфигурация общих настроек скоро будет доступна...
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Email Settings</CardTitle>
+            <CardTitle>Настройки Email</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Email configuration coming soon...
+              Конфигурация email скоро будет доступна...
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Security Settings</CardTitle>
+            <CardTitle>Настройки безопасности</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Security settings coming soon...
+              Настройки безопасности скоро будут доступны...
             </p>
           </CardContent>
         </Card>
@@ -52,4 +53,3 @@ export default function AdminSettingsPage() {
     </div>
   );
 }
-

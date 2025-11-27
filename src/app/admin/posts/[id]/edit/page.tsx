@@ -3,10 +3,11 @@ import { auth } from "~/server/auth";
 import { hasPermission } from "~/server/api/rbac";
 import { db } from "~/server/db";
 import { PostEditorForm } from "../../_components/post-editor-form";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "Edit Post | Admin",
-  description: "Edit blog post with the block editor",
+export const metadata: Metadata = {
+  title: "Редактировать статью | Администратор",
+  description: "Редактирование статьи блога с помощью блочного редактора",
 };
 
 interface EditPostPageProps {
@@ -55,9 +56,9 @@ export default async function EditPostPage({ params }: EditPostPageProps) {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Edit Post</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Редактировать статью</h1>
         <p className="text-muted-foreground mt-2">
-          Update your content using the block editor
+          Обновите ваш контент с помощью блочного редактора
         </p>
       </div>
 

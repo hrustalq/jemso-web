@@ -6,10 +6,11 @@ import { Plus } from "lucide-react";
 import { Skeleton } from "~/components/ui/skeleton";
 import { EventStats } from "./_components/event-stats";
 import { EventList } from "./_components/event-list";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "Manage Events | Admin",
-  description: "Manage events and registrations",
+export const metadata: Metadata = {
+  title: "Управление событиями | Администратор",
+  description: "Управление событиями и регистрациями",
 };
 
 function StatsCardSkeleton() {
@@ -43,15 +44,15 @@ export default function EventsPage() {
     <div>
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Events</h1>
+          <h1 className="text-3xl font-bold tracking-tight">События</h1>
           <p className="mt-2 text-muted-foreground">
-            Manage events and track registrations
+            Управление событиями и отслеживание регистраций
           </p>
         </div>
         <Button asChild>
           <Link href="/admin/events/new">
             <Plus className="mr-2 h-4 w-4" />
-            New Event
+            Создать событие
           </Link>
         </Button>
       </div>
@@ -74,7 +75,7 @@ export default function EventsPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>All Events</CardTitle>
+          <CardTitle>Все события</CardTitle>
         </CardHeader>
         <CardContent>
           <Suspense fallback={<TableSkeleton />}>

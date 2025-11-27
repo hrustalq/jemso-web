@@ -33,29 +33,28 @@ export function PlanActions({ planId, planName }: PlanActionsProps) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
+          <span className="sr-only">Открыть меню</span>
           <MoreHorizontal className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <DropdownMenuLabel>Действия</DropdownMenuLabel>
         <DropdownMenuItem onClick={() => navigator.clipboard.writeText(planId)}>
-          Copy Plan ID
+          Скопировать ID плана
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleEdit}>
           <Edit className="mr-2 h-4 w-4" />
-          Edit Plan
+          Редактировать план
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={handleDelete}
           className="text-destructive focus:text-destructive"
         >
           <Trash className="mr-2 h-4 w-4" />
-          Delete Plan
+          Удалить план
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
-

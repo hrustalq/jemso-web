@@ -43,7 +43,7 @@ export function EventActions({
   const handleDelete = () => {
     if (
       confirm(
-        `Are you sure you want to delete "${eventTitle}"? This will also delete all registrations. This cannot be undone.`
+        `Вы уверены, что хотите удалить "${eventTitle}"? Это также удалит все регистрации. Это действие нельзя отменить.`
       )
     ) {
       deleteMutation.mutate({ id: eventId });
@@ -62,28 +62,28 @@ export function EventActions({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
+          <span className="sr-only">Открыть меню</span>
           <MoreHorizontal className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <DropdownMenuLabel>Действия</DropdownMenuLabel>
         <DropdownMenuItem onClick={handleCopyId}>
           <Copy className="mr-2 h-4 w-4" />
-          Copy Event ID
+          Скопировать ID события
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleCopySlug}>
           <Copy className="mr-2 h-4 w-4" />
-          Copy Slug
+          Скопировать Slug
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleView}>
           <Eye className="mr-2 h-4 w-4" />
-          View Event
+          Посмотреть событие
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleEdit}>
           <Edit className="mr-2 h-4 w-4" />
-          Edit Event
+          Редактировать событие
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={handleDelete}
@@ -91,7 +91,7 @@ export function EventActions({
           disabled={deleteMutation.isPending}
         >
           <Trash className="mr-2 h-4 w-4" />
-          {deleteMutation.isPending ? "Deleting..." : "Delete Event"}
+          {deleteMutation.isPending ? "Удаление..." : "Удалить событие"}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -39,14 +39,14 @@ export function FeatureActions({
   const handleDelete = () => {
     if (usedInPlans > 0) {
       alert(
-        `Cannot delete "${featureName}" because it's used in ${usedInPlans} plan(s). Remove it from all plans first.`
+        `Невозможно удалить "${featureName}", потому что она используется в ${usedInPlans} планах. Сначала удалите её из всех планов.`
       );
       return;
     }
 
     if (
       confirm(
-        `Are you sure you want to delete "${featureName}"? This cannot be undone.`
+        `Вы уверены, что хотите удалить "${featureName}"? Это действие нельзя отменить.`
       )
     ) {
       deleteMutation.mutate({ id: featureId });
@@ -57,21 +57,21 @@ export function FeatureActions({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
+          <span className="sr-only">Открыть меню</span>
           <MoreHorizontal className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <DropdownMenuLabel>Действия</DropdownMenuLabel>
         <DropdownMenuItem
           onClick={() => navigator.clipboard.writeText(featureId)}
         >
-          Copy Feature ID
+          Скопировать ID функции
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleEdit}>
           <Edit className="mr-2 h-4 w-4" />
-          Edit Feature
+          Редактировать функцию
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={handleDelete}
@@ -79,10 +79,9 @@ export function FeatureActions({
           disabled={deleteMutation.isPending || usedInPlans > 0}
         >
           <Trash className="mr-2 h-4 w-4" />
-          {deleteMutation.isPending ? "Deleting..." : "Delete Feature"}
+          {deleteMutation.isPending ? "Удаление..." : "Удалить функцию"}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
-

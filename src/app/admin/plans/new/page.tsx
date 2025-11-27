@@ -1,8 +1,9 @@
 import { PlanForm } from "../_components/plan-form";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "Create Plan | Admin",
-  description: "Create a new subscription plan",
+export const metadata: Metadata = {
+  title: "Создать план | Администратор",
+  description: "Создание нового тарифного плана",
 };
 
 export default function NewPlanPage() {
@@ -10,10 +11,10 @@ export default function NewPlanPage() {
     <div>
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight">
-          Create Subscription Plan
+          Создать тарифный план
         </h1>
         <p className="mt-2 text-muted-foreground">
-          Add a new subscription plan with features and pricing
+          Добавление нового тарифного плана с функциями и ценами
         </p>
       </div>
 
@@ -21,4 +22,3 @@ export default function NewPlanPage() {
     </div>
   );
 }
-

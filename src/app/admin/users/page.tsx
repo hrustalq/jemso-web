@@ -10,10 +10,11 @@ import {
 } from "~/components/ui/table";
 import { Badge } from "~/components/ui/badge";
 import { UserActions } from "./_components/user-actions";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "Manage Users | Admin",
-  description: "Manage system users and their roles",
+export const metadata: Metadata = {
+  title: "Управление пользователями | Администратор",
+  description: "Управление пользователями системы и их ролями",
 };
 
 export default async function UsersPage() {
@@ -41,33 +42,33 @@ export default async function UsersPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Users</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Пользователи</h1>
         <p className="mt-2 text-muted-foreground">
-          Manage users and their roles
+          Управление пользователями и их ролями
         </p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>All Users ({users.length})</CardTitle>
+          <CardTitle>Все пользователи ({users.length})</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
+                <TableHead>Имя</TableHead>
                 <TableHead>Email</TableHead>
-                <TableHead>Roles</TableHead>
-                <TableHead>Posts</TableHead>
-                <TableHead>Joined</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>Роли</TableHead>
+                <TableHead>Статьи</TableHead>
+                <TableHead>Дата регистрации</TableHead>
+                <TableHead className="text-right">Действия</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {users.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center">
-                    No users found
+                    Пользователи не найдены
                   </TableCell>
                 </TableRow>
               ) : (
@@ -87,14 +88,14 @@ export default async function UsersPage() {
                           ))
                         ) : (
                           <span className="text-sm text-muted-foreground">
-                            No roles
+                            Нет ролей
                           </span>
                         )}
                       </div>
                     </TableCell>
                     <TableCell>{user._count.blogPosts}</TableCell>
                     <TableCell>
-                      {new Date(user.createdAt).toLocaleDateString()}
+                      {new Date(user.createdAt).toLocaleDateString('ru-RU')}
                     </TableCell>
                     <TableCell className="text-right">
                       <UserActions userId={user.id} userEmail={user.email ?? ""} />

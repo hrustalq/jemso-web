@@ -43,14 +43,14 @@ export function CategoryActions({
 
     if (totalUsage > 0) {
       alert(
-        `Cannot delete "${categoryName}" because it's used in ${usedInPosts} blog post(s) and ${usedInEvents ?? 0} event(s). Remove it from all content first.`
+        `Невозможно удалить "${categoryName}", потому что она используется в ${usedInPosts} статьях блога и ${usedInEvents ?? 0} событиях. Сначала удалите её из всего контента.`
       );
       return;
     }
 
     if (
       confirm(
-        `Are you sure you want to delete "${categoryName}"? This cannot be undone.`
+        `Вы уверены, что хотите удалить "${categoryName}"? Это действие нельзя отменить.`
       )
     ) {
       deleteMutation.mutate({ id: categoryId });
@@ -67,20 +67,20 @@ export function CategoryActions({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
+          <span className="sr-only">Открыть меню</span>
           <MoreHorizontal className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <DropdownMenuLabel>Действия</DropdownMenuLabel>
         <DropdownMenuItem onClick={handleCopyId}>
           <Copy className="mr-2 h-4 w-4" />
-          Copy Category ID
+          Скопировать ID категории
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleEdit}>
           <Edit className="mr-2 h-4 w-4" />
-          Edit Category
+          Редактировать категорию
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={handleDelete}
@@ -88,10 +88,9 @@ export function CategoryActions({
           disabled={deleteMutation.isPending || totalUsage > 0}
         >
           <Trash className="mr-2 h-4 w-4" />
-          {deleteMutation.isPending ? "Deleting..." : "Delete Category"}
+          {deleteMutation.isPending ? "Удаление..." : "Удалить категорию"}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
-

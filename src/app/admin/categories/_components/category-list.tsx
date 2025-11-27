@@ -18,21 +18,21 @@ export async function CategoryList() {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Name</TableHead>
+          <TableHead>Название</TableHead>
           <TableHead>Slug</TableHead>
-          <TableHead>Color</TableHead>
-          <TableHead>Order</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Posts</TableHead>
-          <TableHead>Events</TableHead>
-          <TableHead className="text-right">Actions</TableHead>
+          <TableHead>Цвет</TableHead>
+          <TableHead>Порядок</TableHead>
+          <TableHead>Статус</TableHead>
+          <TableHead>Статьи</TableHead>
+          <TableHead>События</TableHead>
+          <TableHead className="text-right">Действия</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {categories.length === 0 ? (
           <TableRow>
             <TableCell colSpan={8} className="text-center">
-              No categories found. Create your first category!
+              Категории не найдены. Создайте первую категорию!
             </TableCell>
           </TableRow>
         ) : (
@@ -70,12 +70,12 @@ export async function CategoryList() {
                   {category.showInNav ? (
                     <span className="flex items-center gap-1">
                       <Eye className="h-3 w-3" />
-                      Visible
+                      Видимо
                     </span>
                   ) : (
                     <span className="flex items-center gap-1">
                       <EyeOff className="h-3 w-3" />
-                      Hidden
+                      Скрыто
                     </span>
                   )}
                 </Badge>
@@ -103,4 +103,3 @@ export async function CategoryList() {
     </Table>
   );
 }
-

@@ -38,7 +38,7 @@ export function NewsActions({ postId, postTitle }: NewsActionsProps) {
 
   const handleDelete = () => {
     if (
-      confirm(`Are you sure you want to delete "${postTitle}"? This cannot be undone.`)
+      confirm(`Вы уверены, что хотите удалить "${postTitle}"? Это действие нельзя отменить.`)
     ) {
       deleteMutation.mutate({ id: postId });
     }
@@ -48,23 +48,23 @@ export function NewsActions({ postId, postTitle }: NewsActionsProps) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
+          <span className="sr-only">Открыть меню</span>
           <MoreHorizontal className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <DropdownMenuLabel>Действия</DropdownMenuLabel>
         <DropdownMenuItem onClick={() => navigator.clipboard.writeText(postId)}>
-          Copy Post ID
+          Скопировать ID статьи
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleView}>
           <Eye className="mr-2 h-4 w-4" />
-          View Post
+          Посмотреть статью
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleEdit}>
           <Edit className="mr-2 h-4 w-4" />
-          Edit Post
+          Редактировать статью
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={handleDelete}
@@ -72,10 +72,9 @@ export function NewsActions({ postId, postTitle }: NewsActionsProps) {
           disabled={deleteMutation.isPending}
         >
           <Trash className="mr-2 h-4 w-4" />
-          Delete Post
+          Удалить статью
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
-

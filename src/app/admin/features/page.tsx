@@ -13,10 +13,11 @@ import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Plus } from "lucide-react";
 import { FeatureActions } from "./_components/feature-actions";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "Manage Features | Admin",
-  description: "Manage subscription plan features",
+export const metadata: Metadata = {
+  title: "Управление функциями | Администратор",
+  description: "Управление функциями тарифных планов",
 };
 
 export default async function FeaturesPage() {
@@ -26,41 +27,41 @@ export default async function FeaturesPage() {
     <div>
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Features</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Функции</h1>
           <p className="mt-2 text-muted-foreground">
-            Manage features available for subscription plans
+            Управление функциями доступными для тарифных планов
           </p>
         </div>
         <Button asChild>
           <Link href="/admin/features/new">
             <Plus className="mr-2 h-4 w-4" />
-            New Feature
+            Новая функция
           </Link>
         </Button>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>All Features ({features.length})</CardTitle>
+          <CardTitle>Все функции ({features.length})</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
+                <TableHead>Название</TableHead>
                 <TableHead>Slug</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Description</TableHead>
-                <TableHead>Used In Plans</TableHead>
-                <TableHead>Created</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>Тип</TableHead>
+                <TableHead>Описание</TableHead>
+                <TableHead>Используется в планах</TableHead>
+                <TableHead>Создано</TableHead>
+                <TableHead className="text-right">Действия</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {features.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={7} className="text-center">
-                    No features found. Create your first feature!
+                    Функции не найдены. Создайте первую функцию!
                   </TableCell>
                 </TableRow>
               ) : (
@@ -93,10 +94,10 @@ export default async function FeaturesPage() {
                       </span>
                     </TableCell>
                     <TableCell>
-                      {feature._count.planFeatures} plan(s)
+                      {feature._count.planFeatures} план(ов)
                     </TableCell>
                     <TableCell className="text-sm">
-                      {new Date(feature.createdAt).toLocaleDateString()}
+                      {new Date(feature.createdAt).toLocaleDateString('ru-RU')}
                     </TableCell>
                     <TableCell className="text-right">
                       <FeatureActions
@@ -115,4 +116,3 @@ export default async function FeaturesPage() {
     </div>
   );
 }
-

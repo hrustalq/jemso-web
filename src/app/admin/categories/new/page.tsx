@@ -1,17 +1,18 @@
 import { CategoryForm } from "../_components/category-form";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "Create Category | Admin",
-  description: "Create a new category",
+export const metadata: Metadata = {
+  title: "Создать категорию | Администратор",
+  description: "Создание новой категории",
 };
 
 export default function NewCategoryPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Create Category</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Создать категорию</h1>
         <p className="mt-2 text-muted-foreground">
-          Add a new category for blog posts and events
+          Добавление новой категории для статей блога и событий
         </p>
       </div>
 
@@ -19,4 +20,3 @@ export default function NewCategoryPage() {
     </div>
   );
 }
-

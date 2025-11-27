@@ -1,10 +1,11 @@
 import { notFound } from "next/navigation";
 import { db } from "~/server/db";
 import { FeatureForm } from "../../_components/feature-form";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "Edit Feature | Admin",
-  description: "Edit feature details",
+export const metadata: Metadata = {
+  title: "Редактировать функцию | Администратор",
+  description: "Редактирование деталей функции",
 };
 
 interface EditFeaturePageProps {
@@ -34,13 +35,13 @@ export default async function EditFeaturePage({
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Edit Feature</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Редактировать функцию</h1>
         <p className="mt-2 text-muted-foreground">
-          Update {feature.name} feature details
+          Обновление деталей функции {feature.name}
         </p>
         {feature._count.planFeatures > 0 && (
           <p className="mt-1 text-sm text-muted-foreground">
-            Used in {feature._count.planFeatures} plan(s)
+            Используется в {feature._count.planFeatures} планах
           </p>
         )}
       </div>
@@ -49,4 +50,3 @@ export default async function EditFeaturePage({
     </div>
   );
 }
-

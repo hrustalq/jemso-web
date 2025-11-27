@@ -13,10 +13,11 @@ import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Plus } from "lucide-react";
 import { NewsActions } from "./_components/news-actions";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "Manage News | Admin",
-  description: "Manage news articles and announcements",
+export const metadata: Metadata = {
+  title: "Управление новостями | Администратор",
+  description: "Управление новостными статьями и объявлениями",
 };
 
 export default async function NewsPage() {
@@ -31,41 +32,41 @@ export default async function NewsPage() {
     <div>
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">News</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Новости</h1>
           <p className="mt-2 text-muted-foreground">
-            Manage news articles and announcements
+            Управление новостными статьями и объявлениями
           </p>
         </div>
         <Button asChild>
           <Link href="/admin/posts/new">
             <Plus className="mr-2 h-4 w-4" />
-            New Article
+            Новая статья
           </Link>
         </Button>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>All News Articles ({posts.total})</CardTitle>
+          <CardTitle>Все новостные статьи ({posts.total})</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Title</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Author</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Views</TableHead>
-                <TableHead>Published</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>Название</TableHead>
+                <TableHead>Категория</TableHead>
+                <TableHead>Автор</TableHead>
+                <TableHead>Статус</TableHead>
+                <TableHead>Просмотры</TableHead>
+                <TableHead>Опубликовано</TableHead>
+                <TableHead className="text-right">Действия</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {posts.items.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={7} className="text-center">
-                    No news articles found. Create your first article!
+                    Новостные статьи не найдены. Создайте первую статью!
                   </TableCell>
                 </TableRow>
               ) : (
@@ -87,19 +88,19 @@ export default async function NewsPage() {
                       )}
                     </TableCell>
                     <TableCell>
-                      {post.author?.name ?? "Unknown"}
+                      {post.author?.name ?? "Неизвестно"}
                     </TableCell>
                     <TableCell>
                       <Badge
                         variant={post.published ? "default" : "secondary"}
                       >
-                        {post.published ? "Published" : "Draft"}
+                        {post.published ? "Опубликовано" : "Черновик"}
                       </Badge>
                     </TableCell>
                     <TableCell>{post.views}</TableCell>
                     <TableCell>
                       {post.publishedAt
-                        ? new Date(post.publishedAt).toLocaleDateString()
+                        ? new Date(post.publishedAt).toLocaleDateString('ru-RU')
                         : "—"}
                     </TableCell>
                     <TableCell className="text-right">
@@ -115,4 +116,3 @@ export default async function NewsPage() {
     </div>
   );
 }
-

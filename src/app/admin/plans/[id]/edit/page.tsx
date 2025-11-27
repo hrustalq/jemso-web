@@ -1,10 +1,11 @@
 import { notFound } from "next/navigation";
 import { db } from "~/server/db";
 import { PlanForm } from "../../_components/plan-form";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "Edit Plan | Admin",
-  description: "Edit subscription plan details",
+export const metadata: Metadata = {
+  title: "Редактировать план | Администратор",
+  description: "Редактирование деталей тарифного плана",
 };
 
 interface EditPlanPageProps {
@@ -38,9 +39,9 @@ export default async function EditPlanPage({ params }: EditPlanPageProps) {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Edit Plan</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Редактировать план</h1>
         <p className="mt-2 text-muted-foreground">
-          Update {plan.name} subscription plan details
+          Обновление деталей тарифного плана {plan.name}
         </p>
       </div>
 
@@ -48,4 +49,3 @@ export default async function EditPlanPage({ params }: EditPlanPageProps) {
     </div>
   );
 }
-

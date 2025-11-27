@@ -3,10 +3,11 @@ import { auth } from "~/server/auth";
 import { hasPermission } from "~/server/api/rbac";
 import { db } from "~/server/db";
 import { PostEditorForm } from "../_components/post-editor-form";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "Create New Post | Admin",
-  description: "Create a new blog post with the block editor",
+export const metadata: Metadata = {
+  title: "Создать новую статью | Администратор",
+  description: "Создание новой статьи блога с помощью блочного редактора",
 };
 
 export default async function NewPostPage() {
@@ -31,9 +32,9 @@ export default async function NewPostPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Create New Post</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Создать новую статью</h1>
         <p className="text-muted-foreground mt-2">
-          Use the block editor to create beautiful, structured content
+          Используйте блочный редактор для создания красивого структурированного контента
         </p>
       </div>
 

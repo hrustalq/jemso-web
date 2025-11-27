@@ -13,10 +13,11 @@ import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Plus } from "lucide-react";
 import { PlanActions } from "./_components/plan-actions";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "Manage Subscription Plans | Admin",
-  description: "Manage subscription plans and features",
+export const metadata: Metadata = {
+  title: "Управление тарифными планами | Администратор",
+  description: "Управление тарифными планами и функциями",
 };
 
 export default async function PlansPage() {
@@ -43,42 +44,42 @@ export default async function PlansPage() {
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
-            Subscription Plans
+            Тарифные планы
           </h1>
           <p className="mt-2 text-muted-foreground">
-            Manage subscription plans and their features
+            Управление тарифными планами и их функциями
           </p>
         </div>
         <Button asChild>
           <Link href="/admin/plans/new">
             <Plus className="mr-2 h-4 w-4" />
-            New Plan
+            Новый план
           </Link>
         </Button>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>All Plans ({plans.length})</CardTitle>
+          <CardTitle>Все планы ({plans.length})</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Price</TableHead>
-                <TableHead>Billing Period</TableHead>
-                <TableHead>Features</TableHead>
-                <TableHead>Active Subs</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>Название</TableHead>
+                <TableHead>Цена</TableHead>
+                <TableHead>Период оплаты</TableHead>
+                <TableHead>Функции</TableHead>
+                <TableHead>Активные подписки</TableHead>
+                <TableHead>Статус</TableHead>
+                <TableHead className="text-right">Действия</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {plans.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={7} className="text-center">
-                    No plans found. Create your first plan!
+                    Планы не найдены. Создайте первый план!
                   </TableCell>
                 </TableRow>
               ) : (
@@ -100,7 +101,7 @@ export default async function PlansPage() {
                       <Badge
                         variant={plan.isActive ? "default" : "secondary"}
                       >
-                        {plan.isActive ? "Active" : "Inactive"}
+                        {plan.isActive ? "Активен" : "Неактивен"}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
@@ -116,4 +117,3 @@ export default async function PlansPage() {
     </div>
   );
 }
-

@@ -2,10 +2,11 @@ import { auth } from "~/server/auth";
 import { db } from "~/server/db";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Users, FileText, CreditCard, Star, Calendar, Folder } from "lucide-react";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "Dashboard | Admin",
-  description: "Admin dashboard overview",
+export const metadata: Metadata = {
+  title: "Панель управления | Администратор",
+  description: "Обзор панели администратора",
 };
 
 export default async function AdminDashboard() {
@@ -34,43 +35,43 @@ export default async function AdminDashboard() {
 
   const stats = [
     {
-      title: "Total Users",
+      title: "Всего пользователей",
       value: usersCount,
       icon: Users,
       href: "/admin/users",
     },
     {
-      title: "Blog Posts",
+      title: "Статей блога",
       value: postsCount,
       icon: FileText,
       href: "/admin/posts",
     },
     {
-      title: "Events",
+      title: "События",
       value: eventsCount,
       icon: Calendar,
       href: "/admin/events",
     },
     {
-      title: "Categories",
+      title: "Категории",
       value: categoriesCount,
       icon: Folder,
       href: "/admin/categories",
     },
     {
-      title: "Active Subscriptions",
+      title: "Активные подписки",
       value: subscriptionsCount,
       icon: CreditCard,
       href: "/admin/plans",
     },
     {
-      title: "Subscription Plans",
+      title: "Тарифные планы",
       value: plansCount,
       icon: CreditCard,
       href: "/admin/plans",
     },
     {
-      title: "Features",
+      title: "Функции",
       value: featuresCount,
       icon: Star,
       href: "/admin/features",
@@ -80,9 +81,9 @@ export default async function AdminDashboard() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Панель управления</h1>
         <p className="mt-2 text-muted-foreground">
-          Welcome back, {session?.user.name ?? "Admin"}
+          С возвращением, {session?.user.name ?? "Администратор"}
         </p>
       </div>
 
@@ -110,11 +111,11 @@ export default async function AdminDashboard() {
       <div className="mt-8">
         <Card>
           <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
+            <CardTitle>Последняя активность</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Activity feed coming soon...
+              Лента активности скоро будет доступна...
             </p>
           </CardContent>
         </Card>

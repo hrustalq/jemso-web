@@ -13,10 +13,11 @@ import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Plus } from "lucide-react";
 import { PostActions } from "./_components/post-actions";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "Manage Posts | Admin",
-  description: "Manage your blog posts",
+export const metadata: Metadata = {
+  title: "Управление статьями | Администратор",
+  description: "Управление статьями блога",
 };
 
 export default async function AdminPostsPage() {
@@ -30,42 +31,42 @@ export default async function AdminPostsPage() {
     <div>
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Blog Posts</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Статьи блога</h1>
           <p className="mt-2 text-muted-foreground">
-            Create and manage your blog posts
+            Создание и управление статьями блога
           </p>
         </div>
         <Button asChild>
           <Link href="/admin/posts/new">
             <Plus className="mr-2 h-4 w-4" />
-            New Post
+            Новая статья
           </Link>
         </Button>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>All Posts ({posts.total})</CardTitle>
+          <CardTitle>Все статьи ({posts.total})</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Title</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Author</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Views</TableHead>
-                <TableHead>Comments</TableHead>
-                <TableHead>Published</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>Название</TableHead>
+                <TableHead>Категория</TableHead>
+                <TableHead>Автор</TableHead>
+                <TableHead>Статус</TableHead>
+                <TableHead>Просмотры</TableHead>
+                <TableHead>Комментарии</TableHead>
+                <TableHead>Опубликовано</TableHead>
+                <TableHead className="text-right">Действия</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {posts.items.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={8} className="text-center">
-                    No posts found. Create your first post!
+                    Статьи не найдены. Создайте первую статью!
                   </TableCell>
                 </TableRow>
               ) : (
@@ -88,20 +89,20 @@ export default async function AdminPostsPage() {
                       )}
                     </TableCell>
                     <TableCell className="text-sm">
-                      {post.author?.name ?? "Unknown"}
+                      {post.author?.name ?? "Неизвестно"}
                     </TableCell>
                     <TableCell>
                       <Badge
                         variant={post.published ? "default" : "secondary"}
                       >
-                        {post.published ? "Published" : "Draft"}
+                        {post.published ? "Опубликовано" : "Черновик"}
                       </Badge>
                     </TableCell>
                     <TableCell>{post.views}</TableCell>
                     <TableCell>{post._count.comments}</TableCell>
                     <TableCell className="text-sm">
                       {post.publishedAt
-                        ? new Date(post.publishedAt).toLocaleDateString()
+                        ? new Date(post.publishedAt).toLocaleDateString('ru-RU')
                         : "—"}
                     </TableCell>
                     <TableCell className="text-right">

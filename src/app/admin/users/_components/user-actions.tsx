@@ -31,32 +31,32 @@ export function UserActions({ userId, userEmail }: UserActionsProps) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
+          <span className="sr-only">Открыть меню</span>
           <MoreHorizontal className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <DropdownMenuLabel>Действия</DropdownMenuLabel>
         <DropdownMenuItem
           onClick={() => void navigator.clipboard.writeText(userId)}
         >
-          Copy User ID
+          Скопировать ID пользователя
         </DropdownMenuItem>
         {userEmail && (
           <DropdownMenuItem
             onClick={() => void navigator.clipboard.writeText(userEmail)}
           >
-            Copy Email
+            Скопировать Email
           </DropdownMenuItem>
         )}
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleManageRoles}>
           <Shield className="mr-2 h-4 w-4" />
-          Manage Roles
+          Управление ролями
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleToggleStatus}>
           <Ban className="mr-2 h-4 w-4" />
-          Toggle Status
+          Изменить статус
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
