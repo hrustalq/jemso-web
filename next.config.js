@@ -34,6 +34,8 @@ const config = {
       }
     ],
   },
+  // Ensure Prisma is properly bundled for serverless
+  serverComponentsExternalPackages: ["@prisma/client", "@prisma/engines"],
 };
 
 export default config;
