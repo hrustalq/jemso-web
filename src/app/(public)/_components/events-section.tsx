@@ -74,9 +74,6 @@ export async function EventsSection() {
                   <h3 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
                     Прошедшие события
                   </h3>
-                  <p className="mt-2 text-sm text-muted-foreground md:text-base">
-                    Мероприятия, которые уже состоялись
-                  </p>
                 </div>
                 <AnimatedEventCard events={serializedPastEvents} />
               </div>

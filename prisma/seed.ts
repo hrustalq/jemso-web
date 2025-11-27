@@ -483,12 +483,20 @@ async function main() {
   console.log("Creating features...");
   
   const features = [
-    { name: "Blog Access", slug: "blog-access", featureType: "boolean" },
-    { name: "Premium Content", slug: "premium-content", featureType: "boolean" },
-    { name: "API Access", slug: "api-access", featureType: "boolean" },
-    { name: "Storage Limit", slug: "storage-limit", featureType: "numeric" },
-    { name: "User Seats", slug: "user-seats", featureType: "numeric" },
-    { name: "Priority Support", slug: "priority-support", featureType: "boolean" },
+    { name: "Доступ к базовым событиям", slug: "basic-events-access", featureType: "boolean" },
+    { name: "Доступ к премиум событиям", slug: "premium-events-access", featureType: "boolean" },
+    { name: "Доступ к закрытым событиям", slug: "private-events-access", featureType: "boolean" },
+    { name: "Ранний доступ к регистрации", slug: "early-registration", featureType: "boolean" },
+    { name: "Бесплатный гость +1", slug: "free-guest", featureType: "boolean" },
+    { name: "Цифровые фото с мероприятий", slug: "event-photos", featureType: "boolean" },
+    { name: "Скидка на участие", slug: "event-discount", featureType: "numeric" },
+    { name: "Доступ к дрифт-школе", slug: "drift-school-access", featureType: "boolean" },
+    { name: "Персональный инструктор", slug: "personal-instructor", featureType: "boolean" },
+    { name: "Приоритетная поддержка", slug: "priority-support", featureType: "boolean" },
+    { name: "Доступ к закрытому клубу", slug: "exclusive-club-access", featureType: "boolean" },
+    { name: "Фирменный мерч", slug: "branded-merch", featureType: "boolean" },
+    { name: "VIP парковка", slug: "vip-parking", featureType: "boolean" },
+    { name: "Количество мероприятий в месяц", slug: "monthly-events-limit", featureType: "numeric" },
   ];
 
   for (const feature of features) {
@@ -559,58 +567,59 @@ async function main() {
   // Create subscription plans
   console.log("Creating subscription plans...");
 
-  const freePlan = await prisma.subscriptionPlan.upsert({
-    where: { slug: "free" },
+  const basicPlan = await prisma.subscriptionPlan.upsert({
+    where: { slug: "basic" },
     update: {},
     create: {
-      name: "Free",
-      slug: "free",
-      description: "Basic features for getting started",
-      price: 0,
-      currency: "USD",
-      billingInterval: "lifetime",
+      name: "Базовый",
+      slug: "basic",
+      description: "Начальный уровень для знакомства с миром автоспорта",
+      price: 1490,
+      currency: "RUB",
+      billingInterval: "month",
+      trialDays: 7,
       isActive: true,
       order: 1,
     },
   });
 
-  // Assign features to free plan
-  const freeFeatures = [
-    { slug: "blog-access", value: null },
-    { slug: "storage-limit", value: "1000" }, // 1GB
-    { slug: "user-seats", value: "1" },
+  // Assign features to basic plan
+  const basicFeatures = [
+    { slug: "basic-events-access", value: null },
+    { slug: "event-discount", value: "10" }, // 10% скидка
+    { slug: "monthly-events-limit", value: "2" }, // 2 мероприятия в месяц
   ];
 
-  for (const { slug, value } of freeFeatures) {
+  for (const { slug, value } of basicFeatures) {
     const feature = await prisma.feature.findUnique({ where: { slug } });
     if (feature) {
       await prisma.planFeature.upsert({
         where: {
           planId_featureId: {
-            planId: freePlan.id,
+            planId: basicPlan.id,
             featureId: feature.id,
           },
         },
         update: {},
         create: {
-          planId: freePlan.id,
+          planId: basicPlan.id,
           featureId: feature.id,
           value,
         },
       });
     }
   }
-  console.log(`✅ Created Free plan`);
+  console.log(`✅ Created Базовый plan`);
 
-  const proPlan = await prisma.subscriptionPlan.upsert({
-    where: { slug: "pro" },
+  const advancedPlan = await prisma.subscriptionPlan.upsert({
+    where: { slug: "advanced" },
     update: {},
     create: {
-      name: "Pro",
-      slug: "pro",
-      description: "Advanced features for professionals",
-      price: 29.99,
-      currency: "USD",
+      name: "Продвинутый",
+      slug: "advanced",
+      description: "Для активных участников с доступом к премиум событиям и дрифт-школе",
+      price: 4990,
+      currency: "RUB",
       billingInterval: "month",
       trialDays: 14,
       isActive: true,
@@ -618,36 +627,93 @@ async function main() {
     },
   });
 
-  // Assign features to pro plan
-  const proFeatures = [
-    { slug: "blog-access", value: null },
-    { slug: "premium-content", value: null },
-    { slug: "api-access", value: null },
-    { slug: "storage-limit", value: "50000" }, // 50GB
-    { slug: "user-seats", value: "5" },
+  // Assign features to advanced plan
+  const advancedFeatures = [
+    { slug: "basic-events-access", value: null },
+    { slug: "premium-events-access", value: null },
+    { slug: "early-registration", value: null },
+    { slug: "event-photos", value: null },
+    { slug: "event-discount", value: "20" }, // 20% скидка
+    { slug: "drift-school-access", value: null },
     { slug: "priority-support", value: null },
+    { slug: "monthly-events-limit", value: "5" }, // 5 мероприятий в месяц
   ];
 
-  for (const { slug, value } of proFeatures) {
+  for (const { slug, value } of advancedFeatures) {
     const feature = await prisma.feature.findUnique({ where: { slug } });
     if (feature) {
       await prisma.planFeature.upsert({
         where: {
           planId_featureId: {
-            planId: proPlan.id,
+            planId: advancedPlan.id,
             featureId: feature.id,
           },
         },
         update: {},
         create: {
-          planId: proPlan.id,
+          planId: advancedPlan.id,
           featureId: feature.id,
           value,
         },
       });
     }
   }
-  console.log(`✅ Created Pro plan`);
+  console.log(`✅ Created Продвинутый plan`);
+
+  const vipPlan = await prisma.subscriptionPlan.upsert({
+    where: { slug: "vip" },
+    update: {},
+    create: {
+      name: "VIP",
+      slug: "vip",
+      description: "Максимальный уровень с доступом ко всем привилегиям и закрытым мероприятиям",
+      price: 12990,
+      currency: "RUB",
+      billingInterval: "month",
+      trialDays: 14,
+      isActive: true,
+      order: 3,
+    },
+  });
+
+  // Assign features to VIP plan
+  const vipFeatures = [
+    { slug: "basic-events-access", value: null },
+    { slug: "premium-events-access", value: null },
+    { slug: "private-events-access", value: null },
+    { slug: "early-registration", value: null },
+    { slug: "free-guest", value: null },
+    { slug: "event-photos", value: null },
+    { slug: "event-discount", value: "30" }, // 30% скидка
+    { slug: "drift-school-access", value: null },
+    { slug: "personal-instructor", value: null },
+    { slug: "priority-support", value: null },
+    { slug: "exclusive-club-access", value: null },
+    { slug: "branded-merch", value: null },
+    { slug: "vip-parking", value: null },
+    { slug: "monthly-events-limit", value: "999" }, // неограниченно
+  ];
+
+  for (const { slug, value } of vipFeatures) {
+    const feature = await prisma.feature.findUnique({ where: { slug } });
+    if (feature) {
+      await prisma.planFeature.upsert({
+        where: {
+          planId_featureId: {
+            planId: vipPlan.id,
+            featureId: feature.id,
+          },
+        },
+        update: {},
+        create: {
+          planId: vipPlan.id,
+          featureId: feature.id,
+          value,
+        },
+      });
+    }
+  }
+  console.log(`✅ Created VIP plan`);
 
   // Create default admin user
   console.log("Creating default admin user...");
@@ -726,22 +792,96 @@ async function main() {
       title: "Топ-5 модификаций для дрифт-кара в 2024 году",
       slug: "top-5-drift-car-mods-2024",
       excerpt: "Узнайте, какие модификации помогут вывести ваш дрифт-кар на новый уровень",
-      content: `Дрифт - это не просто вид автоспорта, это искусство управления автомобилем в заносе. Чтобы достичь успеха в дрифте, необходимо правильно подготовить автомобиль. В этой статье мы рассмотрим топ-5 модификаций, которые помогут улучшить характеристики вашего дрифт-кара.
-
-1. **Дифференциал повышенного трения (LSD)**
-Один из самых важных элементов дрифт-кара. LSD позволяет обоим колесам вращаться с одинаковой скоростью, что критично для контролируемого заноса.
-
-2. **Гидравлический ручной тормоз**
-Гидроручник - незаменимый инструмент для инициации заноса и коррекции траектории. Профессиональные дрифтеры используют его постоянно.
-
-3. **Усиленная подвеска**
-Койловеры с регулируемой жесткостью позволяют настроить баланс автомобиля под свой стиль вождения и особенности трассы.
-
-4. **Увеличенный угол поворота передних колес**
-Специальные рычаги подвески позволяют увеличить угол поворота до 60-70 градусов, что критично для больших углов заноса.
-
-5. **Система охлаждения**
-Усиленный радиатор и масляный кулер помогут поддерживать оптимальную температуру двигателя даже при экстремальных нагрузках.`,
+      content: JSON.stringify({
+        version: "1.0",
+        blocks: [
+          {
+            id: "intro-1",
+            type: "paragraph",
+            order: 0,
+            content: "Дрифт - это не просто вид автоспорта, это искусство управления автомобилем в заносе. Чтобы достичь успеха в дрифте, необходимо правильно подготовить автомобиль. В этой статье мы рассмотрим топ-5 модификаций, которые помогут улучшить характеристики вашего дрифт-кара.",
+          },
+          {
+            id: "mod-1-heading",
+            type: "heading",
+            order: 1,
+            content: "1. Дифференциал повышенного трения (LSD)",
+            level: "2",
+          },
+          {
+            id: "mod-1-desc",
+            type: "paragraph",
+            order: 2,
+            content: "Один из самых важных элементов дрифт-кара. LSD позволяет обоим колесам вращаться с одинаковой скоростью, что критично для контролируемого заноса.",
+          },
+          {
+            id: "mod-1-callout",
+            type: "callout",
+            order: 3,
+            title: "Важно знать",
+            content: "Для начинающих дрифтеров рекомендуется LSD с коэффициентом блокировки 1.5-2 way. Более агрессивные варианты подойдут для опытных пилотов.",
+            variant: "info",
+          },
+          {
+            id: "mod-2-heading",
+            type: "heading",
+            order: 4,
+            content: "2. Гидравлический ручной тормоз",
+            level: "2",
+          },
+          {
+            id: "mod-2-desc",
+            type: "paragraph",
+            order: 5,
+            content: "Гидроручник - незаменимый инструмент для инициации заноса и коррекции траектории. Профессиональные дрифтеры используют его постоянно.",
+          },
+          {
+            id: "mod-3-heading",
+            type: "heading",
+            order: 6,
+            content: "3. Усиленная подвеска",
+            level: "2",
+          },
+          {
+            id: "mod-3-desc",
+            type: "paragraph",
+            order: 7,
+            content: "Койловеры с регулируемой жесткостью позволяют настроить баланс автомобиля под свой стиль вождения и особенности трассы.",
+          },
+          {
+            id: "mod-4-heading",
+            type: "heading",
+            order: 8,
+            content: "4. Увеличенный угол поворота передних колес",
+            level: "2",
+          },
+          {
+            id: "mod-4-desc",
+            type: "paragraph",
+            order: 9,
+            content: "Специальные рычаги подвески позволяют увеличить угол поворота до 60-70 градусов, что критично для больших углов заноса.",
+          },
+          {
+            id: "mod-5-heading",
+            type: "heading",
+            order: 10,
+            content: "5. Система охлаждения",
+            level: "2",
+          },
+          {
+            id: "mod-5-desc",
+            type: "paragraph",
+            order: 11,
+            content: "Усиленный радиатор и масляный кулер помогут поддерживать оптимальную температуру двигателя даже при экстремальных нагрузках.",
+          },
+          {
+            id: "conclusion",
+            type: "paragraph",
+            order: 12,
+            content: "Все эти модификации значительно улучшат характеристики вашего дрифт-кара и помогут достичь лучших результатов на треке.",
+          },
+        ],
+      }),
       published: true,
       publishedAt: new Date("2024-01-15"),
       views: 1245,
@@ -754,19 +894,76 @@ async function main() {
       title: "История дрэг-рейсинга: от улиц до профессиональных треков",
       slug: "drag-racing-history",
       excerpt: "Погрузитесь в увлекательную историю развития дрэг-рейсинга от подпольных гонок до международных чемпионатов",
-      content: `Дрэг-рейсинг зародился в США в 1940-х годах как уличные гонки на прямых участках дорог. Со временем это движение превратилось в полноценный вид автоспорта с профессиональными трассами и международными соревнованиями.
-
-## Ранние годы (1940-1950)
-
-После Второй мировой войны многие демобилизованные солдаты привезли с собой опыт работы с техникой. Они начали модифицировать свои автомобили и соревноваться на заброшенных взлетных полосах.
-
-## Профессионализация (1960-1980)
-
-В 1951 году была основана National Hot Rod Association (NHRA), которая стандартизировала правила и создала безопасную среду для соревнований. Появились специализированные drag strips - прямые трассы длиной четверть мили (402 метра).
-
-## Современная эра (1990-настоящее время)
-
-Сегодня дрэг-рейсинг - это высокотехнологичный спорт, где автомобили развивают скорость более 530 км/ч и проходят четверть мили менее чем за 4 секунды. В России дрэг-рейсинг активно развивается с начала 2000-х годов.`,
+      content: JSON.stringify({
+        version: "1.0",
+        blocks: [
+          {
+            id: "intro",
+            type: "paragraph",
+            order: 0,
+            content: "Дрэг-рейсинг зародился в США в 1940-х годах как уличные гонки на прямых участках дорог. Со временем это движение превратилось в полноценный вид автоспорта с профессиональными трассами и международными соревнованиями.",
+          },
+          {
+            id: "era-1-heading",
+            type: "heading",
+            order: 1,
+            content: "Ранние годы (1940-1950)",
+            level: "2",
+          },
+          {
+            id: "era-1-desc",
+            type: "paragraph",
+            order: 2,
+            content: "После Второй мировой войны многие демобилизованные солдаты привезли с собой опыт работы с техникой. Они начали модифицировать свои автомобили и соревноваться на заброшенных взлетных полосах.",
+          },
+          {
+            id: "era-2-heading",
+            type: "heading",
+            order: 3,
+            content: "Профессионализация (1960-1980)",
+            level: "2",
+          },
+          {
+            id: "era-2-desc",
+            type: "paragraph",
+            order: 4,
+            content: "В 1951 году была основана National Hot Rod Association (NHRA), которая стандартизировала правила и создала безопасную среду для соревнований. Появились специализированные drag strips - прямые трассы длиной четверть мили (402 метра).",
+          },
+          {
+            id: "image-1",
+            type: "image",
+            order: 5,
+            src: "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=1200&h=600&fit=crop",
+            alt: "Дрэг-рейсинг трек",
+            caption: "Современная drag strip трасса",
+            alignment: "center",
+          },
+          {
+            id: "era-3-heading",
+            type: "heading",
+            order: 6,
+            content: "Современная эра (1990-настоящее время)",
+            level: "2",
+          },
+          {
+            id: "era-3-desc",
+            type: "paragraph",
+            order: 7,
+            content: "Сегодня дрэг-рейсинг - это высокотехнологичный спорт, где автомобили развивают скорость более 530 км/ч и проходят четверть мили менее чем за 4 секунды. В России дрэг-рейсинг активно развивается с начала 2000-х годов.",
+          },
+          {
+            id: "stats",
+            type: "stats",
+            order: 8,
+            stats: [
+              { label: "Максимальная скорость", value: "530+ км/ч", description: "Top Fuel класс" },
+              { label: "Время заезда", value: "< 4 сек", description: "Четверть мили" },
+              { label: "Мощность двигателя", value: "11000+ л.с.", description: "Top Fuel класс" },
+            ],
+            columns: 3,
+          },
+        ],
+      }),
       published: true,
       publishedAt: new Date("2024-01-20"),
       views: 856,
@@ -779,48 +976,151 @@ async function main() {
       title: "Подготовка к первому трек-дню: чек-лист для начинающих",
       slug: "first-track-day-checklist",
       excerpt: "Полное руководство по подготовке автомобиля и себя к первому выезду на трек",
-      content: `Собираетесь на свой первый трек-день? Это захватывающий опыт, но важно правильно подготовиться. Вот полный чек-лист, который поможет вам избежать проблем и получить максимум удовольствия.
-
-## Подготовка автомобиля
-
-### Технический осмотр
-- Проверьте уровень всех жидкостей
-- Осмотрите тормозные колодки и диски
-- Проверьте давление в шинах
-- Убедитесь, что болты колес затянуты правильно
-
-### Безопасность
-- Снимите все незакрепленные предметы из салона
-- Проверьте надежность крепления аккумулятора
-- Убедитесь, что ремни безопасности в хорошем состоянии
-
-### Расходники
-- Возьмите запасное масло и тормозную жидкость
-- Приготовьте набор инструментов
-- Возьмите запасные тормозные колодки
-
-## Личная подготовка
-
-### Экипировка
-- Шлем (обязательно!)
-- Закрытая обувь
-- Длинные брюки и рубашка с длинным рукавом
-- Перчатки
-
-### Документы
-- Водительское удостоверение
-- Техпаспорт автомобиля
-- Страховка
-
-## На треке
-
-- Приезжайте заранее для регистрации
-- Пройдите брифинг для новичков
-- Начинайте с медленных кругов для разогрева
-- Слушайте инструкторов
-- Не стесняйтесь задавать вопросы
-
-Помните: цель первого трек-дня - научиться правильной траектории и базовым техникам, а не установить рекорд круга!`,
+      content: JSON.stringify({
+        version: "1.0",
+        blocks: [
+          {
+            id: "intro",
+            type: "paragraph",
+            order: 0,
+            content: "Собираетесь на свой первый трек-день? Это захватывающий опыт, но важно правильно подготовиться. Вот полный чек-лист, который поможет вам избежать проблем и получить максимум удовольствия.",
+          },
+          {
+            id: "car-prep-heading",
+            type: "heading",
+            order: 1,
+            content: "Подготовка автомобиля",
+            level: "2",
+          },
+          {
+            id: "tech-inspection-heading",
+            type: "heading",
+            order: 2,
+            content: "Технический осмотр",
+            level: "3",
+          },
+          {
+            id: "tech-inspection-list",
+            type: "list",
+            order: 3,
+            listType: "unordered",
+            items: [
+              "Проверьте уровень всех жидкостей",
+              "Осмотрите тормозные колодки и диски",
+              "Проверьте давление в шинах",
+              "Убедитесь, что болты колес затянуты правильно",
+            ],
+          },
+          {
+            id: "safety-heading",
+            type: "heading",
+            order: 4,
+            content: "Безопасность",
+            level: "3",
+          },
+          {
+            id: "safety-list",
+            type: "list",
+            order: 5,
+            listType: "unordered",
+            items: [
+              "Снимите все незакрепленные предметы из салона",
+              "Проверьте надежность крепления аккумулятора",
+              "Убедитесь, что ремни безопасности в хорошем состоянии",
+            ],
+          },
+          {
+            id: "supplies-heading",
+            type: "heading",
+            order: 6,
+            content: "Расходники",
+            level: "3",
+          },
+          {
+            id: "supplies-list",
+            type: "list",
+            order: 7,
+            listType: "unordered",
+            items: [
+              "Возьмите запасное масло и тормозную жидкость",
+              "Приготовьте набор инструментов",
+              "Возьмите запасные тормозные колодки",
+            ],
+          },
+          {
+            id: "personal-prep-heading",
+            type: "heading",
+            order: 8,
+            content: "Личная подготовка",
+            level: "2",
+          },
+          {
+            id: "gear-heading",
+            type: "heading",
+            order: 9,
+            content: "Экипировка",
+            level: "3",
+          },
+          {
+            id: "gear-list",
+            type: "list",
+            order: 10,
+            listType: "unordered",
+            items: [
+              "Шлем (обязательно!)",
+              "Закрытая обувь",
+              "Длинные брюки и рубашка с длинным рукавом",
+              "Перчатки",
+            ],
+          },
+          {
+            id: "docs-heading",
+            type: "heading",
+            order: 11,
+            content: "Документы",
+            level: "3",
+          },
+          {
+            id: "docs-list",
+            type: "list",
+            order: 12,
+            listType: "unordered",
+            items: [
+              "Водительское удостоверение",
+              "Техпаспорт автомобиля",
+              "Страховка",
+            ],
+          },
+          {
+            id: "ontrack-heading",
+            type: "heading",
+            order: 13,
+            content: "На треке",
+            level: "2",
+          },
+          {
+            id: "ontrack-list",
+            type: "list",
+            order: 14,
+            listType: "unordered",
+            items: [
+              "Приезжайте заранее для регистрации",
+              "Пройдите брифинг для новичков",
+              "Начинайте с медленных кругов для разогрева",
+              "Слушайте инструкторов",
+              "Не стесняйтесь задавать вопросы",
+            ],
+          },
+          {
+            id: "conclusion-callout",
+            type: "callout",
+            order: 15,
+            title: "Помните",
+            content: "Цель первого трек-дня - научиться правильной траектории и базовым техникам, а не установить рекорд круга!",
+            variant: "warning",
+          },
+        ],
+      }),
       published: true,
       publishedAt: new Date("2024-02-01"),
       views: 2103,
@@ -833,23 +1133,92 @@ async function main() {
       title: "Интервью с чемпионом RDS: секреты успеха в дрифте",
       slug: "rds-champion-interview",
       excerpt: "Эксклюзивное интервью с победителем российской дрифт серии о тренировках, настройке автомобиля и психологии",
-      content: `Мы встретились с Александром Грачевым, чемпионом Russian Drift Series 2023 года, чтобы узнать о его пути к вершине российского дрифта.
-
-**JEMSO: Александр, расскажи, как ты начал заниматься дрифтом?**
-
-А.Г.: Все началось лет 10 назад, когда я впервые увидел дрифт-шоу. Меня поразило, как пилоты контролируют машину в заносе. Купил старую BMW E36, установил welded diff и начал учиться на пустых парковках.
-
-**JEMSO: Что самое сложное в дрифте?**
-
-А.Г.: Многие думают, что это физика и техника, но на самом деле самое сложное - это психология. Когда ты едешь в паре, нужно одновременно контролировать свою машину, следить за соперником, реагировать на его действия. Это требует огромной концентрации.
-
-**JEMSO: Какие модификации критичны для соревновательного дрифта?**
-
-А.Г.: На соревновательном уровне важна надежность. У меня был случай, когда в квалификации порвался шланг интеркулера - и всё, выступление закончилось. Поэтому я всегда говорю: сначала надежность, потом мощность. Конечно, нужен мощный двигатель (минимум 400-500 л.с.), хороший LSD, правильная геометрия подвески.
-
-**JEMSO: Совет для начинающих дрифтеров?**
-
-А.Г.: Не гонитесь за мощностью! Начинайте с небольшой машины - 200-250 л.с. вполне достаточно, чтобы научиться базовой технике. И обязательно найдите опытного наставника или запишитесь в дрифт-школу. Это сэкономит вам годы и деньги.`,
+      content: JSON.stringify({
+        version: "1.0",
+        blocks: [
+          {
+            id: "intro",
+            type: "paragraph",
+            order: 0,
+            content: "Мы встретились с Александром Грачевым, чемпионом Russian Drift Series 2023 года, чтобы узнать о его пути к вершине российского дрифта.",
+          },
+          {
+            id: "q1",
+            type: "heading",
+            order: 1,
+            content: "JEMSO: Александр, расскажи, как ты начал заниматься дрифтом?",
+            level: "3",
+          },
+          {
+            id: "a1",
+            type: "quote",
+            order: 2,
+            content: "Все началось лет 10 назад, когда я впервые увидел дрифт-шоу. Меня поразило, как пилоты контролируют машину в заносе. Купил старую BMW E36, установил welded diff и начал учиться на пустых парковках.",
+            author: "Александр Грачев",
+          },
+          {
+            id: "q2",
+            type: "heading",
+            order: 3,
+            content: "JEMSO: Что самое сложное в дрифте?",
+            level: "3",
+          },
+          {
+            id: "a2",
+            type: "quote",
+            order: 4,
+            content: "Многие думают, что это физика и техника, но на самом деле самое сложное - это психология. Когда ты едешь в паре, нужно одновременно контролировать свою машину, следить за соперником, реагировать на его действия. Это требует огромной концентрации.",
+            author: "Александр Грачев",
+          },
+          {
+            id: "q3",
+            type: "heading",
+            order: 5,
+            content: "JEMSO: Какие модификации критичны для соревновательного дрифта?",
+            level: "3",
+          },
+          {
+            id: "a3",
+            type: "quote",
+            order: 6,
+            content: "На соревновательном уровне важна надежность. У меня был случай, когда в квалификации порвался шланг интеркулера - и всё, выступление закончилось. Поэтому я всегда говорю: сначала надежность, потом мощность. Конечно, нужен мощный двигатель (минимум 400-500 л.с.), хороший LSD, правильная геометрия подвески.",
+            author: "Александр Грачев",
+          },
+          {
+            id: "image-1",
+            type: "image",
+            order: 7,
+            src: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1200&h=600&fit=crop",
+            alt: "Александр Грачев на треке",
+            caption: "Александр Грачев на Russian Drift Series",
+            alignment: "center",
+          },
+          {
+            id: "q4",
+            type: "heading",
+            order: 8,
+            content: "JEMSO: Совет для начинающих дрифтеров?",
+            level: "3",
+          },
+          {
+            id: "a4",
+            type: "quote",
+            order: 9,
+            content: "Не гонитесь за мощностью! Начинайте с небольшой машины - 200-250 л.с. вполне достаточно, чтобы научиться базовой технике. И обязательно найдите опытного наставника или запишитесь в дрифт-школу. Это сэкономит вам годы и деньги.",
+            author: "Александр Грачев",
+          },
+          {
+            id: "cta",
+            type: "cta",
+            order: 10,
+            title: "Хотите научиться дрифту?",
+            description: "Запишитесь в дрифт-школу JEMSO и получите скидку 20% на первое занятие",
+            buttonText: "Записаться на обучение",
+            buttonUrl: "/drift",
+            alignment: "center",
+          },
+        ],
+      }),
       published: true,
       publishedAt: new Date("2024-02-10"),
       views: 3421,
@@ -862,37 +1231,117 @@ async function main() {
       title: "JEMSO Club: итоги встречи февраля 2024",
       slug: "jemso-club-february-2024-meetup",
       excerpt: "Более 50 участников, интересные автомобили и отличная атмосфера - отчет о февральской встрече клуба",
-      content: `18 февраля состоялась очередная встреча автомобильного клуба JEMSO. Несмотря на морозную погоду, более 50 энтузиастов собрались на парковке торгового центра "Мега", чтобы пообщаться, обменяться опытом и просто провести время среди единомышленников.
-
-## Highlights встречи
-
-### Автомобили месяца
-
-На этот раз нас порадовали несколько интересных проектов:
-
-- **Toyota Supra A80** с двигателем 2JZ-GTE на 650 л.с. - владелец Дмитрий рассказал о процессе постройки и поделился опытом настройки турбины
-- **Nissan Silvia S15** в дрифт-спеке - свежий импорт из Японии с оригинальным пробегом всего 89 000 км
-- **BMW E46 M3** в Ring-конфигурации - владелец активно участвует в трек-днях и делится своим опытом
-
-### Технические доклады
-
-Наш постоянный участник и механик Сергей провел мини-лекцию о подготовке автомобиля к сезону:
-- Замена технических жидкостей
-- Проверка тормозной системы
-- Диагностика подвески
-- Подготовка к техосмотру
-
-### Планы на сезон 2024
-
-Обсудили календарь мероприятий клуба:
-- Март - выезд на картинг
-- Апрель - открытие сезона трек-дней
-- Май - совместная поездка на Moscow Raceway
-- Июнь - летний караван в горы
-
-## Присоединяйтесь!
-
-Встречи клуба JEMSO проходят каждое третье воскресенье месяца. Следите за анонсами в нашем Telegram-канале. Участие бесплатное, приветствуются все марки и модели автомобилей!`,
+      content: JSON.stringify({
+        version: "1.0",
+        blocks: [
+          {
+            id: "intro",
+            type: "paragraph",
+            order: 0,
+            content: '18 февраля состоялась очередная встреча автомобильного клуба JEMSO. Несмотря на морозную погоду, более 50 энтузиастов собрались на парковке торгового центра "Мега", чтобы пообщаться, обменяться опытом и просто провести время среди единомышленников.',
+          },
+          {
+            id: "highlights-heading",
+            type: "heading",
+            order: 1,
+            content: "Highlights встречи",
+            level: "2",
+          },
+          {
+            id: "cars-heading",
+            type: "heading",
+            order: 2,
+            content: "Автомобили месяца",
+            level: "3",
+          },
+          {
+            id: "cars-intro",
+            type: "paragraph",
+            order: 3,
+            content: "На этот раз нас порадовали несколько интересных проектов:",
+          },
+          {
+            id: "cars-list",
+            type: "list",
+            order: 4,
+            listType: "unordered",
+            items: [
+              "<strong>Toyota Supra A80</strong> с двигателем 2JZ-GTE на 650 л.с. - владелец Дмитрий рассказал о процессе постройки и поделился опытом настройки турбины",
+              "<strong>Nissan Silvia S15</strong> в дрифт-спеке - свежий импорт из Японии с оригинальным пробегом всего 89 000 км",
+              "<strong>BMW E46 M3</strong> в Ring-конфигурации - владелец активно участвует в трек-днях и делится своим опытом",
+            ],
+          },
+          {
+            id: "image-1",
+            type: "image",
+            order: 5,
+            src: "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1200&h=600&fit=crop",
+            alt: "Встреча клуба JEMSO",
+            caption: "Участники февральской встречи JEMSO Club",
+            alignment: "center",
+          },
+          {
+            id: "tech-talks-heading",
+            type: "heading",
+            order: 6,
+            content: "Технические доклады",
+            level: "3",
+          },
+          {
+            id: "tech-talks-desc",
+            type: "paragraph",
+            order: 7,
+            content: "Наш постоянный участник и механик Сергей провел мини-лекцию о подготовке автомобиля к сезону:",
+          },
+          {
+            id: "tech-talks-list",
+            type: "list",
+            order: 8,
+            listType: "unordered",
+            items: [
+              "Замена технических жидкостей",
+              "Проверка тормозной системы",
+              "Диагностика подвески",
+              "Подготовка к техосмотру",
+            ],
+          },
+          {
+            id: "plans-heading",
+            type: "heading",
+            order: 9,
+            content: "Планы на сезон 2024",
+            level: "3",
+          },
+          {
+            id: "plans-desc",
+            type: "paragraph",
+            order: 10,
+            content: "Обсудили календарь мероприятий клуба:",
+          },
+          {
+            id: "plans-list",
+            type: "list",
+            order: 11,
+            listType: "unordered",
+            items: [
+              "Март - выезд на картинг",
+              "Апрель - открытие сезона трек-дней",
+              "Май - совместная поездка на Moscow Raceway",
+              "Июнь - летний караван в горы",
+            ],
+          },
+          {
+            id: "join-cta",
+            type: "cta",
+            order: 12,
+            title: "Присоединяйтесь!",
+            description: "Встречи клуба JEMSO проходят каждое третье воскресенье месяца. Следите за анонсами в нашем Telegram-канале. Участие бесплатное, приветствуются все марки и модели автомобилей!",
+            buttonText: "Подробнее о клубе",
+            buttonUrl: "/club",
+            alignment: "center",
+          },
+        ],
+      }),
       published: true,
       publishedAt: new Date("2024-02-19"),
       views: 892,
@@ -905,48 +1354,169 @@ async function main() {
       title: "Выбор первого дрифт-кара: BMW vs Nissan",
       slug: "first-drift-car-bmw-vs-nissan",
       excerpt: "Сравниваем два самых популярных варианта для начинающих дрифтеров: BMW E46 и Nissan Silvia S14",
-      content: `Выбор первого дрифт-кара - важное решение, которое влияет на скорость обучения и бюджет. Рассмотрим два самых популярных варианта.
-
-## BMW E46 (1998-2006)
-
-### Плюсы
-- Доступность запчастей
-- Надежный рядный 6-цилиндровый двигатель
-- Хорошая развесовка (50/50)
-- Большое комьюнити и база знаний
-
-### Минусы
-- Больший вес (около 1400 кг)
-- Дорогой ремонт при серьезных поломках
-- Часто требует замены подшипников ступиц и сайлентблоков
-
-### Бюджет
-- Покупка: 400-600 тысяч рублей
-- Подготовка: 200-300 тысяч рублей
-- **Итого: 600-900 тысяч рублей**
-
-## Nissan Silvia S14 (1993-1998)
-
-### Плюсы
-- Меньший вес (около 1200 кг)
-- Двигатель SR20DET с большим тюнинг-потенциалом
-- "Правильная" дрифт-геометрия из коробки
-- Культовый статус в дрифт-культуре
-
-### Минусы
-- Дороже в покупке
-- Запчасти нужно заказывать
-- Правый руль (не всем удобно)
-- Возраст автомобилей (часто требуют восстановления)
-
-### Бюджет
-- Покупка: 800-1200 тысяч рублей
-- Подготовка: 200-300 тысяч рублей
-- **Итого: 1000-1500 тысяч рублей**
-
-## Вердикт
-
-Для новичка с ограниченным бюджетом лучше выбрать BMW E46. Если же бюджет позволяет и хочется "настоящий" дрифт-кар с историей - Nissan Silvia будет отличным выбором. Главное - не гнаться за мощностью на первых этапах!`,
+      content: JSON.stringify({
+        version: "1.0",
+        blocks: [
+          {
+            id: "intro",
+            type: "paragraph",
+            order: 0,
+            content: "Выбор первого дрифт-кара - важное решение, которое влияет на скорость обучения и бюджет. Рассмотрим два самых популярных варианта.",
+          },
+          {
+            id: "bmw-heading",
+            type: "heading",
+            order: 1,
+            content: "BMW E46 (1998-2006)",
+            level: "2",
+          },
+          {
+            id: "bmw-pros-heading",
+            type: "heading",
+            order: 2,
+            content: "Плюсы",
+            level: "3",
+          },
+          {
+            id: "bmw-pros-list",
+            type: "list",
+            order: 3,
+            listType: "unordered",
+            items: [
+              "Доступность запчастей",
+              "Надежный рядный 6-цилиндровый двигатель",
+              "Хорошая развесовка (50/50)",
+              "Большое комьюнити и база знаний",
+            ],
+          },
+          {
+            id: "bmw-cons-heading",
+            type: "heading",
+            order: 4,
+            content: "Минусы",
+            level: "3",
+          },
+          {
+            id: "bmw-cons-list",
+            type: "list",
+            order: 5,
+            listType: "unordered",
+            items: [
+              "Больший вес (около 1400 кг)",
+              "Дорогой ремонт при серьезных поломках",
+              "Часто требует замены подшипников ступиц и сайлентблоков",
+            ],
+          },
+          {
+            id: "bmw-budget-heading",
+            type: "heading",
+            order: 6,
+            content: "Бюджет",
+            level: "3",
+          },
+          {
+            id: "bmw-budget-list",
+            type: "list",
+            order: 7,
+            listType: "unordered",
+            items: [
+              "Покупка: 400-600 тысяч рублей",
+              "Подготовка: 200-300 тысяч рублей",
+              "<strong>Итого: 600-900 тысяч рублей</strong>",
+            ],
+          },
+          {
+            id: "separator-1",
+            type: "separator",
+            order: 8,
+            style: "solid",
+          },
+          {
+            id: "nissan-heading",
+            type: "heading",
+            order: 9,
+            content: "Nissan Silvia S14 (1993-1998)",
+            level: "2",
+          },
+          {
+            id: "nissan-pros-heading",
+            type: "heading",
+            order: 10,
+            content: "Плюсы",
+            level: "3",
+          },
+          {
+            id: "nissan-pros-list",
+            type: "list",
+            order: 11,
+            listType: "unordered",
+            items: [
+              "Меньший вес (около 1200 кг)",
+              'Двигатель SR20DET с большим тюнинг-потенциалом',
+              '"Правильная" дрифт-геометрия из коробки',
+              "Культовый статус в дрифт-культуре",
+            ],
+          },
+          {
+            id: "nissan-cons-heading",
+            type: "heading",
+            order: 12,
+            content: "Минусы",
+            level: "3",
+          },
+          {
+            id: "nissan-cons-list",
+            type: "list",
+            order: 13,
+            listType: "unordered",
+            items: [
+              "Дороже в покупке",
+              "Запчасти нужно заказывать",
+              "Правый руль (не всем удобно)",
+              "Возраст автомобилей (часто требуют восстановления)",
+            ],
+          },
+          {
+            id: "nissan-budget-heading",
+            type: "heading",
+            order: 14,
+            content: "Бюджет",
+            level: "3",
+          },
+          {
+            id: "nissan-budget-list",
+            type: "list",
+            order: 15,
+            listType: "unordered",
+            items: [
+              "Покупка: 800-1200 тысяч рублей",
+              "Подготовка: 200-300 тысяч рублей",
+              "<strong>Итого: 1000-1500 тысяч рублей</strong>",
+            ],
+          },
+          {
+            id: "separator-2",
+            type: "separator",
+            order: 16,
+            style: "solid",
+          },
+          {
+            id: "verdict-heading",
+            type: "heading",
+            order: 17,
+            content: "Вердикт",
+            level: "2",
+          },
+          {
+            id: "verdict-callout",
+            type: "callout",
+            order: 18,
+            title: "Наша рекомендация",
+            content: 'Для новичка с ограниченным бюджетом лучше выбрать BMW E46. Если же бюджет позволяет и хочется "настоящий" дрифт-кар с историей - Nissan Silvia будет отличным выбором. Главное - не гнаться за мощностью на первых этапах!',
+            variant: "success",
+          },
+        ],
+      }),
       published: true,
       publishedAt: new Date("2024-02-25"),
       views: 4231,
@@ -996,36 +1566,108 @@ async function main() {
   // Create events
   console.log("Creating events...");
 
-  const now = new Date();
   const events = [
     {
       title: "Открытие дрифт-сезона 2024",
       slug: "drift-season-opening-2024",
       excerpt: "Первое соревнование сезона на автодроме ADM Raceway",
-      content: `Приглашаем всех любителей дрифта на открытие сезона 2024! 
-
-## Программа мероприятия
-
-### 10:00 - Регистрация участников
-Административные проверки, технический осмотр автомобилей
-
-### 11:00 - Квалификация
-Одиночные заезды для определения сетки пар
-
-### 14:00 - Парные заезды
-Основные соревнования в формате битв один на один
-
-### 17:00 - Финалы и награждение
-Определение победителей и торжественное награждение
-
-## Требования к участникам
-
-- Спортивная лицензия или лицензия начинающего
-- Технически исправный автомобиль
-- Шлем (можно взять в аренду на месте)
-- Опыт дрифта приветствуется, но не обязателен
-
-Зрители приветствуются! Вход свободный.`,
+      content: JSON.stringify({
+        version: "1.0",
+        blocks: [
+          {
+            id: "intro",
+            type: "paragraph",
+            order: 0,
+            content: "Приглашаем всех любителей дрифта на открытие сезона 2024!",
+          },
+          {
+            id: "program-heading",
+            type: "heading",
+            order: 1,
+            content: "Программа мероприятия",
+            level: "2",
+          },
+          {
+            id: "time-1",
+            type: "heading",
+            order: 2,
+            content: "10:00 - Регистрация участников",
+            level: "3",
+          },
+          {
+            id: "desc-1",
+            type: "paragraph",
+            order: 3,
+            content: "Административные проверки, технический осмотр автомобилей",
+          },
+          {
+            id: "time-2",
+            type: "heading",
+            order: 4,
+            content: "11:00 - Квалификация",
+            level: "3",
+          },
+          {
+            id: "desc-2",
+            type: "paragraph",
+            order: 5,
+            content: "Одиночные заезды для определения сетки пар",
+          },
+          {
+            id: "time-3",
+            type: "heading",
+            order: 6,
+            content: "14:00 - Парные заезды",
+            level: "3",
+          },
+          {
+            id: "desc-3",
+            type: "paragraph",
+            order: 7,
+            content: "Основные соревнования в формате битв один на один",
+          },
+          {
+            id: "time-4",
+            type: "heading",
+            order: 8,
+            content: "17:00 - Финалы и награждение",
+            level: "3",
+          },
+          {
+            id: "desc-4",
+            type: "paragraph",
+            order: 9,
+            content: "Определение победителей и торжественное награждение",
+          },
+          {
+            id: "requirements-heading",
+            type: "heading",
+            order: 10,
+            content: "Требования к участникам",
+            level: "2",
+          },
+          {
+            id: "requirements-list",
+            type: "list",
+            order: 11,
+            listType: "unordered",
+            items: [
+              "Спортивная лицензия или лицензия начинающего",
+              "Технически исправный автомобиль",
+              "Шлем (можно взять в аренду на месте)",
+              "Опыт дрифта приветствуется, но не обязателен",
+            ],
+          },
+          {
+            id: "spectators-callout",
+            type: "callout",
+            order: 12,
+            title: "Для зрителей",
+            content: "Зрители приветствуются! Вход свободный.",
+            variant: "info",
+          },
+        ],
+      }),
       published: true,
       publishedAt: new Date("2024-03-01"),
       views: 2156,
@@ -1044,42 +1686,149 @@ async function main() {
       title: "Drag Racing Championship - 1 этап",
       slug: "drag-racing-championship-stage-1",
       excerpt: "Первый этап чемпионата России по дрэг-рейсингу",
-      content: `Russian Drag Racing Championship открывает сезон 2024!
-
-## Классы участников
-
-### Street Class
-Дорожные автомобили с минимальными модификациями
-- До 400 л.с.
-- Дорожная резина
-- Полный интерьер
-
-### Pro Street
-- До 800 л.с.
-- Слики разрешены
-- Каркас безопасности обязателен
-
-### Pro Modified
-- Без ограничений по мощности
-- Специализированные дрэг-кары
-- Профессиональные пилоты
-
-## Расписание
-
-**Пятница, 10 мая**
-- 14:00-20:00 - Свободные заезды и тренировки
-
-**Суббота, 11 мая**
-- 10:00-12:00 - Квалификация Street Class
-- 13:00-15:00 - Квалификация Pro Street
-- 16:00-18:00 - Квалификация Pro Modified
-
-**Воскресенье, 12 мая**
-- 10:00 - Начало элиминаций
-- 16:00 - Финалы
-- 17:00 - Награждение
-
-Регистрация открыта до 1 мая на сайте RDRC.`,
+      content: JSON.stringify({
+        version: "1.0",
+        blocks: [
+          {
+            id: "intro",
+            type: "paragraph",
+            order: 0,
+            content: "Russian Drag Racing Championship открывает сезон 2024!",
+          },
+          {
+            id: "classes-heading",
+            type: "heading",
+            order: 1,
+            content: "Классы участников",
+            level: "2",
+          },
+          {
+            id: "street-heading",
+            type: "heading",
+            order: 2,
+            content: "Street Class",
+            level: "3",
+          },
+          {
+            id: "street-desc",
+            type: "paragraph",
+            order: 3,
+            content: "Дорожные автомобили с минимальными модификациями",
+          },
+          {
+            id: "street-list",
+            type: "list",
+            order: 4,
+            listType: "unordered",
+            items: [
+              "До 400 л.с.",
+              "Дорожная резина",
+              "Полный интерьер",
+            ],
+          },
+          {
+            id: "prostreet-heading",
+            type: "heading",
+            order: 5,
+            content: "Pro Street",
+            level: "3",
+          },
+          {
+            id: "prostreet-list",
+            type: "list",
+            order: 6,
+            listType: "unordered",
+            items: [
+              "До 800 л.с.",
+              "Слики разрешены",
+              "Каркас безопасности обязателен",
+            ],
+          },
+          {
+            id: "promod-heading",
+            type: "heading",
+            order: 7,
+            content: "Pro Modified",
+            level: "3",
+          },
+          {
+            id: "promod-list",
+            type: "list",
+            order: 8,
+            listType: "unordered",
+            items: [
+              "Без ограничений по мощности",
+              "Специализированные дрэг-кары",
+              "Профессиональные пилоты",
+            ],
+          },
+          {
+            id: "schedule-heading",
+            type: "heading",
+            order: 9,
+            content: "Расписание",
+            level: "2",
+          },
+          {
+            id: "friday-heading",
+            type: "heading",
+            order: 10,
+            content: "Пятница, 10 мая",
+            level: "3",
+          },
+          {
+            id: "friday-list",
+            type: "list",
+            order: 11,
+            listType: "unordered",
+            items: ["14:00-20:00 - Свободные заезды и тренировки"],
+          },
+          {
+            id: "saturday-heading",
+            type: "heading",
+            order: 12,
+            content: "Суббота, 11 мая",
+            level: "3",
+          },
+          {
+            id: "saturday-list",
+            type: "list",
+            order: 13,
+            listType: "unordered",
+            items: [
+              "10:00-12:00 - Квалификация Street Class",
+              "13:00-15:00 - Квалификация Pro Street",
+              "16:00-18:00 - Квалификация Pro Modified",
+            ],
+          },
+          {
+            id: "sunday-heading",
+            type: "heading",
+            order: 14,
+            content: "Воскресенье, 12 мая",
+            level: "3",
+          },
+          {
+            id: "sunday-list",
+            type: "list",
+            order: 15,
+            listType: "unordered",
+            items: [
+              "10:00 - Начало элиминаций",
+              "16:00 - Финалы",
+              "17:00 - Награждение",
+            ],
+          },
+          {
+            id: "registration-callout",
+            type: "callout",
+            order: 16,
+            title: "Регистрация",
+            content: "Регистрация открыта до 1 мая на сайте RDRC.",
+            variant: "warning",
+          },
+        ],
+      }),
       published: true,
       publishedAt: new Date("2024-03-10"),
       views: 1834,
@@ -1098,35 +1847,117 @@ async function main() {
       title: "Track Day для начинающих",
       slug: "beginners-track-day-may-2024",
       excerpt: "Специальный трек-день для новичков с инструкторами",
-      content: `Первый раз на треке? Этот трек-день специально для вас!
-
-## Что включено
-
-### Теоретическая часть (1 час)
-- Правила безопасности на треке
-- Правильная траектория
-- Техника прохождения поворотов
-- Работа с тормозами
-
-### Практические занятия (4 часа)
-- Персональный инструктор в вашем автомобиле
-- 4 сессии по 20 минут
-- Разбор ошибок после каждой сессии
-- Видеоанализ прохождения круга
-
-### Дополнительно
-- Кофе-брейк
-- Обед
-- Видеозапись ваших заездов
-- Сертификат участника
-
-## Требования
-
-- Технически исправный автомобиль
-- Водительский стаж от 1 года
-- Желание учиться!
-
-Количество мест ограничено - 20 участников.`,
+      content: JSON.stringify({
+        version: "1.0",
+        blocks: [
+          {
+            id: "intro",
+            type: "paragraph",
+            order: 0,
+            content: "Первый раз на треке? Этот трек-день специально для вас!",
+          },
+          {
+            id: "included-heading",
+            type: "heading",
+            order: 1,
+            content: "Что включено",
+            level: "2",
+          },
+          {
+            id: "theory-heading",
+            type: "heading",
+            order: 2,
+            content: "Теоретическая часть (1 час)",
+            level: "3",
+          },
+          {
+            id: "theory-list",
+            type: "list",
+            order: 3,
+            listType: "unordered",
+            items: [
+              "Правила безопасности на треке",
+              "Правильная траектория",
+              "Техника прохождения поворотов",
+              "Работа с тормозами",
+            ],
+          },
+          {
+            id: "practice-heading",
+            type: "heading",
+            order: 4,
+            content: "Практические занятия (4 часа)",
+            level: "3",
+          },
+          {
+            id: "practice-list",
+            type: "list",
+            order: 5,
+            listType: "unordered",
+            items: [
+              "Персональный инструктор в вашем автомобиле",
+              "4 сессии по 20 минут",
+              "Разбор ошибок после каждой сессии",
+              "Видеоанализ прохождения круга",
+            ],
+          },
+          {
+            id: "additional-heading",
+            type: "heading",
+            order: 6,
+            content: "Дополнительно",
+            level: "3",
+          },
+          {
+            id: "additional-list",
+            type: "list",
+            order: 7,
+            listType: "unordered",
+            items: [
+              "Кофе-брейк",
+              "Обед",
+              "Видеозапись ваших заездов",
+              "Сертификат участника",
+            ],
+          },
+          {
+            id: "requirements-heading",
+            type: "heading",
+            order: 8,
+            content: "Требования",
+            level: "2",
+          },
+          {
+            id: "requirements-list",
+            type: "list",
+            order: 9,
+            listType: "unordered",
+            items: [
+              "Технически исправный автомобиль",
+              "Водительский стаж от 1 года",
+              "Желание учиться!",
+            ],
+          },
+          {
+            id: "spots-callout",
+            type: "callout",
+            order: 10,
+            title: "Важно",
+            content: "Количество мест ограничено - 20 участников.",
+            variant: "warning",
+          },
+          {
+            id: "cta",
+            type: "cta",
+            order: 11,
+            title: "Не упустите возможность!",
+            description: "Запишитесь на трек-день прямо сейчас",
+            buttonText: "Зарегистрироваться",
+            buttonUrl: "/events/beginners-track-day-may-2024",
+            alignment: "center",
+          },
+        ],
+      }),
       published: true,
       publishedAt: new Date("2024-03-15"),
       views: 1456,
@@ -1145,41 +1976,151 @@ async function main() {
       title: "JEMSO Summer Meet 2024",
       slug: "jemso-summer-meet-2024",
       excerpt: "Летняя встреча клуба с шоу-программой, BBQ и розыгрышем призов",
-      content: `Самое масштабное мероприятие клуба в году!
-
-## Программа
-
-### 12:00 - Открытие
-Регистрация участников, размещение автомобилей
-
-### 13:00 - Конкурс автомобилей
-- Лучший дрифт-кар
-- Лучший драг-кар
-- Лучший шоу-кар
-- Народный выбор
-
-### 15:00 - BBQ и общение
-Отличная еда и напитки в неформальной обстановке
-
-### 17:00 - Демонстрационные заезды
-Показательные выступления профессиональных пилотов
-
-### 19:00 - Розыгрыш призов
-Ценные призы от спонсоров:
-- Комплект спортивных тормозных колодок
-- Сертификаты на услуги сервисов
-- Мерч JEMSO
-
-### 20:00 - After-party
-Продолжение в неформальной обстановке
-
-## Участие
-
-- **Для членов клуба**: бесплатно
-- **Гости**: 1000 рублей
-- **Участие автомобиля в конкурсе**: бесплатно
-
-Приглашаются все энтузиасты, независимо от марки и модели автомобиля!`,
+      content: JSON.stringify({
+        version: "1.0",
+        blocks: [
+          {
+            id: "intro",
+            type: "paragraph",
+            order: 0,
+            content: "Самое масштабное мероприятие клуба в году!",
+          },
+          {
+            id: "program-heading",
+            type: "heading",
+            order: 1,
+            content: "Программа",
+            level: "2",
+          },
+          {
+            id: "time-1",
+            type: "heading",
+            order: 2,
+            content: "12:00 - Открытие",
+            level: "3",
+          },
+          {
+            id: "desc-1",
+            type: "paragraph",
+            order: 3,
+            content: "Регистрация участников, размещение автомобилей",
+          },
+          {
+            id: "time-2",
+            type: "heading",
+            order: 4,
+            content: "13:00 - Конкурс автомобилей",
+            level: "3",
+          },
+          {
+            id: "contest-list",
+            type: "list",
+            order: 5,
+            listType: "unordered",
+            items: [
+              "Лучший дрифт-кар",
+              "Лучший драг-кар",
+              "Лучший шоу-кар",
+              "Народный выбор",
+            ],
+          },
+          {
+            id: "time-3",
+            type: "heading",
+            order: 6,
+            content: "15:00 - BBQ и общение",
+            level: "3",
+          },
+          {
+            id: "desc-3",
+            type: "paragraph",
+            order: 7,
+            content: "Отличная еда и напитки в неформальной обстановке",
+          },
+          {
+            id: "time-4",
+            type: "heading",
+            order: 8,
+            content: "17:00 - Демонстрационные заезды",
+            level: "3",
+          },
+          {
+            id: "desc-4",
+            type: "paragraph",
+            order: 9,
+            content: "Показательные выступления профессиональных пилотов",
+          },
+          {
+            id: "time-5",
+            type: "heading",
+            order: 10,
+            content: "19:00 - Розыгрыш призов",
+            level: "3",
+          },
+          {
+            id: "prizes-desc",
+            type: "paragraph",
+            order: 11,
+            content: "Ценные призы от спонсоров:",
+          },
+          {
+            id: "prizes-list",
+            type: "list",
+            order: 12,
+            listType: "unordered",
+            items: [
+              "Комплект спортивных тормозных колодок",
+              "Сертификаты на услуги сервисов",
+              "Мерч JEMSO",
+            ],
+          },
+          {
+            id: "time-6",
+            type: "heading",
+            order: 13,
+            content: "20:00 - After-party",
+            level: "3",
+          },
+          {
+            id: "desc-6",
+            type: "paragraph",
+            order: 14,
+            content: "Продолжение в неформальной обстановке",
+          },
+          {
+            id: "separator",
+            type: "separator",
+            order: 15,
+            style: "solid",
+          },
+          {
+            id: "participation-heading",
+            type: "heading",
+            order: 16,
+            content: "Участие",
+            level: "2",
+          },
+          {
+            id: "pricing-list",
+            type: "list",
+            order: 17,
+            listType: "unordered",
+            items: [
+              "<strong>Для членов клуба:</strong> бесплатно",
+              "<strong>Гости:</strong> 1000 рублей",
+              "<strong>Участие автомобиля в конкурсе:</strong> бесплатно",
+            ],
+          },
+          {
+            id: "welcome-callout",
+            type: "callout",
+            order: 18,
+            title: "Приглашаются все!",
+            content: "Приглашаются все энтузиасты, независимо от марки и модели автомобиля!",
+            variant: "success",
+          },
+        ],
+      }),
       published: true,
       publishedAt: new Date("2024-04-01"),
       views: 3421,

@@ -134,13 +134,13 @@ export function AnimatedPlanCard({ plans }: AnimatedPlanCardProps) {
       {plans.map((plan) => (
         <Card
           key={plan.id}
-          className={`plan-card relative overflow-hidden border-border/40 bg-card/50 backdrop-blur ${
+          className={`plan-card relative flex h-full flex-col overflow-hidden border-border/40 bg-card/50 backdrop-blur ${
             plan.isPopular ? "border-primary shadow-lg shadow-primary/20" : ""
           }`}
         >
           {/* Popular Badge */}
           {plan.isPopular && (
-            <div className="absolute right-4 top-4">
+            <div className="absolute right-4 top-4 z-10">
               <Badge className="gap-1 bg-primary text-primary-foreground">
                 <Sparkles className="h-3 w-3" />
                 Популярный
@@ -148,7 +148,7 @@ export function AnimatedPlanCard({ plans }: AnimatedPlanCardProps) {
             </div>
           )}
 
-          <div className="space-y-6 p-8">
+          <div className="flex flex-1 flex-col p-8">
             {/* Header */}
             <div className="space-y-2">
               <h3 className="text-2xl font-bold text-foreground">{plan.name}</h3>
@@ -160,7 +160,7 @@ export function AnimatedPlanCard({ plans }: AnimatedPlanCardProps) {
             </div>
 
             {/* Price */}
-            <div className="space-y-1">
+            <div className="mt-6 space-y-1">
               <div className="flex items-baseline gap-2">
                 <span className="text-4xl font-bold text-foreground">
                   {formatPrice(plan.price, plan.currency)}
@@ -177,7 +177,7 @@ export function AnimatedPlanCard({ plans }: AnimatedPlanCardProps) {
             </div>
 
             {/* Features */}
-            <ul className="space-y-3">
+            <ul className="mt-6 flex-1 space-y-3">
               {plan.features.map((feature, index) => (
                 <li key={index} className="flex items-start gap-3">
                   <Check className="h-5 w-5 shrink-0 text-primary" />
@@ -193,14 +193,16 @@ export function AnimatedPlanCard({ plans }: AnimatedPlanCardProps) {
               ))}
             </ul>
 
-            {/* CTA Button */}
-            <Button
-              className="w-full"
-              variant={plan.isPopular ? "default" : "outline"}
-              size="lg"
-            >
-              Выбрать план
-            </Button>
+            {/* CTA Button - Always at bottom */}
+            <div className="mt-6">
+              <Button
+                className="w-full"
+                variant="default"
+                size="lg"
+              >
+                Выбрать план
+              </Button>
+            </div>
           </div>
 
           {/* Background decoration for popular plan */}

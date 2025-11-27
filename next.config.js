@@ -10,28 +10,8 @@ const config = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "images.unsplash.com",
-        port: "",
-        pathname: "/**",
+        hostname: "**",
       },
-      {
-        protocol: "https",
-        hostname: "video.twimg.com",
-        port: "",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "steamcommunity.com",
-        port: "",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "commondatastorage.googleapis.com",
-        port: "",
-        pathname: "/**",
-      }
     ],
   },
   // Ensure Prisma is properly bundled for serverless

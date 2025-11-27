@@ -99,14 +99,6 @@ This application implements a comprehensive **Role-Based Access Control (RBAC)**
 
 ### Default Plans
 
-#### Free Plan
-- **Price**: $0
-- **Billing**: Lifetime
-- **Features**:
-  - Blog Access
-  - Storage: 1GB
-  - User Seats: 1
-
 #### Pro Plan
 - **Price**: $29.99/month
 - **Billing**: Monthly
