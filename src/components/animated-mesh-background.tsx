@@ -6,6 +6,7 @@ import { gsap } from "gsap";
 export function AnimatedMeshBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number | undefined>(undefined);
+  const offsetRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -13,6 +14,8 @@ export function AnimatedMeshBackground() {
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+
+    const offset = offsetRef.current;
 
     // Set canvas size with device pixel ratio for crisp rendering
     const resizeCanvas = () => {
@@ -26,98 +29,106 @@ export function AnimatedMeshBackground() {
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
-    // Pure grayscale mesh gradient - minimalistic
-    const colors = {
-      dark: [
-        "rgba(250, 250, 250, 0.035)",
-        "rgba(248, 248, 248, 0.03)",
-        "rgba(246, 246, 246, 0.028)",
-        "rgba(245, 245, 245, 0.025)",
-        "rgba(243, 243, 243, 0.022)",
-        "rgba(240, 240, 240, 0.02)",
-      ],
-      light: [
-        "rgba(25, 25, 25, 0.025)",
-        "rgba(22, 22, 22, 0.022)",
-        "rgba(20, 20, 20, 0.02)",
-        "rgba(18, 18, 18, 0.018)",
-        "rgba(16, 16, 16, 0.016)",
-        "rgba(15, 15, 15, 0.015)",
-      ],
-    };
-
     const isDark = document.documentElement.classList.contains("dark");
-    const currentColors = isDark ? colors.dark : colors.light;
-
-    // Create gradient points with smooth, large radius
-    const displayWidth = window.innerWidth;
-    const displayHeight = window.innerHeight;
     
-    const points = Array.from({ length: 5 }, (_, i) => ({
-      x: Math.random() * displayWidth,
-      y: Math.random() * displayHeight,
-      vx: (Math.random() - 0.5) * 0.5,
-      vy: (Math.random() - 0.5) * 0.5,
-      radius: Math.random() * 350 + 250,
-      color: currentColors[i % currentColors.length] ?? currentColors[0] ?? "",
-    }));
+    // Carbon fiber inspired colors matching logo blue - adjusted for higher density
+    const primaryColor = isDark ? "rgba(100, 150, 200, 0.06)" : "rgba(0, 75, 135, 0.06)";
+    const secondaryColor = isDark ? "rgba(120, 160, 210, 0.04)" : "rgba(0, 85, 145, 0.04)";
+    const accentColor = isDark ? "rgba(240, 245, 250, 0.02)" : "rgba(10, 70, 130, 0.02)";
 
-    // Animate points with smooth, slow movement
-    points.forEach((point) => {
-      gsap.to(point, {
-        x: `+=${(Math.random() - 0.5) * displayWidth * 0.3}`,
-        y: `+=${(Math.random() - 0.5) * displayHeight * 0.3}`,
-        duration: Math.random() * 15 + 15,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-      });
+    // Animate offset for subtle movement
+    gsap.to(offset, {
+      x: 20,
+      y: 20,
+      duration: 10,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut",
     });
 
-    // Animation loop
-    const animate = () => {
+    // Draw carbon fiber texture pattern
+    const drawCarbonFiber = () => {
+      const displayWidth = window.innerWidth;
+      const displayHeight = window.innerHeight;
+      
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw soft gradient circles with smooth blur
-      ctx.filter = "blur(80px)";
-      points.forEach((point) => {
-        const gradient = ctx.createRadialGradient(
-          point.x,
-          point.y,
-          0,
-          point.x,
-          point.y,
-          point.radius,
-        );
-        gradient.addColorStop(0, point.color);
-        gradient.addColorStop(0.4, point.color.replace(/[\d.]+\)$/, "0.008)"));
-        gradient.addColorStop(0.7, point.color.replace(/[\d.]+\)$/, "0.003)"));
-        gradient.addColorStop(1, "transparent");
+      // Pattern settings - increased density
+      const spacing = 3; // Reduced from 8 to 3 for higher density
+      const lineWidth = 1.5;
+      const offset = offsetRef.current;
 
-        ctx.fillStyle = gradient;
+      // Calculate diagonal line positions
+      const diagonal = Math.sqrt(displayWidth ** 2 + displayHeight ** 2);
+      const numLines = Math.ceil(diagonal / spacing) * 2;
+
+      // Draw primary diagonal lines (top-left to bottom-right)
+      ctx.strokeStyle = primaryColor;
+      ctx.lineWidth = lineWidth;
+      ctx.lineCap = "round";
+
+      for (let i = -numLines / 2; i < numLines / 2; i++) {
+        const startX = i * spacing + offset.x;
+        const startY = -diagonal + offset.y;
+        const endX = startX + diagonal;
+        const endY = diagonal + offset.y;
+
         ctx.beginPath();
-        ctx.arc(point.x, point.y, point.radius, 0, Math.PI * 2);
-        ctx.fill();
-      });
+        ctx.moveTo(startX, startY);
+        ctx.lineTo(endX, endY);
+        ctx.stroke();
+      }
 
-      animationRef.current = requestAnimationFrame(animate);
+      // Draw secondary parallel lines with slight offset for depth
+      ctx.strokeStyle = secondaryColor;
+      ctx.lineWidth = lineWidth * 0.8;
+      
+      for (let i = -numLines / 2; i < numLines / 2; i++) {
+        const startX = i * spacing + spacing / 3 + offset.x * 0.8;
+        const startY = -diagonal + offset.y * 0.8;
+        const endX = startX + diagonal;
+        const endY = diagonal + offset.y * 0.8;
+
+        ctx.beginPath();
+        ctx.moveTo(startX, startY);
+        ctx.lineTo(endX, endY);
+        ctx.stroke();
+      }
+
+      // Add subtle accent lines for texture depth
+      ctx.strokeStyle = accentColor;
+      ctx.lineWidth = lineWidth * 0.5;
+      
+      for (let i = -numLines / 2; i < numLines / 2; i += 2) {
+        const startX = i * spacing + spacing / 1.5 + offset.x * 0.6;
+        const startY = -diagonal + offset.y * 0.6;
+        const endX = startX + diagonal;
+        const endY = diagonal + offset.y * 0.6;
+
+        ctx.beginPath();
+        ctx.moveTo(startX, startY);
+        ctx.lineTo(endX, endY);
+        ctx.stroke();
+      }
+
+      animationRef.current = requestAnimationFrame(drawCarbonFiber);
     };
 
-    animate();
+    drawCarbonFiber();
 
     return () => {
       window.removeEventListener("resize", resizeCanvas);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
-      gsap.killTweensOf(points);
+      gsap.killTweensOf(offset);
     };
   }, []);
 
   return (
     <canvas
       ref={canvasRef}
-      className="pointer-events-none fixed inset-0 -z-10 opacity-80 dark:opacity-90"
+      className="pointer-events-none fixed inset-0 -z-10 opacity-50 dark:opacity-60"
       aria-hidden="true"
     />
   );

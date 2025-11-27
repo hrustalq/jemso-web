@@ -54,11 +54,11 @@ export function PageLoader({ variant = "default" }: PageLoaderProps) {
             ref={barsRef}
             className="flex items-end gap-1"
           >
-            <div className="h-8 w-1 bg-primary" />
-            <div className="h-8 w-1 bg-primary" />
-            <div className="h-8 w-1 bg-primary" />
-            <div className="h-8 w-1 bg-primary" />
-            <div className="h-8 w-1 bg-primary" />
+            <div className="h-8 w-1 rounded-sm bg-primary" />
+            <div className="h-8 w-1 rounded-sm bg-primary" />
+            <div className="h-8 w-1 rounded-sm bg-primary" />
+            <div className="h-8 w-1 rounded-sm bg-primary" />
+            <div className="h-8 w-1 rounded-sm bg-primary" />
           </div>
         </div>
       </div>
@@ -66,10 +66,22 @@ export function PageLoader({ variant = "default" }: PageLoaderProps) {
   }
 
   return (
-    <div className="fixed inset-0 z-100 flex items-center justify-center bg-background/95 backdrop-blur-sm">
+    <div 
+      className="fixed inset-0 flex min-h-screen items-center justify-center bg-background/98 backdrop-blur-md"
+      style={{ 
+        zIndex: 9999, 
+        isolation: 'isolate', 
+        minHeight: '100dvh',
+        height: '100vh',
+        width: '100vw',
+        top: 0,
+        left: 0,
+        position: 'fixed'
+      }}
+    >
       <div ref={loaderRef} className="flex flex-col items-center gap-6">
         {/* Logo */}
-        <div className="text-4xl font-bold uppercase tracking-wider">
+        <div className="text-4xl font-bold uppercase tracking-wider text-foreground">
           JEMSO
         </div>
 
@@ -78,15 +90,15 @@ export function PageLoader({ variant = "default" }: PageLoaderProps) {
           ref={barsRef}
           className="flex items-end gap-1.5"
         >
-          <div className="h-12 w-2 bg-primary" />
-          <div className="h-12 w-2 bg-primary" />
-          <div className="h-12 w-2 bg-primary" />
-          <div className="h-12 w-2 bg-primary" />
-          <div className="h-12 w-2 bg-primary" />
+          <div className="h-12 w-2 rounded-sm bg-primary" />
+          <div className="h-12 w-2 rounded-sm bg-primary" />
+          <div className="h-12 w-2 rounded-sm bg-primary" />
+          <div className="h-12 w-2 rounded-sm bg-primary" />
+          <div className="h-12 w-2 rounded-sm bg-primary" />
         </div>
 
         {/* Loading text */}
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-foreground/70">
           Загрузка...
         </p>
       </div>

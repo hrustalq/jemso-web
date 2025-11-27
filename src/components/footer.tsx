@@ -167,49 +167,24 @@ export async function Footer() {
           <Separator className="my-6 sm:my-8 lg:my-12" />
 
           {/* Legal Information - Required by Russian Law */}
-          <div className="mb-6 space-y-3 rounded-lg border border-border/40 bg-card/50 p-4 text-xs text-foreground/70 sm:p-6">
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mb-6 rounded-lg p-4 text-sm text-foreground/90">
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 sm:justify-start">
               <div>
-                <span className="font-semibold text-foreground">Наименование:</span>
-                <p>ИП Хайбулаев Шамиль Магомедрашидович</p>
+                <span className="font-medium text-foreground">ИП Хайбулаев Ш.М.</span>
+              </div>
+              <div className="text-foreground/80">
+                <span className="font-medium">ИНН:</span> 056203350846
+              </div>
+              <div className="text-foreground/80">
+                <span className="font-medium">ОГРНИП:</span> 319057100022896
               </div>
               <div>
-                <span className="font-semibold text-foreground">ИНН:</span>
-                <p>056203350846</p>
-              </div>
-              <div>
-                <span className="font-semibold text-foreground">ОГРНИП:</span>
-                <p>319057100022896</p>
-              </div>
-              <div>
-                <span className="font-semibold text-foreground">Email:</span>
-                <p>
-                  <a 
-                    href="mailto:Jemsodrive@gmail.com"
-                    className="transition-colors hover:text-primary"
-                  >
-                    Jemsodrive@gmail.com
-                  </a>
-                </p>
-              </div>
-              <div>
-                <span className="font-semibold text-foreground">Телефон:</span>
-                <p>
-                  <a 
-                    href="tel:+79887725757"
-                    className="transition-colors hover:text-primary"
-                  >
-                    +7 988 772-57-57
-                  </a>
-                </p>
-              </div>
-              <div className="sm:col-span-2 lg:col-span-1">
-                <Link 
-                  href="/contact"
-                  className="font-semibold text-primary transition-colors hover:text-primary/80"
+                <a 
+                  href="mailto:Jemsodrive@gmail.com"
+                  className="text-primary transition-colors hover:text-primary/80"
                 >
-                  Полные реквизиты →
-                </Link>
+                  Jemsodrive@gmail.com
+                </a>
               </div>
             </div>
           </div>

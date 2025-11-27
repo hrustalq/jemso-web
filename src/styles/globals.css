@@ -65,15 +65,15 @@
   /* Content height calculation accounting for header and safe areas */
   --content-height: calc(100vh - var(--header-height) - var(--safe-top) - var(--safe-bottom));
   
-  /* Gran Turismo inspired light theme - clean and minimal */
+  /* JEMSO inspired light theme - clean and professional with logo blue */
   --background: oklch(0.98 0 0);
   --foreground: oklch(0.09 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.09 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.09 0 0);
-  /* GT Red accent - racing inspired */
-  --primary: oklch(0.55 0.22 25);
+  /* JEMSO Deep Blue accent - logo inspired (#004B87) */
+  --primary: oklch(0.38 0.12 250);
   --primary-foreground: oklch(0.99 0 0);
   --secondary: oklch(0.94 0 0);
   --secondary-foreground: oklch(0.09 0 0);
@@ -84,32 +84,32 @@
   --destructive: oklch(0.55 0.22 25);
   --border: oklch(0.89 0 0);
   --input: oklch(0.89 0 0);
-  --ring: oklch(0.55 0.22 25);
-  --chart-1: oklch(0.55 0.22 25);
-  --chart-2: oklch(0.45 0.15 220);
+  --ring: oklch(0.38 0.12 250);
+  --chart-1: oklch(0.38 0.12 250);
+  --chart-2: oklch(0.50 0.14 240);
   --chart-3: oklch(0.6 0.18 160);
   --chart-4: oklch(0.65 0.16 50);
-  --chart-5: oklch(0.5 0.2 280);
+  --chart-5: oklch(0.45 0.16 260);
   --sidebar: oklch(0.98 0 0);
   --sidebar-foreground: oklch(0.09 0 0);
-  --sidebar-primary: oklch(0.55 0.22 25);
+  --sidebar-primary: oklch(0.38 0.12 250);
   --sidebar-primary-foreground: oklch(0.99 0 0);
   --sidebar-accent: oklch(0.94 0 0);
   --sidebar-accent-foreground: oklch(0.09 0 0);
   --sidebar-border: oklch(0.89 0 0);
-  --sidebar-ring: oklch(0.55 0.22 25);
+  --sidebar-ring: oklch(0.38 0.12 250);
 }
 
 .dark {
-  /* Gran Turismo inspired dark theme - deep black with high contrast */
+  /* JEMSO inspired dark theme - deep black with high contrast and logo blue */
   --background: oklch(0.09 0 0);
   --foreground: oklch(0.98 0 0);
   --card: oklch(0.12 0 0);
   --card-foreground: oklch(0.98 0 0);
   --popover: oklch(0.12 0 0);
   --popover-foreground: oklch(0.98 0 0);
-  /* GT Red accent - racing inspired */
-  --primary: oklch(0.60 0.24 25);
+  /* JEMSO Bright Blue accent - logo inspired, enhanced for dark mode */
+  --primary: oklch(0.55 0.16 245);
   --primary-foreground: oklch(0.99 0 0);
   --secondary: oklch(0.15 0 0);
   --secondary-foreground: oklch(0.98 0 0);
@@ -120,20 +120,20 @@
   --destructive: oklch(0.60 0.24 25);
   --border: oklch(0.18 0 0);
   --input: oklch(0.18 0 0);
-  --ring: oklch(0.60 0.24 25);
-  --chart-1: oklch(0.60 0.24 25);
-  --chart-2: oklch(0.55 0.18 220);
+  --ring: oklch(0.55 0.16 245);
+  --chart-1: oklch(0.55 0.16 245);
+  --chart-2: oklch(0.60 0.18 235);
   --chart-3: oklch(0.65 0.20 160);
   --chart-4: oklch(0.70 0.18 50);
-  --chart-5: oklch(0.60 0.22 280);
+  --chart-5: oklch(0.58 0.20 260);
   --sidebar: oklch(0.09 0 0);
   --sidebar-foreground: oklch(0.98 0 0);
-  --sidebar-primary: oklch(0.60 0.24 25);
+  --sidebar-primary: oklch(0.55 0.16 245);
   --sidebar-primary-foreground: oklch(0.99 0 0);
   --sidebar-accent: oklch(0.15 0 0);
   --sidebar-accent-foreground: oklch(0.98 0 0);
   --sidebar-border: oklch(0.18 0 0);
-  --sidebar-ring: oklch(0.60 0.24 25);
+  --sidebar-ring: oklch(0.55 0.16 245);
 }
 
 @layer base {
