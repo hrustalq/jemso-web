@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { MoreHorizontal, Shield, Ban } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import {
@@ -14,12 +13,10 @@ import {
 
 interface UserActionsProps {
   userId: string;
-  userEmail: string;
+  userEmail: string | null;
 }
 
 export function UserActions({ userId, userEmail }: UserActionsProps) {
-  const [isLoading, setIsLoading] = useState(false);
-
   const handleManageRoles = () => {
     // TODO: Implement role management modal
     console.log("Manage roles for:", userId);
@@ -41,15 +38,17 @@ export function UserActions({ userId, userEmail }: UserActionsProps) {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuItem
-          onClick={() => navigator.clipboard.writeText(userId)}
+          onClick={() => void navigator.clipboard.writeText(userId)}
         >
           Copy User ID
         </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => navigator.clipboard.writeText(userEmail)}
-        >
-          Copy Email
-        </DropdownMenuItem>
+        {userEmail && (
+          <DropdownMenuItem
+            onClick={() => void navigator.clipboard.writeText(userEmail)}
+          >
+            Copy Email
+          </DropdownMenuItem>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleManageRoles}>
           <Shield className="mr-2 h-4 w-4" />

@@ -51,11 +51,11 @@ export function EventActions({
   };
 
   const handleCopyId = () => {
-    navigator.clipboard.writeText(eventId);
+    void navigator.clipboard.writeText(eventId);
   };
 
   const handleCopySlug = () => {
-    navigator.clipboard.writeText(eventSlug);
+    void navigator.clipboard.writeText(eventSlug);
   };
 
   return (

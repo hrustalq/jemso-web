@@ -5,7 +5,7 @@ import { gsap } from "gsap";
 
 export function AnimatedMeshBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -50,7 +50,7 @@ export function AnimatedMeshBackground() {
       vx: (Math.random() - 0.5) * 0.5,
       vy: (Math.random() - 0.5) * 0.5,
       radius: Math.random() * 300 + 200,
-      color: currentColors[i % currentColors.length],
+      color: currentColors[i % currentColors.length] ?? currentColors[0] ?? "",
     }));
 
     // Animate points

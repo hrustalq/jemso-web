@@ -29,6 +29,12 @@ export default async function EditPlanPage({ params }: EditPlanPageProps) {
     notFound();
   }
 
+  // Transform the plan data to match PlanForm interface
+  const planForForm = {
+    ...plan,
+    billingPeriod: plan.billingInterval,
+  };
+
   return (
     <div>
       <div className="mb-8">
@@ -38,7 +44,7 @@ export default async function EditPlanPage({ params }: EditPlanPageProps) {
         </p>
       </div>
 
-      <PlanForm plan={plan} />
+      <PlanForm plan={planForForm} />
     </div>
   );
 }

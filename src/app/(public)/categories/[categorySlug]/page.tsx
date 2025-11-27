@@ -7,14 +7,15 @@ import { CategoryEvents } from "./_components/category-events";
 import { CategoryNewsletterForm } from "~/components/category-newsletter-form";
 
 interface CategoryPageProps {
-  params: {
+  params: Promise<{
     categorySlug: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: CategoryPageProps) {
+  const { categorySlug } = await params;
   const category = await db.category.findUnique({
-    where: { slug: params.categorySlug },
+    where: { slug: categorySlug },
   });
 
   if (!category) {
@@ -31,8 +32,9 @@ export async function generateMetadata({ params }: CategoryPageProps) {
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
+  const { categorySlug } = await params;
   const category = await db.category.findUnique({
-    where: { slug: params.categorySlug },
+    where: { slug: categorySlug },
   });
 
   if (!category) {

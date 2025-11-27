@@ -169,16 +169,16 @@ export function FeatureForm({ feature }: FeatureFormProps) {
             {!feature && (
               <div className="mt-2 space-y-1 text-xs text-muted-foreground">
                 <p>
-                  <strong>Boolean:</strong> Feature is either included or not (e.g.,
-                  "Premium Support")
+                  <strong>Boolean:</strong> Feature is either included or not (e.g.,{" "}
+                  Premium Support)
                 </p>
                 <p>
-                  <strong>Numeric:</strong> Feature has a numeric value (e.g., "50GB
-                  Storage", "1000 API Calls")
+                  <strong>Numeric:</strong> Feature has a numeric value (e.g., 50GB{" "}
+                  Storage, 1000 API Calls)
                 </p>
                 <p>
-                  <strong>Text:</strong> Feature has a custom text value (e.g.,
-                  "Priority Queue Access")
+                  <strong>Text:</strong> Feature has a custom text value (e.g.,{" "}
+                  Priority Queue Access)
                 </p>
               </div>
             )}

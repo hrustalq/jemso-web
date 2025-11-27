@@ -124,7 +124,7 @@ export function BlockEditor({
         <BlockRenderer
           block={block}
           editable={true}
-          onUpdate={onUpdate}
+          onUpdate={(_, updates) => onUpdate(updates)}
         />
       </div>
     </div>

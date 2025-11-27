@@ -10,21 +10,22 @@ export const metadata = {
 };
 
 interface EditPostPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function EditPostPage({ params }: EditPostPageProps) {
+  const { id } = await params;
   const session = await auth();
 
   if (!session) {
-    redirect(`/auth/sign-in?callbackUrl=/admin/posts/${params.id}/edit`);
+    redirect(`/auth/sign-in?callbackUrl=/admin/posts/${id}/edit`);
   }
 
   // Fetch the post
   const post = await db.blogPost.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       tags: {
         include: {

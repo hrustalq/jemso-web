@@ -67,7 +67,7 @@ export function BlockEditor({ blocks, onChange }: BlockEditorProps) {
 
   const handleBlockTypeSelect = (type: BlockType) => {
     const position = insertPosition ?? blocks.length;
-    const newBlock = createEmptyBlock(type, position) as Block;
+    const newBlock = createEmptyBlock(type, position);
     
     const updatedBlocks = [...blocks];
     updatedBlocks.splice(position, 0, newBlock);

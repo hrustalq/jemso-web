@@ -41,7 +41,7 @@ export const updatePlanDto = z.object({
 export const getPlanDto = z.object({
   id: z.string().optional(),
   slug: z.string().optional(),
-}).refine((data) => data.id || data.slug, {
+}).refine((data) => data.id ?? data.slug, {
   message: "Either id or slug must be provided",
 });
 

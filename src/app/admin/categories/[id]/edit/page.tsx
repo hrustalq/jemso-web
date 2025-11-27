@@ -8,16 +8,17 @@ export const metadata = {
 };
 
 interface EditCategoryPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function EditCategoryPage({
   params,
 }: EditCategoryPageProps) {
+  const { id } = await params;
   const category = await db.category.findUnique({
-    where: { id: params.id },
+    where: { id },
   });
 
   if (!category) {

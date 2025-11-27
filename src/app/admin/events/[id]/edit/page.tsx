@@ -8,14 +8,15 @@ export const metadata = {
 };
 
 interface EditEventPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function EditEventPage({ params }: EditEventPageProps) {
+  const { id } = await params;
   const event = await db.event.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       category: true,
       author: {

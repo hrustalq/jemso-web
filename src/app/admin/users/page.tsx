@@ -97,7 +97,7 @@ export default async function UsersPage() {
                       {new Date(user.createdAt).toLocaleDateString()}
                     </TableCell>
                     <TableCell className="text-right">
-                      <UserActions userId={user.id} userEmail={user.email} />
+                      <UserActions userId={user.id} userEmail={user.email ?? ""} />
                     </TableCell>
                   </TableRow>
                 ))
