@@ -1,7 +1,7 @@
 "use client";
 
 import { api } from "~/trpc/react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
+import { Card, CardContent } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 import { Skeleton } from "~/components/ui/skeleton";
 import { 
@@ -11,6 +11,7 @@ import {
   Star,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function UserContentPage() {
   const { data: user, isLoading: loadingUser } = api.user.me.useQuery();
@@ -158,10 +159,11 @@ function PostCard({ post, isAccessible }: PostCardProps) {
     }`}>
       {post.coverImage && (
         <div className="relative aspect-video overflow-hidden rounded-t-lg">
-          <img 
+          <Image 
             src={post.coverImage} 
             alt={post.title}
-            className={`object-cover w-full h-full ${!isAccessible ? "blur-sm" : ""}`}
+            fill
+            className={`object-cover ${!isAccessible ? "blur-sm" : ""}`}
           />
           {!isAccessible && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/50">

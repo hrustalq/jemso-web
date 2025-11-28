@@ -26,7 +26,6 @@ export function SectionMeshBackground({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let isVisible = false;
     let isAnimating = false;
 
     // Set canvas size to match container with device pixel ratio for crisp rendering
@@ -169,7 +168,6 @@ export function SectionMeshBackground({
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          isVisible = entry.isIntersecting;
           if (entry.isIntersecting) {
             startAnimations();
           } else {
@@ -184,13 +182,11 @@ export function SectionMeshBackground({
     
     // Start if already visible
     if (container.getBoundingClientRect().top < window.innerHeight) {
-      isVisible = true;
       startAnimations();
     }
 
     return () => {
       isAnimating = false;
-      isVisible = false;
       observer.disconnect();
       resizeObserver.disconnect();
       if (animationRef.current) {

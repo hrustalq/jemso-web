@@ -8,16 +8,18 @@ export default function AuthLoading() {
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!containerRef.current || !cardRef.current) return;
+    const container = containerRef.current;
+    const card = cardRef.current;
+    if (!container || !card) return;
 
     // Fade in animation
-    gsap.from(containerRef.current, {
+    gsap.from(container, {
       opacity: 0,
       duration: 0.3,
     });
 
     // Card pulse animation
-    gsap.to(cardRef.current, {
+    gsap.to(card, {
       scale: 1.02,
       duration: 1.5,
       repeat: -1,
@@ -26,8 +28,8 @@ export default function AuthLoading() {
     });
 
     return () => {
-      gsap.killTweensOf(containerRef.current);
-      gsap.killTweensOf(cardRef.current);
+      gsap.killTweensOf(container);
+      gsap.killTweensOf(card);
     };
   }, []);
 

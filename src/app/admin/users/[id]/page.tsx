@@ -9,7 +9,7 @@ interface PageProps {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { id } = await params;
+  await params;
   return {
     title: `Редактирование пользователя | Админ-панель`,
   };
@@ -80,7 +80,7 @@ export default async function UserDetailsPage({ params }: PageProps) {
         </div>
       </div>
     );
-  } catch (error) {
+  } catch {
     notFound();
   }
 }

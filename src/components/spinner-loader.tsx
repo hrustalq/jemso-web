@@ -8,10 +8,12 @@ export function SpinnerLoader() {
   const circleRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!spinnerRef.current || !circleRef.current) return;
+    const spinner = spinnerRef.current;
+    const circle = circleRef.current;
+    if (!spinner || !circle) return;
 
     // Rotate animation
-    gsap.to(spinnerRef.current, {
+    gsap.to(spinner, {
       rotation: 360,
       duration: 1.5,
       repeat: -1,
@@ -19,7 +21,7 @@ export function SpinnerLoader() {
     });
 
     // Scale pulse animation
-    gsap.to(circleRef.current, {
+    gsap.to(circle, {
       scale: 1.1,
       opacity: 0.6,
       duration: 0.8,
@@ -29,8 +31,8 @@ export function SpinnerLoader() {
     });
 
     return () => {
-      gsap.killTweensOf(spinnerRef.current);
-      gsap.killTweensOf(circleRef.current);
+      gsap.killTweensOf(spinner);
+      gsap.killTweensOf(circle);
     };
   }, []);
 

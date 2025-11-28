@@ -17,7 +17,7 @@ interface PlanActionsProps {
   planName: string;
 }
 
-export function PlanActions({ planId, planName }: PlanActionsProps) {
+export function PlanActions({ planId, planName: _planName }: PlanActionsProps) {
   const router = useRouter();
 
   const handleEdit = () => {

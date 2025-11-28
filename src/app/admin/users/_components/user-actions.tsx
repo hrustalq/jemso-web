@@ -1,6 +1,6 @@
 "use client";
 
-import { MoreHorizontal, Shield, Ban } from "lucide-react";
+import { MoreHorizontal, Shield } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
 import {
@@ -18,11 +18,6 @@ interface UserActionsProps {
 }
 
 export function UserActions({ userId, userEmail }: UserActionsProps) {
-  const handleToggleStatus = () => {
-    // TODO: Implement user status toggle
-    console.log("Toggle status for:", userId);
-  };
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
