@@ -23,11 +23,13 @@ model BlogPost {
     slug        String   @unique
     excerpt     String?
     content     String   // Legacy: Plain text/HTML content (kept for backward compatibility)
-    blocks      Json?    // New: Structured block content for page builder
+    blocks      Json?    // Legacy: Structured block content for page builder (deprecated, use htmlContent)
+    htmlContent String?  // New: CKEditor HTML content (preferred for new content)
     coverImage  String?
     published   Boolean  @default(false)
     publishedAt DateTime?
     views       Int      @default(0)
+    minTier     Int      @default(0) // 0 = free/everyone, higher value = higher tier required
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
 
@@ -44,6 +46,40 @@ model BlogPost {
     @@index([authorId])
     @@index([categoryId])
     @@index([published, publishedAt])
+    @@index([minTier])
+}
+
+// News model - Separated from BlogPost
+model News {
+    id          String   @id @default(cuid())
+    title       String
+    slug        String   @unique
+    excerpt     String?
+    content     String   // Plain text/HTML content
+    htmlContent String?  // CKEditor HTML content
+    coverImage  String?
+    published   Boolean  @default(false)
+    publishedAt DateTime?
+    views       Int      @default(0)
+    minTier     Int      @default(0) // 0 = free/everyone, higher value = higher tier required
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    authorId String
+    author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+    categoryId String?
+    category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+    tags     NewsTag[]
+    
+    // News doesn't necessarily need comments, but can be added if needed later
+
+    @@index([slug])
+    @@index([authorId])
+    @@index([categoryId])
+    @@index([published, publishedAt])
+    @@index([minTier])
 }
 
 // Category model - Racing disciplines (drift, drag, ring, etc.)
@@ -63,6 +99,7 @@ model Category {
     updatedAt   DateTime   @updatedAt
     
     posts       BlogPost[]
+    news        News[]
     events      Event[]
     userPreferences UserCategoryPreference[]
 
@@ -79,6 +116,7 @@ model Tag {
     slug      String        @unique
     createdAt DateTime      @default(now())
     posts     BlogPostTag[]
+    news      NewsTag[]
 
     @@index([slug])
 }
@@ -95,6 +133,21 @@ model BlogPostTag {
 
     @@unique([postId, tagId])
     @@index([postId])
+    @@index([tagId])
+}
+
+// Junction table for many-to-many relationship between News and Tag
+model NewsTag {
+    id         String   @id @default(cuid())
+    newsId     String
+    tagId      String
+    assignedAt DateTime @default(now())
+
+    news News @relation(fields: [newsId], references: [id], onDelete: Cascade)
+    tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+    @@unique([newsId, tagId])
+    @@index([newsId])
     @@index([tagId])
 }
 
@@ -164,11 +217,13 @@ model Event {
     slug            String   @unique
     excerpt         String?
     content         String?  // Legacy: Plain text/HTML content
-    blocks          Json?    // New: Structured block content for page builder
+    blocks          Json?    // Legacy: Structured block content for page builder (deprecated, use htmlContent)
+    htmlContent     String?  // New: CKEditor HTML content (preferred for new content)
     coverImage      String?
     published       Boolean  @default(false)
     publishedAt     DateTime?
     views           Int      @default(0)
+    minTier         Int      @default(0) // 0 = free/everyone, higher value = higher tier required
     
     // Event-specific fields
     startDate       DateTime
@@ -195,6 +250,7 @@ model Event {
     @@index([categoryId])
     @@index([published, startDate])
     @@index([startDate, endDate])
+    @@index([minTier])
 }
 
 // Event Registration model - Tracks who registered for events
@@ -423,6 +479,7 @@ model User {
     accounts            Account[]
     sessions            Session[]
     blogPosts           BlogPost[]
+    news                News[]
     comments            Comment[]
     userRoles           UserRole[]
     subscriptions       UserSubscription[]

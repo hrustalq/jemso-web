@@ -236,3 +236,33 @@ export async function requireFeatureAccess(
   return value;
 }
 
+/**
+ * Get user's current subscription tier order
+ * Returns 0 if no active subscription
+ */
+export async function getUserTier(
+  db: PrismaClient,
+  userId: string,
+): Promise<number> {
+  const subscription = await db.userSubscription.findFirst({
+    where: {
+      userId,
+      status: "active",
+      OR: [
+        { endDate: null },
+        { endDate: { gt: new Date() } },
+      ],
+    },
+    include: {
+      plan: true,
+    },
+    orderBy: {
+      plan: {
+        order: "desc",
+      },
+    },
+  });
+
+  return subscription?.plan.order ?? 0;
+}
+

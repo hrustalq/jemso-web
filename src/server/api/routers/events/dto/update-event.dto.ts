@@ -6,11 +6,13 @@ export const updateEventDto = z.object({
   title: z.string().min(1).max(255).optional(),
   slug: z.string().min(1).max(255).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).optional(),
   excerpt: z.string().max(500).optional(),
-  content: z.string().optional(),
-  blocks: blocksArraySchema.optional(),
+  content: z.string().optional(), // Legacy content
+  blocks: blocksArraySchema.optional(), // Legacy: structured block content (deprecated, use htmlContent)
+  htmlContent: z.string().optional(), // New: CKEditor HTML content (preferred)
   coverImage: z.string().url().optional(),
   published: z.boolean().optional(),
   categoryId: z.string().optional().nullable(),
+  minTier: z.number().int().min(0).optional(),
   
   // Event-specific fields
   startDate: z.coerce.date().optional(),
@@ -34,4 +36,3 @@ export const updateEventDto = z.object({
 );
 
 export type UpdateEventDto = z.infer<typeof updateEventDto>;
-

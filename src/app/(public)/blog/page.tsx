@@ -3,6 +3,7 @@ import { HydrateClient, api } from "~/trpc/server";
 import { AnimatedHero } from "~/components/animated-hero";
 import { AnimatedCardGrid } from "~/components/animated-card-grid";
 import { AnimatedCategoryTags } from "~/components/animated-category-tags";
+import { PageWrapper } from "~/components/page-wrapper";
 
 export default async function BlogPage() {
   // Fetch all published posts and categories
@@ -17,7 +18,7 @@ export default async function BlogPage() {
 
   return (
     <HydrateClient>
-      <main className="min-h-(--content-height)" style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top))' }}>
+      <PageWrapper>
         <AnimatedHero
           title="БЛОГ"
           subtitle="Истории, инсайты и новости"
@@ -82,7 +83,7 @@ export default async function BlogPage() {
             </div>
           )}
         </div>
-      </main>
+      </PageWrapper>
     </HydrateClient>
   );
 }

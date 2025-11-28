@@ -1,6 +1,7 @@
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 import { authRouter } from "~/server/api/routers/auth";
 import { blogRouter } from "~/server/api/routers/blog";
+import { newsIndexRouter } from "~/server/api/routers/news";
 import { eventRouter } from "~/server/api/routers/events";
 import { rbacRouter } from "~/server/api/routers/rbac";
 import { subscriptionsRouter } from "~/server/api/routers/subscriptions";
@@ -14,6 +15,7 @@ import { userRouter } from "~/server/api/routers/user";
 export const appRouter = createTRPCRouter({
   auth: authRouter,
   blog: blogRouter,
+  news: newsIndexRouter,
   event: eventRouter,
   rbac: rbacRouter,
   subscriptions: subscriptionsRouter,

@@ -11,6 +11,8 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 
+import { PageWrapper } from "~/components/page-wrapper";
+
 export default function SignOutPage() {
   useEffect(() => {
     const handleSignOut = async () => {
@@ -32,8 +34,8 @@ export default function SignOutPage() {
   }, []);
 
   return (
-    <div 
-      className="flex min-h-(--content-height) items-center justify-center px-4 py-8"
+    <PageWrapper 
+      className="flex items-center justify-center px-4 py-8"
       style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top) + 2rem)' }}
     >
       <Card className="w-full max-w-md shadow-lg">
@@ -52,7 +54,7 @@ export default function SignOutPage() {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </PageWrapper>
   );
 }
 

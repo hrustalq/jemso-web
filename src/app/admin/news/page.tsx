@@ -21,8 +21,8 @@ export const metadata: Metadata = {
 };
 
 export default async function NewsPage() {
-  // Fetch news posts (blog posts in news category or with specific tag)
-  const posts = await api.blog.posts.list({
+  // Fetch news posts
+  const posts = await api.news.posts.list({
     page: 1,
     pageSize: 50,
     published: undefined, // Show all statuses
@@ -38,16 +38,16 @@ export default async function NewsPage() {
           </p>
         </div>
         <Button asChild>
-          <Link href="/admin/posts/new">
+          <Link href="/admin/news/new">
             <Plus className="mr-2 h-4 w-4" />
-            Новая статья
+            Новая новость
           </Link>
         </Button>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Все новостные статьи ({posts.total})</CardTitle>
+          <CardTitle>Все новости ({posts.total})</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
@@ -57,6 +57,7 @@ export default async function NewsPage() {
                 <TableHead>Категория</TableHead>
                 <TableHead>Автор</TableHead>
                 <TableHead>Статус</TableHead>
+                <TableHead>Уровень</TableHead>
                 <TableHead>Просмотры</TableHead>
                 <TableHead>Опубликовано</TableHead>
                 <TableHead className="text-right">Действия</TableHead>
@@ -65,8 +66,8 @@ export default async function NewsPage() {
             <TableBody>
               {posts.items.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center">
-                    Новостные статьи не найдены. Создайте первую статью!
+                  <TableCell colSpan={8} className="text-center">
+                    Новости не найдены. Создайте первую новость!
                   </TableCell>
                 </TableRow>
               ) : (
@@ -74,7 +75,7 @@ export default async function NewsPage() {
                   <TableRow key={post.id}>
                     <TableCell className="font-medium">
                       <Link
-                        href={`/blog/${post.slug}`}
+                        href={`/admin/news/${post.id}/edit`}
                         className="hover:underline"
                       >
                         {post.title}
@@ -97,6 +98,13 @@ export default async function NewsPage() {
                         {post.published ? "Опубликовано" : "Черновик"}
                       </Badge>
                     </TableCell>
+                    <TableCell>
+                        <Badge variant="outline">
+                            {post.minTier === 0 ? "Все" : 
+                             post.minTier === 1 ? "Базовый" :
+                             post.minTier === 2 ? "Продвинутый" : "VIP"}
+                        </Badge>
+                    </TableCell>
                     <TableCell>{post.views}</TableCell>
                     <TableCell>
                       {post.publishedAt
@@ -104,7 +112,7 @@ export default async function NewsPage() {
                         : "—"}
                     </TableCell>
                     <TableCell className="text-right">
-                      <NewsActions postId={post.id} postTitle={post.title} />
+                      <NewsActions postId={post.id} postTitle={post.title} slug={post.slug} />
                     </TableCell>
                   </TableRow>
                 ))

@@ -17,6 +17,7 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
+import { PageWrapper } from "~/components/page-wrapper";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -83,8 +84,8 @@ export default function ResetPasswordPage() {
   // Loading state while verifying token
   if (verifyTokenQuery.isLoading) {
     return (
-      <div 
-        className="flex min-h-(--content-height) items-center justify-center px-4 py-8"
+      <PageWrapper 
+        className="flex items-center justify-center px-4 py-8"
         style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top) + 2rem)' }}
       >
         <Card className="w-full max-w-md shadow-lg">
@@ -95,15 +96,15 @@ export default function ResetPasswordPage() {
             </p>
           </CardContent>
         </Card>
-      </div>
+      </PageWrapper>
     );
   }
 
   // Invalid or expired token
   if (!token || verifyTokenQuery.data?.valid === false) {
     return (
-      <div 
-        className="flex min-h-(--content-height) items-center justify-center px-4 py-8"
+      <PageWrapper 
+        className="flex items-center justify-center px-4 py-8"
         style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top) + 2rem)' }}
       >
         <Card className="w-full max-w-md shadow-lg">
@@ -136,16 +137,16 @@ export default function ResetPasswordPage() {
             </Link>
           </CardFooter>
         </Card>
-      </div>
+      </PageWrapper>
     );
   }
 
   // Success state
   if (success) {
     return (
-      <div 
-        className="flex min-h-(--content-height) items-center justify-center px-4 py-8"
-        style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top) + 2rem)' }}
+      <PageWrapper 
+        className="flex items-center justify-center px-4 py-8"
+        withHeaderOffset={false}
       >
         <Card className="w-full max-w-md shadow-lg">
           <CardHeader className="space-y-2">
@@ -167,15 +168,15 @@ export default function ResetPasswordPage() {
             </Alert>
           </CardContent>
         </Card>
-      </div>
+      </PageWrapper>
     );
   }
 
   // Reset password form
   return (
-    <div 
-      className="flex min-h-(--content-height) items-center justify-center px-4 py-8"
-      style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top) + 2rem)' }}
+    <PageWrapper 
+      className="flex items-center justify-center px-4 py-8"
+      withHeaderOffset={false}
     >
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="space-y-2">
@@ -249,7 +250,7 @@ export default function ResetPasswordPage() {
           </CardFooter>
         </form>
       </Card>
-    </div>
+    </PageWrapper>
   );
 }
 

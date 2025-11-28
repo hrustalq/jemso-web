@@ -1,9 +1,10 @@
 import { HydrateClient } from "~/trpc/server";
+import { PageWrapper } from "~/components/page-wrapper";
 
 export default async function DragPage() {
   return (
     <HydrateClient>
-      <main className="min-h-(--content-height)" style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top))' }}>
+      <PageWrapper>
         <div className="border-b border-border/40">
           <div className="container mx-auto px-4 py-16 text-center">
             <h1 className="mb-4 text-5xl font-extrabold uppercase tracking-tight text-foreground sm:text-6xl">
@@ -74,7 +75,7 @@ export default async function DragPage() {
             </section>
           </div>
         </div>
-      </main>
+      </PageWrapper>
     </HydrateClient>
   );
 }

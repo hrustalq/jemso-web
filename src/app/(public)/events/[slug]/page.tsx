@@ -18,6 +18,8 @@ interface EventPageProps {
   params: Promise<{ slug: string }>;
 }
 
+import { PageWrapper } from "~/components/page-wrapper";
+
 export default async function EventPage({ params }: EventPageProps) {
   const { slug } = await params;
 
@@ -42,9 +44,12 @@ export default async function EventPage({ params }: EventPageProps) {
 
     return (
       <HydrateClient>
-        <main className="min-h-(--content-height)" style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top))' }}>
-          <article className="py-16">
-            <div className="container mx-auto px-4">
+        <PageWrapper
+          withHeaderOffset={false}
+          className="pt-[calc(var(--header-height)+var(--safe-top))] md:pt-[calc(var(--header-height)+var(--safe-top)+4rem)]"
+        >
+          <article>
+            <div className="container mx-auto px-4 py-4 md:py-10">
               <div className="mx-auto max-w-4xl">
                 {/* Back link */}
                 <Link
@@ -291,7 +296,7 @@ export default async function EventPage({ params }: EventPageProps) {
               </div>
             </div>
           </article>
-        </main>
+        </PageWrapper>
       </HydrateClient>
     );
   } catch {

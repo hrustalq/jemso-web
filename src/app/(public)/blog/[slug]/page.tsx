@@ -7,6 +7,8 @@ import { isValidPostContent } from "~/lib/blocks/utils";
 import type { Block } from "~/lib/blocks/types";
 import { ArrowLeftIcon } from "lucide-react";
 
+import { PageWrapper } from "~/components/page-wrapper";
+
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
 }
@@ -19,9 +21,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
     return (
       <HydrateClient>
-        <main className="min-h-(--content-height)" style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top))' }}>
+        <PageWrapper
+          withHeaderOffset={false}
+          className="pt-[calc(var(--header-height)+var(--safe-top))] md:pt-[calc(var(--header-height)+var(--safe-top)+4rem)]"
+        >
           <article>
-            <div className="container mx-auto px-4">
+            <div className="container mx-auto px-4 py-4 md:py-10">
               <div className="mx-auto max-w-4xl">
                 {/* Back link */}
                 <Link
@@ -78,7 +83,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 )}
 
                 {/* Title */}
-                <h1 className="mb-6 text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl">
+                <h1 className="mb-6 text-2xl font-extrabold tracking-tight text-foreground sm:text-4xl md:text-5xl">
                   {post.title}
                 </h1>
 
@@ -123,8 +128,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 )}
 
                 {/* Comments Section */}
-                <div className="mt-12 border-t border-border/40 pt-12">
-                  <h2 className="mb-6 text-2xl font-bold uppercase tracking-tight">
+                <div className="mt-8 border-t border-border/40 pt-8 pb-6 md:mt-12 md:pt-12 md:pb-10">
+                  <h2 className="mb-6 text-xl font-bold uppercase tracking-tight sm:text-2xl">
                     Комментарии ({post.comments.length})
                   </h2>
                   
@@ -171,7 +176,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               </div>
             </div>
           </article>
-        </main>
+        </PageWrapper>
       </HydrateClient>
     );
   } catch {

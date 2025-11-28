@@ -7,7 +7,7 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 import { calculatePagination } from "~/server/api/utils";
-import { requirePermission, hasPermission } from "~/server/api/rbac";
+import { requirePermission, hasPermission, getUserTier } from "~/server/api/rbac";
 import { createBlogPostDto } from "./dto/create-post.dto";
 import { updateBlogPostDto } from "./dto/update-post.dto";
 import {
@@ -55,6 +55,20 @@ export const postsRouter = createTRPCRouter({
         });
       }
 
+      // Check minTier access
+      if (post.minTier > 0) {
+        const userTier = ctx.session?.user 
+          ? await getUserTier(ctx.db, ctx.session.user.id) 
+          : 0;
+        
+        if (userTier < post.minTier && !canViewUnpublished) {
+           throw new TRPCError({
+             code: "FORBIDDEN",
+             message: "You need a higher subscription tier to view this post",
+           });
+        }
+      }
+
       // Increment views
       await ctx.db.blogPost.update({
         where: { id: post.id },
@@ -70,10 +84,23 @@ export const postsRouter = createTRPCRouter({
       input;
     const { skip, take } = calculatePagination(page, pageSize, 0);
 
+    // Get user tier for filtering
+    const userTier = ctx.session?.user 
+      ? await getUserTier(ctx.db, ctx.session.user.id) 
+      : 0;
+      
+    const canViewUnpublished = ctx.session?.user
+        ? await hasPermission(ctx.db, ctx.session.user.id, "blog_post", "read")
+        : false;
+
+    // Filter by tier only for public/users without management permissions
+    const tierFilter = !canViewUnpublished ? { minTier: { lte: userTier } } : {};
+
     const where = {
       ...(published !== undefined ? { published } : { published: true }),
       ...(categoryId && { categoryId }),
       ...(authorId && { authorId }),
+      ...tierFilter,
       ...(tagId && {
         tags: {
           some: {
@@ -130,7 +157,7 @@ export const postsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await requirePermission(ctx.db, ctx.session.user.id, "blog_post", "create");
 
-      const { tagIds, blocks, ...postData } = input;
+      const { tagIds, blocks, htmlContent, ...postData } = input;
 
       // Check if slug already exists
       const existing = await ctx.db.blogPost.findUnique({
@@ -144,14 +171,15 @@ export const postsRouter = createTRPCRouter({
         });
       }
 
-      // Ensure content field has a value (use empty string if blocks are provided)
-      const content = input.content ?? (blocks ? "" : "");
+      // Ensure content field has a value (use empty string if blocks/htmlContent are provided)
+      const content = input.content ?? (blocks || htmlContent ? "" : "");
 
       return await ctx.db.blogPost.create({
         data: {
           ...postData,
           content,
           blocks: blocks ? (blocks as unknown as Prisma.InputJsonValue) : undefined,
+          htmlContent: htmlContent ?? undefined,
           authorId: ctx.session.user.id,
           publishedAt: input.published ? new Date() : null,
           ...(tagIds &&
@@ -181,7 +209,7 @@ export const postsRouter = createTRPCRouter({
   update: protectedProcedure
     .input(updateBlogPostDto)
     .mutation(async ({ ctx, input }) => {
-      const { id, tagIds, blocks, ...updateData } = input;
+      const { id, tagIds, blocks, htmlContent, ...updateData } = input;
 
       const post = await ctx.db.blogPost.findUnique({
         where: { id },
@@ -221,6 +249,7 @@ export const postsRouter = createTRPCRouter({
         data: {
           ...updateData,
           ...(blocks !== undefined && { blocks: blocks as unknown as Prisma.InputJsonValue }),
+          ...(htmlContent !== undefined && { htmlContent }),
           ...(updateData.published !== undefined &&
             updateData.published &&
             !post.publishedAt && { publishedAt: new Date() }),

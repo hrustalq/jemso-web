@@ -12,6 +12,8 @@ interface CategoryPageProps {
   }>;
 }
 
+import { PageWrapper } from "~/components/page-wrapper";
+
 export async function generateMetadata({ params }: CategoryPageProps) {
   const { categorySlug } = await params;
   const category = await db.category.findUnique({
@@ -43,7 +45,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   return (
     <HydrateClient>
-      <main className="min-h-(--content-height)" style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top))' }}>
+      <PageWrapper>
         <CategoryHero category={category} />
         
         <div className="container mx-auto px-4 py-12">
@@ -63,7 +65,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             </section>
           </div>
         </div>
-      </main>
+      </PageWrapper>
     </HydrateClient>
   );
 }

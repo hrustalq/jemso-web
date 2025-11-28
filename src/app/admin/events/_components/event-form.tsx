@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import { api } from "~/trpc/react";
+import { CKEditorComponent } from "~/components/ckeditor/ckeditor";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -13,6 +14,8 @@ import { Switch } from "~/components/ui/switch";
 import { Alert, AlertDescription } from "~/components/ui/alert";
 import { AlertCircle, Loader2 } from "lucide-react";
 
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
+
 interface EventFormProps {
   event?: {
     id: string;
@@ -20,6 +23,7 @@ interface EventFormProps {
     slug: string;
     excerpt: string | null;
     content: string | null;
+    htmlContent: string | null;
     coverImage: string | null;
     published: boolean;
     startDate: Date;
@@ -30,6 +34,7 @@ interface EventFormProps {
     price: { toNumber: () => number };
     currency: string;
     categoryId: string | null;
+    minTier: number;
   };
 }
 
@@ -41,7 +46,7 @@ export function EventForm({ event }: EventFormProps) {
   const [title, setTitle] = useState(event?.title ?? "");
   const [slug, setSlug] = useState(event?.slug ?? "");
   const [excerpt, setExcerpt] = useState(event?.excerpt ?? "");
-  const [content, setContent] = useState(event?.content ?? "");
+  const [htmlContent, setHtmlContent] = useState(event?.htmlContent ?? event?.content ?? "");
   const [coverImage, setCoverImage] = useState(event?.coverImage ?? "");
   const [published, setPublished] = useState(event?.published ?? false);
   const [startDate, setStartDate] = useState(
@@ -60,6 +65,7 @@ export function EventForm({ event }: EventFormProps) {
   );
   const [currency, setCurrency] = useState(event?.currency ?? "USD");
   const [categoryId, setCategoryId] = useState(event?.categoryId ?? "");
+  const [minTier, setMinTier] = useState(event?.minTier?.toString() ?? "0");
 
   // Fetch categories
   const { data: categoriesData } = api.blog.categories.list.useQuery();
@@ -97,7 +103,7 @@ export function EventForm({ event }: EventFormProps) {
       title,
       slug,
       excerpt: excerpt || undefined,
-      content: content || undefined,
+      htmlContent: htmlContent || undefined,
       coverImage: coverImage || undefined,
       published,
       startDate: new Date(startDate),
@@ -108,6 +114,7 @@ export function EventForm({ event }: EventFormProps) {
       price: parseFloat(price),
       currency,
       categoryId: categoryId || undefined,
+      minTier: parseInt(minTier),
     };
 
     if (event) {
@@ -196,18 +203,17 @@ export function EventForm({ event }: EventFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="content">Полное описание *</Label>
-            <Textarea
-              id="content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
+            <Label htmlFor="htmlContent">Полное описание *</Label>
+            <CKEditorComponent
+              value={htmlContent}
+              onChange={setHtmlContent}
               placeholder="Полное описание события и детали..."
               disabled={isLoading}
-              rows={6}
-              required
+              minHeight="400px"
+              maxHeight="800px"
             />
             <p className="text-xs text-muted-foreground">
-              Для редактирования расширенного контента используйте блочный редактор после создания события
+              Используйте редактор для создания богатого контента с форматированием, изображениями и таблицами
             </p>
           </div>
 
@@ -249,6 +255,24 @@ export function EventForm({ event }: EventFormProps) {
               disabled={isLoading}
             />
             <Label htmlFor="published">Опубликовано</Label>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="minTier">Уровень доступа</Label>
+            <Select value={minTier} onValueChange={setMinTier}>
+                <SelectTrigger>
+                <SelectValue placeholder="Выберите уровень" />
+                </SelectTrigger>
+                <SelectContent>
+                <SelectItem value="0">Все (Бесплатно)</SelectItem>
+                <SelectItem value="1">Базовый</SelectItem>
+                <SelectItem value="2">Продвинутый</SelectItem>
+                <SelectItem value="3">VIP</SelectItem>
+                </SelectContent>
+            </Select>
+            <p className="text-xs text-muted-foreground">
+                Минимальный уровень подписки для просмотра
+            </p>
           </div>
         </CardContent>
       </Card>

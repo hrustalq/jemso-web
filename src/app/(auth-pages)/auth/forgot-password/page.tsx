@@ -16,6 +16,7 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
+import { PageWrapper } from "~/components/page-wrapper";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -34,8 +35,8 @@ export default function ForgotPasswordPage() {
 
   if (success) {
     return (
-      <div 
-        className="flex min-h-(--content-height) items-center justify-center bg-background px-4 py-8"
+      <PageWrapper 
+        className="flex items-center justify-center bg-background px-4 py-8"
         style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top) + 2rem)' }}
       >
         <Card className="w-full max-w-md shadow-lg">
@@ -79,13 +80,13 @@ export default function ForgotPasswordPage() {
             </div>
           </CardFooter>
         </Card>
-      </div>
+      </PageWrapper>
     );
   }
 
   return (
-    <div 
-      className="flex min-h-(--content-height) items-center justify-center px-4 py-8"
+    <PageWrapper 
+      className="flex items-center justify-center px-4 py-8"
       style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top) + 2rem)' }}
     >
       <Card className="w-full max-w-md shadow-lg">
@@ -141,7 +142,7 @@ export default function ForgotPasswordPage() {
           </CardFooter>
         </form>
       </Card>
-    </div>
+    </PageWrapper>
   );
 }
 

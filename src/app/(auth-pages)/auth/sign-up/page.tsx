@@ -18,6 +18,7 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Alert, AlertDescription } from "~/components/ui/alert";
+import { PageWrapper } from "~/components/page-wrapper";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -79,8 +80,8 @@ export default function SignUpPage() {
 
   if (success) {
     return (
-      <div 
-        className="flex min-h-(--content-height) items-center justify-center px-4 py-8"
+      <PageWrapper 
+        className="flex items-center justify-center px-4 py-8"
         style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top) + 2rem)' }}
       >
         <Card className="w-full max-w-md shadow-lg">
@@ -94,13 +95,13 @@ export default function SignUpPage() {
             </CardDescription>
           </CardHeader>
         </Card>
-      </div>
+      </PageWrapper>
     );
   }
 
   return (
-    <div 
-      className="flex min-h-(--content-height) items-center justify-center px-4 py-8"
+    <PageWrapper 
+      className="flex items-center justify-center px-4 py-8"
       style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top) + 2rem)' }}
     >
       <Card className="w-full max-w-md shadow-lg">
@@ -199,7 +200,7 @@ export default function SignUpPage() {
           </CardFooter>
         </form>
       </Card>
-    </div>
+    </PageWrapper>
   );
 }
 

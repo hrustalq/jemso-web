@@ -1,13 +1,14 @@
 import { HydrateClient, api } from "~/trpc/server";
 import { AnimatedCategoryCard } from "~/components/animated-category-card";
 import { ScrollReveal } from "~/components/scroll-reveal";
+import { PageWrapper } from "~/components/page-wrapper";
 
 export default async function CategoriesPage() {
   const categories = await api.blog.categories.list();
 
   return (
     <HydrateClient>
-      <main className="min-h-(--content-height)" style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top))' }}>
+      <PageWrapper>
         <div className="container mx-auto px-4 py-16">
         <ScrollReveal animation="fadeIn">
           <div className="mb-12">
@@ -31,7 +32,7 @@ export default async function CategoriesPage() {
           </div>
         )}
         </div>
-      </main>
+      </PageWrapper>
     </HydrateClient>
   );
 }

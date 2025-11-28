@@ -16,24 +16,26 @@ import { api } from "~/trpc/react";
 interface NewsActionsProps {
   postId: string;
   postTitle: string;
+  slug?: string;
 }
 
-export function NewsActions({ postId, postTitle }: NewsActionsProps) {
+export function NewsActions({ postId, postTitle, slug }: NewsActionsProps) {
   const router = useRouter();
 
-  const deleteMutation = api.blog.posts.delete.useMutation({
+  const deleteMutation = api.news.posts.delete.useMutation({
     onSuccess: () => {
       router.refresh();
     },
   });
 
   const handleEdit = () => {
-    router.push(`/admin/posts/${postId}/edit`);
+    router.push(`/admin/news/${postId}/edit`);
   };
 
   const handleView = () => {
-    // Find the slug and view the post
-    window.open(`/blog/${postId}`, "_blank");
+    if (slug) {
+      window.open(`/news/${slug}`, "_blank");
+    }
   };
 
   const handleDelete = () => {
@@ -55,16 +57,18 @@ export function NewsActions({ postId, postTitle }: NewsActionsProps) {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Действия</DropdownMenuLabel>
         <DropdownMenuItem onClick={() => navigator.clipboard.writeText(postId)}>
-          Скопировать ID статьи
+          Скопировать ID
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleView}>
-          <Eye className="mr-2 h-4 w-4" />
-          Посмотреть статью
-        </DropdownMenuItem>
+        {slug && (
+          <DropdownMenuItem onClick={handleView}>
+            <Eye className="mr-2 h-4 w-4" />
+            Посмотреть на сайте
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem onClick={handleEdit}>
           <Edit className="mr-2 h-4 w-4" />
-          Редактировать статью
+          Редактировать
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={handleDelete}
@@ -72,7 +76,7 @@ export function NewsActions({ postId, postTitle }: NewsActionsProps) {
           disabled={deleteMutation.isPending}
         >
           <Trash className="mr-2 h-4 w-4" />
-          Удалить статью
+          Удалить
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

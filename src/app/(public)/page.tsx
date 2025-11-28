@@ -7,6 +7,7 @@ import { AnimatedPlanCard } from "~/components/animated-plan-card";
 import { AnimatedShopPreview } from "~/components/animated-shop-preview";
 import { ScrollReveal } from "~/components/scroll-reveal";
 import { SectionMeshBackground } from "~/components/section-mesh-background";
+import { PageWrapper } from "~/components/page-wrapper";
 import { CategoriesSection } from "./_components/categories-section";
 import { CategoriesSectionSkeleton } from "./_components/categories-section-skeleton";
 import { EventsSection } from "./_components/events-section";
@@ -29,9 +30,9 @@ export default async function Home() {
 
   return (
     <HydrateClient>
-      <main className="snap-y snap-mandatory overflow-y-auto" style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top))' }}>
+      <PageWrapper className="snap-y snap-mandatory overflow-y-auto">
         {/* Hero Section */}
-        <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16 relative" style={{ minHeight: 'calc(100vh - var(--header-height) - var(--safe-top))' }}>
+        <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16 relative min-h-(--content-height)">
           <SectionMeshBackground variant="multi" intensity="medium" />
           <div className="container mx-auto px-3 sm:px-4 w-full relative z-10">
             <AnimatedHeroSection />
@@ -49,7 +50,7 @@ export default async function Home() {
         </Suspense>
 
         {/* News Section */}
-        <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16 relative" style={{ minHeight: 'calc(100vh - var(--header-height) - var(--safe-top))' }}>
+        <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16 relative min-h-(--content-height)">
           <SectionMeshBackground variant="slate" intensity="low" />
           <div className="container mx-auto px-3 sm:px-4 w-full relative z-10">
             <ScrollReveal animation="slideInRight">
@@ -74,7 +75,7 @@ export default async function Home() {
 
         {/* Subscription Plans Section */}
         {plans.items.length > 0 && (
-          <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16 relative" style={{ minHeight: 'calc(100vh - var(--header-height) - var(--safe-top))' }}>
+          <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16 relative min-h-(--content-height)">
             <SectionMeshBackground variant="purple" intensity="low" />
             <div className="container mx-auto px-3 sm:px-4 w-full relative z-10">
               <ScrollReveal animation="scaleIn">
@@ -102,7 +103,7 @@ export default async function Home() {
         )}
 
         {/* Shop Section */}
-        <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16 relative" style={{ minHeight: 'calc(100vh - var(--header-height) - var(--safe-top))' }}>
+        <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16 relative min-h-(--content-height)">
           <SectionMeshBackground variant="pink" intensity="low" />
           <div className="container mx-auto px-3 sm:px-4 w-full relative z-10">
             <ScrollReveal animation="blurIn">
@@ -116,7 +117,7 @@ export default async function Home() {
             <AnimatedShopPreview />
           </div>
         </section>
-      </main>
+      </PageWrapper>
     </HydrateClient>
   );
 }

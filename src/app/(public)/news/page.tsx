@@ -1,10 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import { HydrateClient, api } from "~/trpc/server";
+import { PageWrapper } from "~/components/page-wrapper";
 
 export default async function NewsPage() {
   // Fetch latest published posts
-  const posts = await api.blog.posts.list({
+  const posts = await api.news.posts.list({
     page: 1,
     pageSize: 10,
     published: true,
@@ -12,8 +13,8 @@ export default async function NewsPage() {
 
   return (
     <HydrateClient>
-      <main className="min-h-screen" style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top))' }}>
-        <div className="border-b border-border/40 pt-6 md:pt-[calc(var(--header-height)+var(--safe-top)+2rem)]">
+      <PageWrapper>
+        <div className="border-b border-border/40 pt-6">
           <div className="text-center">
             <h1 className="mb-4 text-5xl font-extrabold uppercase tracking-tight text-foreground sm:text-6xl">
               НОВОСТИ
@@ -33,7 +34,7 @@ export default async function NewsPage() {
                     key={post.id}
                     className="overflow-hidden rounded-lg border border-border bg-card transition-colors hover:border-primary"
                   >
-                    <Link href={`/blog/${post.slug}`}>
+                    <Link href={`/news/${post.slug}`}>
                       <div className="md:flex">
                         {post.coverImage && (
                           <div className="aspect-video w-full overflow-hidden md:w-1/3">
@@ -74,8 +75,6 @@ export default async function NewsPage() {
                           )}
                           <div className="flex items-center gap-4 text-sm text-foreground/70">
                             <span>{post.views} просмотров</span>
-                            <span>•</span>
-                            <span>{post._count.comments} комментариев</span>
                           </div>
                         </div>
                       </div>
@@ -93,7 +92,7 @@ export default async function NewsPage() {
             )}
           </div>
         </div>
-      </main>
+      </PageWrapper>
     </HydrateClient>
   );
 }

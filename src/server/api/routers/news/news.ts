@@ -1,6 +1,5 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { type Prisma } from "../../../../../generated/prisma/client";
 import {
   createTRPCRouter,
   protectedProcedure,
@@ -8,93 +7,99 @@ import {
 } from "~/server/api/trpc";
 import { calculatePagination } from "~/server/api/utils";
 import { requirePermission, hasPermission, getUserTier } from "~/server/api/rbac";
-import { createEventDto } from "./dto/create-event.dto";
-import { updateEventDto } from "./dto/update-event.dto";
+import { createNewsDto } from "./dto/create-news.dto";
+import { updateNewsDto } from "./dto/update-news.dto";
 import {
-  getEventBySlugDto,
-  listEventsDto,
-} from "./dto/get-event.dto";
+  getNewsBySlugDto,
+  listNewsDto,
+} from "./dto/get-news.dto";
 
-export const eventsRouter = createTRPCRouter({
-  // Public: Get event by slug
+export const newsRouter = createTRPCRouter({
+  // Public: Get news by slug
   getBySlug: publicProcedure
-    .input(getEventBySlugDto)
+    .input(getNewsBySlugDto)
     .query(async ({ ctx, input }) => {
-      const event = await ctx.db.event.findUnique({
+      const news = await ctx.db.news.findUnique({
         where: { slug: input.slug },
         include: {
           author: {
             select: { id: true, name: true, image: true },
           },
           category: true,
-          _count: {
-            select: { registrations: true },
+          tags: {
+            include: {
+              tag: true,
+            },
           },
         },
       });
 
-      // Check if event is published or user has permission to view unpublished
+      // Check if news is published or user has permission to view unpublished
       const canViewUnpublished = ctx.session?.user
-        ? await hasPermission(ctx.db, ctx.session.user.id, "event", "read")
+        ? await hasPermission(ctx.db, ctx.session.user.id, "news", "read")
         : false;
 
-      if (!event || (!event.published && !canViewUnpublished)) {
+      if (!news || (!news.published && !canViewUnpublished)) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Event not found",
+          message: "News article not found",
         });
       }
 
       // Check minTier access
-      if (event.minTier > 0) {
+      if (news.minTier > 0) {
         const userTier = ctx.session?.user 
           ? await getUserTier(ctx.db, ctx.session.user.id) 
           : 0;
         
-        if (userTier < event.minTier && !canViewUnpublished) {
+        if (userTier < news.minTier && !canViewUnpublished) {
            throw new TRPCError({
              code: "FORBIDDEN",
-             message: "You need a higher subscription tier to view this event",
+             message: "You need a higher subscription tier to view this article",
            });
         }
       }
 
       // Increment views
-      await ctx.db.event.update({
-        where: { id: event.id },
+      await ctx.db.news.update({
+        where: { id: news.id },
         data: { views: { increment: 1 } },
       });
 
-      return event;
+      return news;
     }),
 
-  // Public: List events
-  list: publicProcedure.input(listEventsDto).query(async ({ ctx, input }) => {
-    const { page, pageSize, published, categoryId, authorId, search, upcoming, past } =
+  // Public: List news
+  list: publicProcedure.input(listNewsDto).query(async ({ ctx, input }) => {
+    const { page, pageSize, published, categoryId, tagId, authorId, search } =
       input;
     const { skip, take } = calculatePagination(page, pageSize, 0);
-
-    const now = new Date();
 
     // Get user tier for filtering
     const userTier = ctx.session?.user 
       ? await getUserTier(ctx.db, ctx.session.user.id) 
       : 0;
-
+      
+    // Check if user is admin/manager/editor to bypass tier filtering
     const canViewUnpublished = ctx.session?.user
-        ? await hasPermission(ctx.db, ctx.session.user.id, "event", "read")
+        ? await hasPermission(ctx.db, ctx.session.user.id, "news", "read")
         : false;
 
     // Filter by tier only for public/users without management permissions
     const tierFilter = !canViewUnpublished ? { minTier: { lte: userTier } } : {};
-    
-    const where: Prisma.EventWhereInput = {
+
+    const where = {
       ...(published !== undefined ? { published } : { published: true }),
       ...(categoryId && { categoryId }),
       ...(authorId && { authorId }),
       ...tierFilter,
-      ...(upcoming && { startDate: { gte: now } }),
-      ...(past && { endDate: { lt: now } }),
+      ...(tagId && {
+        tags: {
+          some: {
+            tagId,
+          },
+        },
+      }),
       ...(search && {
         OR: [
           { title: { contains: search, mode: "insensitive" as const } },
@@ -105,19 +110,21 @@ export const eventsRouter = createTRPCRouter({
     };
 
     const [total, items] = await ctx.db.$transaction([
-      ctx.db.event.count({ where }),
-      ctx.db.event.findMany({
+      ctx.db.news.count({ where }),
+      ctx.db.news.findMany({
         where,
         skip,
         take,
-        orderBy: { startDate: "desc" },
+        orderBy: { publishedAt: "desc" },
         include: {
           author: {
             select: { id: true, name: true, image: true },
           },
           category: true,
-          _count: {
-            select: { registrations: true },
+          tags: {
+            include: {
+              tag: true,
+            },
           },
         },
       }),
@@ -133,162 +140,160 @@ export const eventsRouter = createTRPCRouter({
     };
   }),
 
-  // Protected: Create event
+  // Protected: Create news
   create: protectedProcedure
-    .input(createEventDto)
+    .input(createNewsDto)
     .mutation(async ({ ctx, input }) => {
-      await requirePermission(ctx.db, ctx.session.user.id, "event", "create");
+      await requirePermission(ctx.db, ctx.session.user.id, "news", "create");
 
-      const { blocks, htmlContent, ...eventData } = input;
+      const { tagIds, htmlContent, content, ...newsData } = input;
 
-      // Check if slug already exists
-      const existing = await ctx.db.event.findUnique({
+      const existing = await ctx.db.news.findUnique({
         where: { slug: input.slug },
       });
 
       if (existing) {
         throw new TRPCError({
           code: "CONFLICT",
-          message: "An event with this slug already exists",
+          message: "A news article with this slug already exists",
         });
       }
 
-      // Ensure content field has a value (use empty string if blocks/htmlContent are provided)
-      const content = input.content ?? (blocks || htmlContent ? "" : "");
+      const finalContent = content ?? (htmlContent ? "" : "");
 
-      return await ctx.db.event.create({
+      return await ctx.db.news.create({
         data: {
-          ...eventData,
-          content,
-          blocks: blocks ? (blocks as unknown as Prisma.InputJsonValue) : undefined,
+          ...newsData,
+          content: finalContent,
           htmlContent: htmlContent ?? undefined,
           authorId: ctx.session.user.id,
           publishedAt: input.published ? new Date() : null,
+          ...(tagIds &&
+            tagIds.length > 0 && {
+              tags: {
+                create: tagIds.map((tagId) => ({
+                  tagId,
+                })),
+              },
+            }),
         },
         include: {
           author: {
             select: { id: true, name: true, image: true },
           },
           category: true,
-          _count: {
-            select: { registrations: true },
+          tags: {
+            include: {
+              tag: true,
+            },
           },
         },
       });
     }),
 
-  // Protected: Update event
+  // Protected: Update news
   update: protectedProcedure
-    .input(updateEventDto)
+    .input(updateNewsDto)
     .mutation(async ({ ctx, input }) => {
-      const { id, blocks, htmlContent, ...updateData } = input;
+      const { id, tagIds, htmlContent, content, minTier, ...updateData } = input;
 
-      const event = await ctx.db.event.findUnique({
+      const news = await ctx.db.news.findUnique({
         where: { id },
       });
 
-      if (!event) {
+      if (!news) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Event not found",
+          message: "News article not found",
         });
       }
 
-      // Check if user owns the event or has permission to update any event
       const canUpdateAny = await hasPermission(
         ctx.db,
         ctx.session.user.id,
-        "event",
+        "news",
         "update",
       );
 
-      if (event.authorId !== ctx.session.user.id && !canUpdateAny) {
+      if (news.authorId !== ctx.session.user.id && !canUpdateAny) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "You can only edit your own events",
+          message: "You can only edit your own news articles",
         });
       }
 
-      return await ctx.db.event.update({
+      if (tagIds) {
+        await ctx.db.newsTag.deleteMany({
+          where: { newsId: id },
+        });
+      }
+
+      return await ctx.db.news.update({
         where: { id },
         data: {
           ...updateData,
-          ...(blocks !== undefined && { blocks: blocks as unknown as Prisma.InputJsonValue }),
+          ...(minTier !== undefined && { minTier }),
+          ...(content !== undefined && { content }),
           ...(htmlContent !== undefined && { htmlContent }),
           ...(updateData.published !== undefined &&
             updateData.published &&
-            !event.publishedAt && { publishedAt: new Date() }),
+            !news.publishedAt && { publishedAt: new Date() }),
+          ...(tagIds && {
+            tags: {
+              create: tagIds.map((tagId) => ({
+                tagId,
+              })),
+            },
+          }),
         },
         include: {
           author: {
             select: { id: true, name: true, image: true },
           },
           category: true,
-          _count: {
-            select: { registrations: true },
+          tags: {
+            include: {
+              tag: true,
+            },
           },
         },
       });
     }),
 
-  // Protected: Delete event
+  // Protected: Delete news
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const event = await ctx.db.event.findUnique({
+      const news = await ctx.db.news.findUnique({
         where: { id: input.id },
       });
 
-      if (!event) {
+      if (!news) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Event not found",
+          message: "News article not found",
         });
       }
 
-      // Check if user owns the event or has permission to delete any event
       const canDeleteAny = await hasPermission(
         ctx.db,
         ctx.session.user.id,
-        "event",
+        "news",
         "delete",
       );
 
-      if (event.authorId !== ctx.session.user.id && !canDeleteAny) {
+      if (news.authorId !== ctx.session.user.id && !canDeleteAny) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "You can only delete your own events",
+          message: "You can only delete your own news articles",
         });
       }
 
-      await ctx.db.event.delete({
+      await ctx.db.news.delete({
         where: { id: input.id },
       });
 
       return { success: true };
     }),
-
-  // Protected: Get event stats (admin only)
-  getStats: protectedProcedure.query(async ({ ctx }) => {
-    await requirePermission(ctx.db, ctx.session.user.id, "event", "read");
-
-    const now = new Date();
-
-    const [total, published, upcoming, past, totalRegistrations] = await Promise.all([
-      ctx.db.event.count(),
-      ctx.db.event.count({ where: { published: true } }),
-      ctx.db.event.count({ where: { startDate: { gte: now } } }),
-      ctx.db.event.count({ where: { endDate: { lt: now } } }),
-      ctx.db.eventRegistration.count(),
-    ]);
-
-    return {
-      total,
-      published,
-      upcoming,
-      past,
-      totalRegistrations,
-    };
-  }),
 });
 

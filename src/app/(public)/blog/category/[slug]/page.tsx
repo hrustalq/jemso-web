@@ -4,6 +4,7 @@ import { CategoryHero } from "./_components/category-hero";
 import { CategoryNews } from "./_components/category-news";
 import { CategoryUpcomingEvents } from "./_components/category-upcoming-events";
 import { CategoryPastEvents } from "./_components/category-past-events";
+import { PageWrapper } from "~/components/page-wrapper";
 import type { Metadata } from "next";
 
 interface CategoryPageProps {
@@ -46,10 +47,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
     return (
       <HydrateClient>
-        <main
-          className="min-h-(--content-height)"
-          style={{ paddingTop: "calc(var(--header-height) + var(--safe-top))" }}
-        >
+        <PageWrapper>
           <CategoryHero category={category} />
 
           <div className="container mx-auto px-4 py-10 md:px-6 lg:px-8">
@@ -64,7 +62,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               <CategoryPastEvents categoryId={category.id} />
             </div>
           </div>
-        </main>
+        </PageWrapper>
       </HydrateClient>
     );
   } catch {

@@ -12,18 +12,17 @@ import { Switch } from "~/components/ui/switch";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { Alert, AlertDescription } from "~/components/ui/alert";
 import { Loader2, Save, Eye, ArrowLeft } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import Link from "next/link";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 
-interface PostEditorFormProps {
+interface NewsEditorFormProps {
   mode: "create" | "edit";
-  post?: {
+  news?: {
     id: string;
     title: string;
     slug: string;
     excerpt: string | null;
     content: string;
-    blocks: unknown;
     htmlContent: string | null;
     coverImage: string | null;
     published: boolean;
@@ -33,17 +32,17 @@ interface PostEditorFormProps {
   };
 }
 
-export function PostEditorForm({ mode, post }: PostEditorFormProps) {
+export function NewsEditorForm({ mode, news }: NewsEditorFormProps) {
   const router = useRouter();
 
   // Form state
-  const [title, setTitle] = useState(post?.title ?? "");
-  const [slug, setSlug] = useState(post?.slug ?? "");
-  const [excerpt, setExcerpt] = useState(post?.excerpt ?? "");
-  const [coverImage, setCoverImage] = useState(post?.coverImage ?? "");
-  const [published, setPublished] = useState(post?.published ?? false);
-  const [htmlContent, setHtmlContent] = useState(post?.htmlContent ?? post?.content ?? "");
-  const [minTier, setMinTier] = useState(post?.minTier?.toString() ?? "0");
+  const [title, setTitle] = useState(news?.title ?? "");
+  const [slug, setSlug] = useState(news?.slug ?? "");
+  const [excerpt, setExcerpt] = useState(news?.excerpt ?? "");
+  const [coverImage, setCoverImage] = useState(news?.coverImage ?? "");
+  const [published, setPublished] = useState(news?.published ?? false);
+  const [htmlContent, setHtmlContent] = useState(news?.htmlContent ?? news?.content ?? "");
+  const [minTier, setMinTier] = useState(news?.minTier?.toString() ?? "0");
   const [autoSlug, setAutoSlug] = useState(mode === "create");
   const [error, setError] = useState<string | null>(null);
 
@@ -58,10 +57,9 @@ export function PostEditorForm({ mode, post }: PostEditorFormProps) {
     }
   }, [title, autoSlug]);
 
-  // Auto-generate excerpt from HTML content if empty
+  // Auto-generate excerpt
   useEffect(() => {
     if (!excerpt && htmlContent) {
-      // Strip HTML tags and get first 160 characters
       const textContent = htmlContent.replace(/<[^>]*>/g, "").trim();
       const generated = textContent.length > 160 
         ? textContent.slice(0, 160) + "..." 
@@ -73,18 +71,18 @@ export function PostEditorForm({ mode, post }: PostEditorFormProps) {
   }, [htmlContent, excerpt]);
 
   // API mutations
-  const createMutation = api.blog.posts.create.useMutation({
+  const createMutation = api.news.posts.create.useMutation({
     onSuccess: (data) => {
-      router.push(`/blog/${data.slug}`);
+      router.push(`/news/${data.slug}`);
     },
     onError: (err) => {
       setError(err.message);
     },
   });
 
-  const updateMutation = api.blog.posts.update.useMutation({
+  const updateMutation = api.news.posts.update.useMutation({
     onSuccess: (data) => {
-      router.push(`/blog/${data.slug}`);
+      router.push(`/news/${data.slug}`);
     },
     onError: (err) => {
       setError(err.message);
@@ -106,9 +104,9 @@ export function PostEditorForm({ mode, post }: PostEditorFormProps) {
         published,
         minTier: minTierInt,
       });
-    } else if (post) {
+    } else if (news) {
       updateMutation.mutate({
-        id: post.id,
+        id: news.id,
         title,
         slug,
         excerpt: excerpt || undefined,
@@ -130,14 +128,14 @@ export function PostEditorForm({ mode, post }: PostEditorFormProps) {
         {/* Title */}
         <Card>
           <CardHeader>
-            <CardTitle>Заголовок статьи</CardTitle>
+            <CardTitle>Заголовок новости</CardTitle>
             <CardDescription>
-              Введите привлекательный заголовок для вашей статьи
+              Введите заголовок для вашей новости
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Input
-              placeholder="Введите заголовок статьи..."
+              placeholder="Введите заголовок..."
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="text-2xl font-bold h-auto py-3"
@@ -150,14 +148,14 @@ export function PostEditorForm({ mode, post }: PostEditorFormProps) {
           <CardHeader>
             <CardTitle>Контент</CardTitle>
             <CardDescription>
-              Создайте контент статьи используя редактор
+              Создайте контент новости
             </CardDescription>
           </CardHeader>
           <CardContent>
             <CKEditorComponent
               value={htmlContent}
               onChange={setHtmlContent}
-              placeholder="Начните вводить текст статьи..."
+              placeholder="Начните вводить текст..."
               minHeight="500px"
               maxHeight="1000px"
             />
@@ -175,7 +173,7 @@ export function PostEditorForm({ mode, post }: PostEditorFormProps) {
               <div className="flex gap-2 mt-1">
                 <Input
                   id="slug"
-                  placeholder="post-slug"
+                  placeholder="news-slug"
                   value={slug}
                   onChange={(e) => {
                     setSlug(e.target.value);
@@ -192,24 +190,18 @@ export function PostEditorForm({ mode, post }: PostEditorFormProps) {
                   </Button>
                 )}
               </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                URL-дружественная версия заголовка
-              </p>
             </div>
 
             <div>
               <Label htmlFor="excerpt">Краткое описание</Label>
               <Textarea
                 id="excerpt"
-                placeholder="Краткое описание вашей статьи..."
+                placeholder="Краткое описание..."
                 value={excerpt}
                 onChange={(e) => setExcerpt(e.target.value)}
                 rows={3}
                 className="mt-1"
               />
-              <p className="text-xs text-muted-foreground mt-1">
-                {excerpt.length}/500 символов
-              </p>
             </div>
 
             <div>
@@ -282,20 +274,20 @@ export function PostEditorForm({ mode, post }: PostEditorFormProps) {
                 ) : (
                   <>
                     <Save className="mr-2 h-4 w-4" />
-                    {mode === "create" ? "Создать статью" : "Обновить статью"}
+                    {mode === "create" ? "Создать" : "Обновить"}
                   </>
                 )}
               </Button>
 
-              {mode === "edit" && post && (
+              {mode === "edit" && news && (
                 <Button
                   asChild
                   variant="outline"
                   className="w-full"
                 >
-                  <Link href={`/blog/${post.slug}`}>
+                  <Link href={`/news/${news.slug}`}>
                     <Eye className="mr-2 h-4 w-4" />
-                    Посмотреть статью
+                    Посмотреть
                   </Link>
                 </Button>
               )}
@@ -305,51 +297,16 @@ export function PostEditorForm({ mode, post }: PostEditorFormProps) {
                 variant="ghost"
                 className="w-full"
               >
-                <Link href="/admin/posts">
+                <Link href="/admin/news">
                   <ArrowLeft className="mr-2 h-4 w-4" />
-                  Назад к статьям
+                  Назад к новостям
                 </Link>
               </Button>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Post Info */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Информация о статье</CardTitle>
-          </CardHeader>
-          <CardContent className="text-sm space-y-2 text-muted-foreground">
-            <div>
-              <strong>Контент:</strong> {htmlContent.length} симв.
-            </div>
-            <div>
-              <strong>Статус:</strong> {published ? "Опубликовано" : "Черновик"}
-            </div>
-            {excerpt && (
-              <div>
-                <strong>Описание:</strong> {excerpt.length} симв.
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Tips */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Советы</CardTitle>
-          </CardHeader>
-          <CardContent className="text-sm space-y-2 text-muted-foreground">
-            <ul className="list-disc list-inside space-y-1">
-              <li>Используйте заголовки для структурирования контента</li>
-              <li>Добавляйте изображения для привлекательности статей</li>
-              <li>Используйте форматирование для выделения важной информации</li>
-              <li>Используйте списки для организации контента</li>
-              <li>Добавляйте ссылки на внешние ресурсы</li>
-            </ul>
           </CardContent>
         </Card>
       </div>
     </div>
   );
 }
+
