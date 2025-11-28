@@ -1,10 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import { ZodError } from "zod";
 import { db } from "~/server/db";
 import { subscribeToCategoryDto } from "~/server/api/routers/blog/dto/newsletter.dto";
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    const body = (await req.json()) as unknown;
     
     // Validate input
     const validatedInput = subscribeToCategoryDto.parse(body);
@@ -67,9 +69,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(subscriber, { status: 200 });
   } catch (error) {
     // Handle validation errors
-    if (error instanceof Error && error.name === "ZodError") {
+    if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: "Invalid input data", details: error.message },
+        { 
+          error: "Invalid input data", 
+          details: error.errors.map((e) => `${e.path.join(".")}: ${e.message}`).join(", ")
+        },
         { status: 400 }
       );
     }
