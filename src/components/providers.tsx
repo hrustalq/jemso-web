@@ -1,6 +1,7 @@
 "use client";
 
 import { SessionProvider } from "next-auth/react";
+import { TRPCReactProvider } from "~/trpc/react";
 import type { ReactNode } from "react";
 
 interface ProvidersProps {
@@ -8,6 +9,10 @@ interface ProvidersProps {
 }
 
 export function Providers({ children }: ProvidersProps) {
-  return <SessionProvider>{children}</SessionProvider>;
+  return (
+    <SessionProvider>
+      <TRPCReactProvider>{children}</TRPCReactProvider>
+    </SessionProvider>
+  );
 }
 

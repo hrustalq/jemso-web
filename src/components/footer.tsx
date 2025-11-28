@@ -4,7 +4,7 @@ import { Separator } from "~/components/ui/separator";
 import { auth } from "~/server/auth";
 import { api } from "~/trpc/server";
 import { AnimatedFooterWrapper } from "./animated-footer";
-import { NewsletterForm } from "./newsletter-form-wrapper";
+import { NewsletterForm } from "./newsletter-form";
 
 const staticFooterSections = [
   {

@@ -4,6 +4,7 @@ import { type Metadata, type Viewport } from "next";
 import { Roboto } from "next/font/google";
 
 import { AnimatedMeshBackground } from "~/components/animated-mesh-background";
+import { Providers } from "~/components/providers";
 import { Toaster } from "~/components/ui/sonner";
 
 export const metadata: Metadata = {
@@ -93,9 +94,11 @@ export default function RootLayout({
   return (
     <html lang="ru" className={`dark ${roboto.variable}`} data-scroll-behavior="smooth">
       <body className="flex min-h-screen flex-col">
-        <AnimatedMeshBackground />
-        {children}
-        <Toaster />
+        <Providers>
+          <AnimatedMeshBackground />
+          {children}
+          <Toaster />
+        </Providers>
       </body>
     </html>
   );

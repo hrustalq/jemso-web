@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useTransition, useEffect } from "react";
 import { Mail, User, CheckCircle2 } from "lucide-react";
-import { api } from "~/trpc/react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -22,26 +21,59 @@ export function CategoryNewsletterForm({
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
 
-  const subscribe = api.blog.newsletter.subscribeToCategory.useMutation({
-    onSuccess: () => {
-      setSuccess(true);
-      setEmail("");
-      setName("");
-      // Reset success message after 5 seconds
-      setTimeout(() => setSuccess(false), 5000);
-    },
-  });
+  // Reset success message after 5 seconds
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        startTransition(() => {
+          setSuccess(false);
+        });
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [success, startTransition]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
-    subscribe.mutate({ 
-      email, 
-      name: name || undefined,
-      categoryId 
+
+    setError(null);
+
+    startTransition(() => {
+      // Mark the start of transition
     });
-  };
+
+    try {
+      const response = await fetch("/api/newsletter/subscribe-category", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          name: name || undefined,
+          categoryId,
+        }),
+      });
+
+      const data = (await response.json()) as { error?: string };
+
+      if (!response.ok) {
+        throw new Error(data.error ?? "Failed to subscribe");
+      }
+
+      startTransition(() => {
+        setSuccess(true);
+        setEmail("");
+        setName("");
+      });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to subscribe to category newsletter");
+    }
+  }, [email, name, categoryId, startTransition]);
 
   return (
     <Card 
@@ -90,7 +122,7 @@ export function CategoryNewsletterForm({
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="pl-10"
-                  disabled={subscribe.isPending}
+                  disabled={isPending}
                 />
               </div>
             </div>
@@ -110,16 +142,16 @@ export function CategoryNewsletterForm({
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10"
                   required
-                  disabled={subscribe.isPending}
+                  disabled={isPending}
                 />
               </div>
             </div>
 
             {/* Error Message */}
-            {subscribe.error && (
+            {error && (
               <div className="rounded-md border border-destructive/20 bg-destructive/10 p-3">
                 <p className="text-sm text-destructive">
-                  {subscribe.error.message}
+                  {error}
                 </p>
               </div>
             )}
@@ -127,14 +159,14 @@ export function CategoryNewsletterForm({
             {/* Submit Button */}
             <Button
               type="submit"
-              disabled={subscribe.isPending || !email}
+              disabled={isPending || !email}
               className="w-full font-semibold uppercase tracking-wide"
               size="lg"
               style={{
                 backgroundColor: categoryColor ?? undefined,
               }}
             >
-              {subscribe.isPending ? "Отправка..." : "Подписаться"}
+              {isPending ? "Отправка..." : "Подписаться"}
             </Button>
           </form>
         )}
