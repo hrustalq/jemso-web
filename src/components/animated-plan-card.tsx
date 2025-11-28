@@ -51,10 +51,11 @@ export function AnimatedPlanCard({ plans, currentPlanId: propCurrentPlanId }: An
   const { data: session, status } = useSession();
 
   // Fetch current subscription if user is authenticated and no currentPlanId prop provided
+  // Only fetch on client side to avoid SSR issues
   const { data: currentSubscription } = api.subscriptions.subscriptions.myCurrent.useQuery(
     undefined,
     {
-      enabled: !!session && propCurrentPlanId === undefined,
+      enabled: typeof window !== "undefined" && !!session && propCurrentPlanId === undefined,
     }
   );
 

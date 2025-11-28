@@ -42,6 +42,10 @@ export const metadata: Metadata = {
   },
 };
 
+// Force static rendering with ISR
+export const dynamic = 'force-static';
+export const revalidate = 60; // Revalidate every 60 seconds
+
 export default async function Home() {
   // Fetch data in parallel for better performance
   const [latestPosts, plans] = await Promise.all([
