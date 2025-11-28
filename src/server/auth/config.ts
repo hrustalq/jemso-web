@@ -142,4 +142,5 @@ export const authConfig = {
   session: {
     strategy: "jwt", // Use JWT for credentials provider
   },
+  trustHost: true, // Trust host during build time and development
 } satisfies NextAuthConfig;

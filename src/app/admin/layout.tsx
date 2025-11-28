@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { auth } from "~/server/auth";
 import { hasRole } from "~/server/api/rbac";
 import { db } from "~/server/db";
+import { AppProviders } from "~/components/app-providers";
 import { AdminLayoutClient } from "./_components/admin-layout-client";
 
 export default async function AdminLayout({
@@ -26,11 +27,13 @@ export default async function AdminLayout({
   }
 
   return (
-    <AdminLayoutClient
-      userName={session.user.name ?? null}
-      userEmail={session.user.email ?? null}
-    >
-      {children}
-    </AdminLayoutClient>
+    <AppProviders>
+      <AdminLayoutClient
+        userName={session.user.name ?? null}
+        userEmail={session.user.email ?? null}
+      >
+        {children}
+      </AdminLayoutClient>
+    </AppProviders>
   );
 }

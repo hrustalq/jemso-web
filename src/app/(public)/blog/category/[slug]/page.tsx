@@ -7,6 +7,9 @@ import { CategoryPastEvents } from "./_components/category-past-events";
 import { PageWrapper } from "~/components/page-wrapper";
 import type { Metadata } from "next";
 
+// ISR: Revalidate every 300 seconds (5 minutes) - categories change less frequently
+export const revalidate = 300;
+
 interface CategoryPageProps {
   params: Promise<{ slug: string }>;
 }
@@ -20,21 +23,36 @@ export async function generateMetadata({
     const category = await api.blog.categories.get({ slug });
 
     return {
-      title: `${category.name} | JEMSO`,
+      title: category.name,
       description:
         category.description ??
-        `Explore ${category.name} news, events, and more on JEMSO`,
+        `Изучайте контент по направлению "${category.name}": новости, события и статьи на JEMSO.`,
+      keywords: [
+        "направление",
+        "категория",
+        "блог",
+        "JEMSO",
+        category.name,
+      ],
       openGraph: {
         title: `${category.name} | JEMSO`,
         description:
           category.description ??
-          `Explore ${category.name} news, events, and more on JEMSO`,
+          `Изучайте контент по направлению "${category.name}": новости, события и статьи на JEMSO.`,
+        type: "website",
+      },
+      twitter: {
+        card: "summary",
+        title: `${category.name} | JEMSO`,
+        description:
+          category.description ??
+          `Изучайте контент по направлению "${category.name}" на JEMSO.`,
       },
     };
   } catch {
     return {
-      title: "Category Not Found | JEMSO",
-      description: "The requested category could not be found",
+      title: "Направление не найдено",
+      description: "Запрашиваемое направление не найдено.",
     };
   }
 }

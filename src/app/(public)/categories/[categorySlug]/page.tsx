@@ -1,10 +1,14 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { db } from "~/server/db";
 import { HydrateClient } from "~/trpc/server";
 import { CategoryHero } from "./_components/category-hero";
 import { CategoryNews } from "./_components/category-news";
 import { CategoryEvents } from "./_components/category-events";
 import { CategoryNewsletterForm } from "~/components/category-newsletter-form";
+
+// ISR: Revalidate every 300 seconds (5 minutes) - categories change less frequently
+export const revalidate = 300;
 
 interface CategoryPageProps {
   params: Promise<{
@@ -14,7 +18,7 @@ interface CategoryPageProps {
 
 import { PageWrapper } from "~/components/page-wrapper";
 
-export async function generateMetadata({ params }: CategoryPageProps) {
+export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const { categorySlug } = await params;
   const category = await db.category.findUnique({
     where: { slug: categorySlug },
@@ -22,14 +26,30 @@ export async function generateMetadata({ params }: CategoryPageProps) {
 
   if (!category) {
     return {
-      title: "Category Not Found",
+      title: "Направление не найдено",
+      description: "Запрашиваемое направление не найдено.",
     };
   }
 
   return {
-    title: `${category.name} | JEMSO`,
-    description:
-      category.description ?? `Explore ${category.name} news, events, and more`,
+    title: category.name,
+    description: category.description ?? `Изучайте контент по направлению "${category.name}": новости, события и статьи на JEMSO.`,
+    keywords: [
+      "направление",
+      "категория",
+      "JEMSO",
+      category.name,
+    ],
+    openGraph: {
+      title: `${category.name} | JEMSO`,
+      description: category.description ?? `Изучайте контент по направлению "${category.name}": новости, события и статьи на JEMSO.`,
+      type: "website",
+    },
+    twitter: {
+      card: "summary",
+      title: `${category.name} | JEMSO`,
+      description: category.description ?? `Изучайте контент по направлению "${category.name}" на JEMSO.`,
+    },
   };
 }
 

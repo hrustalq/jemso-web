@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { HydrateClient, api } from "~/trpc/server";
 import Image from "next/image";
 import { BlocksRenderer } from "~/components/blocks/block-renderer";
@@ -9,8 +10,62 @@ import { ArrowLeftIcon } from "lucide-react";
 
 import { PageWrapper } from "~/components/page-wrapper";
 
+// ISR: Revalidate every 60 seconds
+export const revalidate = 60;
+
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
+  const { slug } = await params;
+
+  try {
+    const post = await api.blog.posts.getBySlug({ slug });
+
+    return {
+      title: post.title,
+      description: post.excerpt ?? `Читайте статью "${post.title}" на JEMSO. ${post.category ? `Категория: ${post.category.name}.` : ""}`,
+      keywords: [
+        "блог",
+        "статья",
+        "JEMSO",
+        ...(post.category ? [post.category.name] : []),
+        ...(post.tags.map((t) => t.tag.name)),
+      ],
+      authors: post.author?.name ? [{ name: post.author.name }] : undefined,
+      openGraph: {
+        title: post.title,
+        description: post.excerpt ?? `Читайте статью "${post.title}" на JEMSO.`,
+        type: "article",
+        publishedTime: post.publishedAt?.toISOString(),
+        authors: post.author?.name ? [post.author.name] : undefined,
+        ...(post.coverImage && {
+          images: [
+            {
+              url: post.coverImage,
+              width: 1200,
+              height: 630,
+              alt: post.title,
+            },
+          ],
+        }),
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: post.title,
+        description: post.excerpt ?? `Читайте статью "${post.title}" на JEMSO.`,
+        ...(post.coverImage && {
+          images: [post.coverImage],
+        }),
+      },
+    };
+  } catch {
+    return {
+      title: "Статья не найдена",
+      description: "Запрашиваемая статья не найдена.",
+    };
+  }
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {

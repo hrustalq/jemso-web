@@ -1,7 +1,46 @@
 import Link from "next/link";
 import Image from "next/image";
+import type { Metadata } from "next";
 import { HydrateClient, api } from "~/trpc/server";
 import { PageWrapper } from "~/components/page-wrapper";
+
+// ISR: Revalidate every 60 seconds
+export const revalidate = 60;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const posts = await api.news.posts.list({
+    page: 1,
+    pageSize: 1,
+    published: true,
+  });
+
+  const latestPost = posts.items[0];
+
+  return {
+    title: "Новости",
+    description: "Последние новости и события JEMSO. Следите за обновлениями о фестивалях, гонках, чемпионатах по дрифту и дрэг-рейсингу.",
+    openGraph: {
+      title: "Новости | JEMSO",
+      description: "Последние новости и события JEMSO. Следите за обновлениями о фестивалях, гонках, чемпионатах по дрифту и дрэг-рейсингу.",
+      type: "website",
+      ...(latestPost?.coverImage && {
+        images: [
+          {
+            url: latestPost.coverImage,
+            width: 1200,
+            height: 630,
+            alt: latestPost.title,
+          },
+        ],
+      }),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Новости | JEMSO",
+      description: "Последние новости и события JEMSO. Следите за обновлениями о фестивалях, гонках, чемпионатах по дрифту и дрэг-рейсингу.",
+    },
+  };
+}
 
 export default async function NewsPage() {
   // Fetch latest published posts

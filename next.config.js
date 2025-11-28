@@ -14,10 +14,7 @@ const config = {
       },
     ],
   },
-  // Ensure Prisma is properly bundled for serverless
-  serverComponentsExternalPackages: ["@prisma/client", "@prisma/engines"],
-  
-
+  serverExternalPackages: ["@prisma/client", "@prisma/engines"],
   transpilePackages: ['gsap', '@gsap/react'],
 };
 

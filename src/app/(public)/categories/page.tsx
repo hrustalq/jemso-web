@@ -1,7 +1,40 @@
+import type { Metadata } from "next";
 import { HydrateClient, api } from "~/trpc/server";
 import { AnimatedCategoryCard } from "~/components/animated-category-card";
 import { ScrollReveal } from "~/components/scroll-reveal";
 import { PageWrapper } from "~/components/page-wrapper";
+
+// ISR: Revalidate every 300 seconds (5 minutes) - categories change less frequently
+export const revalidate = 300;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const categories = await api.blog.categories.list();
+  const categoryNames = categories.map((cat) => cat.name).join(", ");
+
+  return {
+    title: "Направления",
+    description: `Изучайте контент по направлениям: от дрифта и тюнинга до новостей автоспорта и технических обзоров. ${categoryNames ? `Доступные направления: ${categoryNames}.` : ""}`,
+    keywords: [
+      "автомобильные направления",
+      "категории контента",
+      "дрифт",
+      "тюнинг",
+      "автоспорт",
+      "технические обзоры",
+      ...categories.map((cat) => cat.name),
+    ],
+    openGraph: {
+      title: "Направления | JEMSO",
+      description: `Изучайте контент по направлениям: от дрифта и тюнинга до новостей автоспорта и технических обзоров.`,
+      type: "website",
+    },
+    twitter: {
+      card: "summary",
+      title: "Направления | JEMSO",
+      description: `Изучайте контент по направлениям: от дрифта и тюнинга до новостей автоспорта и технических обзоров.`,
+    },
+  };
+}
 
 export default async function CategoriesPage() {
   const categories = await api.blog.categories.list();

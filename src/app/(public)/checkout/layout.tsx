@@ -1,3 +1,4 @@
+import { Providers } from "~/components/providers";
 import { redirect } from "next/navigation";
 import { auth } from "~/server/auth";
 
@@ -12,6 +13,10 @@ export default async function CheckoutLayout({
     redirect("/auth/sign-in?callbackUrl=/checkout");
   }
 
-  return <>{children}</>;
+  return (
+    <Providers>
+      {children}
+    </Providers>
+  );
 }
 

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { useState, useEffect } from "react";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AlertCircle, CheckCircle2 } from "lucide-react";
@@ -22,12 +22,20 @@ import { PageWrapper } from "~/components/page-wrapper";
 
 export default function SignUpPage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
   const [formError, setFormError] = useState("");
   const [success, setSuccess] = useState(false);
+
+  // Redirect authenticated users to dashboard
+  useEffect(() => {
+    if (status === "authenticated" && session) {
+      router.push("/dashboard");
+    }
+  }, [status, session, router]);
 
   const signUpMutation = api.auth.signUp.useMutation({
     onSuccess: async () => {
@@ -41,7 +49,7 @@ export default function SignUpPage() {
       });
 
       if (result?.ok) {
-        router.push("/");
+        router.push("/dashboard");
         router.refresh();
       }
     },

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { HydrateClient, api } from "~/trpc/server";
 import Image from "next/image";
 import { Decimal } from "decimal.js";
@@ -15,11 +16,92 @@ import {
   DollarSignIcon,
 } from "lucide-react";
 
+// ISR: Revalidate every 60 seconds
+export const revalidate = 60;
+
 interface EventPageProps {
   params: Promise<{ slug: string }>;
 }
 
 import { PageWrapper } from "~/components/page-wrapper";
+
+export async function generateMetadata({ params }: EventPageProps): Promise<Metadata> {
+  const { slug } = await params;
+
+  try {
+    const event = await api.event.events.getBySlug({ slug });
+    const price = new Decimal(event.price);
+    const startDate = new Date(event.startDate);
+    const endDate = new Date(event.endDate);
+    const now = new Date();
+    const isUpcoming = startDate > now;
+    const isOngoing = startDate <= now && endDate >= now;
+
+    const statusText = isUpcoming 
+      ? "Скоро" 
+      : isOngoing 
+        ? "Идёт сейчас" 
+        : "Завершено";
+
+    const priceText = price.isZero() 
+      ? "Бесплатно" 
+      : `${price.toNumber()} ${event.currency}`;
+
+    const dateText = startDate.toLocaleDateString("ru-RU", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+
+    const keywords: string[] = [
+      "событие",
+      "мероприятие",
+      "JEMSO",
+      "JEMSO EVENTS",
+    ];
+    if (event.category) {
+      keywords.push(event.category.name);
+    }
+    if (event.location) {
+      keywords.push(event.location);
+    }
+
+    return {
+      title: event.title,
+      description: event.excerpt ?? `${event.title}. ${statusText}. ${dateText}. ${event.location ? `Место: ${event.location}.` : ""} ${priceText}.`,
+      keywords,
+      authors: event.author?.name ? [{ name: event.author.name }] : undefined,
+      openGraph: {
+        title: event.title,
+        description: event.excerpt ?? `${event.title}. ${statusText}. ${dateText}.`,
+        type: "website",
+        ...(event.coverImage && {
+          images: [
+            {
+              url: event.coverImage,
+              width: 1200,
+              height: 630,
+              alt: event.title,
+            },
+          ],
+        }),
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: event.title,
+        description: event.excerpt ?? `${event.title}. ${statusText}. ${dateText}.`,
+        ...(event.coverImage && {
+          images: [event.coverImage],
+        }),
+      },
+    };
+  } catch {
+    return {
+      title: "Событие не найдено",
+      description: "Запрашиваемое событие не найдено.",
+    };
+  }
+}
 
 export default async function EventPage({ params }: EventPageProps) {
   const { slug } = await params;

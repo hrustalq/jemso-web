@@ -1,9 +1,61 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { HydrateClient, api } from "~/trpc/server";
 import { AnimatedHero } from "~/components/animated-hero";
 import { AnimatedCardGrid } from "~/components/animated-card-grid";
 import { AnimatedCategoryTags } from "~/components/animated-category-tags";
 import { PageWrapper } from "~/components/page-wrapper";
+
+// ISR: Revalidate every 60 seconds
+export const revalidate = 60;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const [posts, categories] = await Promise.all([
+    api.blog.posts.list({
+      page: 1,
+      pageSize: 1,
+      published: true,
+    }),
+    api.blog.categories.list(),
+  ]);
+
+  const latestPost = posts.items[0];
+  const categoryNames = categories.map((cat) => cat.name).join(", ");
+
+  return {
+    title: "Блог",
+    description: `Истории, инсайты и новости об автомобильной культуре. Направления: ${categoryNames || "дрифт, тюнинг, автоспорт, технические обзоры"}.`,
+    keywords: [
+      "автомобильный блог",
+      "автомобильная культура",
+      "дрифт",
+      "тюнинг",
+      "автоспорт",
+      "технические обзоры",
+      ...categories.map((cat) => cat.name),
+    ],
+    openGraph: {
+      title: "Блог | JEMSO",
+      description: `Истории, инсайты и новости об автомобильной культуре. Направления: ${categoryNames || "дрифт, тюнинг, автоспорт"}.`,
+      type: "website",
+      ...(latestPost?.coverImage && {
+        images: [
+          {
+            url: latestPost.coverImage,
+            width: 1200,
+            height: 630,
+            alt: latestPost.title,
+          },
+        ],
+      }),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Блог | JEMSO",
+      description: `Истории, инсайты и новости об автомобильной культуре.`,
+    },
+  };
+}
 
 export default async function BlogPage() {
   // Fetch all published posts and categories

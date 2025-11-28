@@ -1,7 +1,6 @@
 import { Suspense } from "react";
-import { redirect } from "next/navigation";
+import type { Metadata } from "next";
 import { HydrateClient, api } from "~/trpc/server";
-import { auth } from "~/server/auth";
 import { AnimatedHeroSection } from "~/components/animated-hero-section";
 import { AnimatedCardGrid } from "~/components/animated-card-grid";
 import { AnimatedSectionHeader } from "~/components/animated-section-header";
@@ -15,12 +14,35 @@ import { CategoriesSectionSkeleton } from "./_components/categories-section-skel
 import { EventsSection } from "./_components/events-section";
 import { EventsSectionSkeleton } from "./_components/events-section-skeleton";
 
+export const metadata: Metadata = {
+  title: "Главная",
+  description: "JEMSO DRIVE - Радость в движении! Автомобильное сообщество, фестивали, гонки, чемпионаты по дрифту и дрэг-рейсингу. Присоединяйтесь к нам!",
+  keywords: [
+    "JEMSO",
+    "JEMSO DRIVE",
+    "автомобильное сообщество",
+    "автомобильные фестивали",
+    "дрифт",
+    "дрэг-рейсинг",
+    "автомобильные выставки",
+    "автопробеги",
+    "мотоспорт",
+    "автомобильный клуб",
+    "Дагестан",
+  ],
+  openGraph: {
+    title: "JEMSO - Радость в движении!",
+    description: "JEMSO DRIVE - автомобильное сообщество, организация фестивалей, гонок, чемпионатов по дрифту и дрэг-рейсингу.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "JEMSO - Радость в движении!",
+    description: "JEMSO DRIVE - автомобильное сообщество, организация фестивалей, гонок, чемпионатов по дрифту и дрэг-рейсингу.",
+  },
+};
+
 export default async function Home() {
-  // Redirect authenticated users to dashboard
-  const session = await auth();
-  if (session) {
-    redirect("/dashboard");
-  }
   // Fetch data in parallel for better performance
   const [latestPosts, plans] = await Promise.all([
     api.blog.posts.list({

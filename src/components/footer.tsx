@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { Facebook, Twitter, Youtube, Instagram } from "lucide-react";
 import { Separator } from "~/components/ui/separator";
-import { NewsletterForm } from "~/components/newsletter-form";
 import { auth } from "~/server/auth";
 import { api } from "~/trpc/server";
 import { AnimatedFooterWrapper } from "./animated-footer";
+import { NewsletterForm } from "./newsletter-form-wrapper";
 
 const staticFooterSections = [
   {
