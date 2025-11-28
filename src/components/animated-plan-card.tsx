@@ -1,6 +1,8 @@
 "use client";
 
 import { useRef } from "react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -8,6 +10,7 @@ import { Check, Sparkles } from "lucide-react";
 import { Card } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
+import { api } from "~/trpc/react";
 
 // Register ScrollTrigger plugin
 if (typeof window !== "undefined") {
@@ -39,10 +42,35 @@ interface Plan {
 
 interface AnimatedPlanCardProps {
   plans: Plan[];
+  currentPlanId?: string | null; // Current subscription plan ID
 }
 
-export function AnimatedPlanCard({ plans }: AnimatedPlanCardProps) {
+export function AnimatedPlanCard({ plans, currentPlanId: propCurrentPlanId }: AnimatedPlanCardProps) {
   const cardsRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const { data: session, status } = useSession();
+
+  // Fetch current subscription if user is authenticated and no currentPlanId prop provided
+  const { data: currentSubscription } = api.subscriptions.subscriptions.myCurrent.useQuery(
+    undefined,
+    {
+      enabled: !!session && propCurrentPlanId === undefined,
+    }
+  );
+
+  // Use prop or fetched subscription
+  const currentPlanId = propCurrentPlanId ?? currentSubscription?.planId ?? null;
+
+  const handlePlanSelect = (plan: Plan) => {
+    // If not authenticated, redirect to login
+    if (status !== "authenticated" || !session) {
+      router.push(`/auth/sign-in?callbackUrl=/checkout?plan=${plan.id}`);
+      return;
+    }
+
+    // If user is authenticated, go to checkout
+    router.push(`/checkout?plan=${plan.id}`);
+  };
 
   useGSAP(() => {
     if (!cardsRef.current) return;
@@ -221,13 +249,25 @@ export function AnimatedPlanCard({ plans }: AnimatedPlanCardProps) {
 
             {/* CTA Button - Always at bottom */}
             <div className="mt-6">
-              <Button
-                className="w-full"
-                variant="default"
-                size="lg"
-              >
-                Выбрать план
-              </Button>
+              {currentPlanId === plan.id ? (
+                <Button
+                  className="w-full"
+                  variant="outline"
+                  size="lg"
+                  disabled
+                >
+                  Текущий план
+                </Button>
+              ) : (
+                <Button
+                  className="w-full"
+                  variant="default"
+                  size="lg"
+                  onClick={() => handlePlanSelect(plan)}
+                >
+                  Выбрать план
+                </Button>
+              )}
             </div>
           </div>
 

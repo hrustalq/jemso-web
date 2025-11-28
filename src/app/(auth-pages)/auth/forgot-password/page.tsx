@@ -35,10 +35,7 @@ export default function ForgotPasswordPage() {
 
   if (success) {
     return (
-      <PageWrapper 
-        className="flex items-center justify-center bg-background px-4 py-8"
-        style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top) + 2rem)' }}
-      >
+      <PageWrapper className="page-pt-lg flex items-center justify-center bg-background px-4 py-8">
         <Card className="w-full max-w-md shadow-lg">
           <CardHeader className="space-y-2">
             <CardTitle className="flex items-center gap-2 text-2xl font-bold">
@@ -85,10 +82,7 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <PageWrapper 
-      className="flex items-center justify-center px-4 py-8"
-      style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top) + 2rem)' }}
-    >
+    <PageWrapper className="page-pt-lg flex items-center justify-center px-4 py-8">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="space-y-2">
           <CardTitle className="text-2xl font-bold">Забыли пароль?</CardTitle>

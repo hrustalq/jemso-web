@@ -10,7 +10,7 @@ export async function CategoriesSection() {
   });
 
   return (
-    <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16 relative" style={{ minHeight: 'calc(100vh - var(--header-height) - var(--safe-top))' }}>
+    <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16 relative section-min-h-full">
       <SectionMeshBackground variant="red" intensity="low" />
       <div className="container mx-auto px-3 sm:px-4 w-full relative z-10">
         <ScrollReveal animation="fadeIn">

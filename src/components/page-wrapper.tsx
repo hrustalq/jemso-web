@@ -8,17 +8,16 @@ interface PageWrapperProps extends React.HTMLAttributes<HTMLElement> {
 export function PageWrapper({ 
   children, 
   className, 
-  style, 
   withHeaderOffset = true,
   ...props 
 }: PageWrapperProps) {
   return (
     <main 
-      className={cn("min-h-(--content-height)", className)} 
-      style={{ 
-        paddingTop: withHeaderOffset ? 'calc(var(--header-height) + var(--safe-top))' : undefined,
-        ...style 
-      }}
+      className={cn(
+        "min-h-(--content-height)",
+        withHeaderOffset && "page-pt",
+        className
+      )} 
       {...props}
     >
       {children}

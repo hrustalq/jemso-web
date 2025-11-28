@@ -2,16 +2,17 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { HydrateClient, api } from "~/trpc/server";
 import Image from "next/image";
+import { Decimal } from "decimal.js";
 import { BlocksRenderer } from "~/components/blocks/block-renderer";
 import { isValidPostContent } from "~/lib/blocks/utils";
 import type { Block } from "~/lib/blocks/types";
-import { Button } from "~/components/ui/button";
+import { EventRegistration } from "./_components/event-registration";
 import { 
   CalendarIcon, 
   MapPinIcon, 
   UsersIcon, 
   ClockIcon,
-  DollarSignIcon 
+  DollarSignIcon,
 } from "lucide-react";
 
 interface EventPageProps {
@@ -27,7 +28,7 @@ export default async function EventPage({ params }: EventPageProps) {
     const event = await api.event.events.getBySlug({ slug });
 
     // Serialize Decimal to number for display
-    const price = event.price.toNumber();
+    const price = new Decimal(event.price).toNumber();
 
     // Calculate event status
     const now = new Date();
@@ -44,10 +45,7 @@ export default async function EventPage({ params }: EventPageProps) {
 
     return (
       <HydrateClient>
-        <PageWrapper
-          withHeaderOffset={false}
-          className="pt-[calc(var(--header-height)+var(--safe-top))] md:pt-[calc(var(--header-height)+var(--safe-top)+4rem)]"
-        >
+        <PageWrapper withHeaderOffset={false} className="article-pt">
           <article>
             <div className="container mx-auto px-4 py-4 md:py-10">
               <div className="mx-auto max-w-4xl">
@@ -241,16 +239,14 @@ export default async function EventPage({ params }: EventPageProps) {
                 </div>
 
                 {/* Registration CTA */}
-                {isUpcoming && spotsRemaining !== 0 && (
-                  <div className="mb-8 rounded-lg border border-primary/20 bg-primary/5 p-6 text-center">
-                    <p className="mb-4 text-lg font-semibold text-foreground">
-                      Хотите принять участие в этом событии?
-                    </p>
-                    <Button size="lg" className="px-8">
-                      Зарегистрироваться
-                    </Button>
-                  </div>
-                )}
+                <EventRegistration
+                  eventId={event.id}
+                  eventTitle={event.title}
+                  price={price}
+                  currency={event.currency}
+                  spotsRemaining={spotsRemaining}
+                  isUpcoming={isUpcoming}
+                />
 
                 {/* Organizer */}
                 {event.author && (

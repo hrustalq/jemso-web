@@ -5,18 +5,18 @@ export default async function DragPage() {
   return (
     <HydrateClient>
       <PageWrapper>
-        <div className="border-b border-border/40">
-          <div className="container mx-auto px-4 py-16 text-center">
-            <h1 className="mb-4 text-5xl font-extrabold uppercase tracking-tight text-foreground sm:text-6xl">
+        <div className="border-b border-border/40 py-8 md:py-12">
+          <div className="container mx-auto px-4 text-center">
+            <h1 className="mb-4 text-4xl font-extrabold uppercase tracking-tight text-foreground sm:text-5xl md:text-6xl">
               ДРЭГ РЕЙСИНГ
             </h1>
-            <p className="text-xl font-bold text-primary">
+            <p className="text-lg font-bold text-primary sm:text-xl">
               Чистая скорость, чистый адреналин
             </p>
           </div>
         </div>
 
-        <div className="container mx-auto px-4 py-16">
+        <div className="container mx-auto px-4 py-8 md:py-12">
           <div className="mx-auto max-w-4xl space-y-8">
             <section>
               <h2 className="mb-4 text-2xl font-bold uppercase tracking-tight text-foreground">

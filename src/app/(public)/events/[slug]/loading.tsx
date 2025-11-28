@@ -34,7 +34,7 @@ export default function EventLoading() {
   }, []);
 
   return (
-    <main className="min-h-(--content-height)" style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top))' }}>
+    <main className="min-h-(--content-height) page-pt">
       <div className="py-16">
         <div className="container mx-auto px-4">
           <div ref={containerRef} className="mx-auto max-w-4xl">

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { HydrateClient, api } from "~/trpc/server";
 import Image from "next/image";
 import { ArrowLeftIcon } from "lucide-react";
+import { PageWrapper } from "~/components/page-wrapper";
 
 interface NewsPageProps {
   params: Promise<{ slug: string }>;
@@ -16,9 +17,7 @@ export default async function NewsPage({ params }: NewsPageProps) {
 
     return (
       <HydrateClient>
-        <main 
-          className="min-h-screen pt-[calc(var(--header-height)+var(--safe-top))] md:pt-[calc(var(--header-height)+var(--safe-top)+4rem)]" 
-        >
+        <PageWrapper withHeaderOffset={false} className="article-pt">
           <article>
             <div className="container mx-auto px-4 py-4 md:py-10">
               <div className="mx-auto max-w-4xl">
@@ -114,7 +113,7 @@ export default async function NewsPage({ params }: NewsPageProps) {
               </div>
             </div>
           </article>
-        </main>
+        </PageWrapper>
       </HydrateClient>
     );
   } catch {

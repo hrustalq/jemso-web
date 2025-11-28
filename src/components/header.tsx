@@ -57,21 +57,12 @@ export async function Header() {
 
   return (
     <AnimatedHeaderWrapper>
-      <header 
-        className="fixed top-0 z-50 w-full bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60" 
-        style={{ paddingTop: 'var(--safe-top)' }}
-      >
+      <header className="fixed top-0 z-50 w-full bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 pt-[var(--safe-top)]">
         {/* Top Bar */}
         <div 
           className="border-b border-border/40"
         >
-          <div 
-            className="container mx-auto flex h-16 items-center justify-between px-4 sm:h-20" 
-            style={{ 
-              paddingLeft: 'max(1rem, var(--safe-left))', 
-              paddingRight: 'max(1rem, var(--safe-right))' 
-            }}
-          >
+          <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:h-20 pl-[max(1rem,var(--safe-left))] pr-[max(1rem,var(--safe-right))]">
             {/* Left Section: Burger Menu (mobile) / Social Links (desktop) */}
             <div className="flex items-center gap-2">
               {/* Hamburger Menu - Left on mobile, right on desktop */}
@@ -160,13 +151,7 @@ export async function Header() {
 
         {/* Navigation Bar - Second Layer - Hidden on mobile (< md) */}
         <div className="hidden md:block border-b border-border/40 overflow-hidden" data-nav-bar>
-          <div 
-            className="container mx-auto px-4" 
-            style={{ 
-              paddingLeft: 'max(1rem, var(--safe-left))', 
-              paddingRight: 'max(1rem, var(--safe-right))' 
-            }}
-          >
+          <div className="container mx-auto px-4 pl-[max(1rem,var(--safe-left))] pr-[max(1rem,var(--safe-right))]">
             <nav className="flex items-center justify-center gap-6 py-3 sm:gap-8 sm:py-4">
               {staticNavItems.map((item) => (
                 <Link

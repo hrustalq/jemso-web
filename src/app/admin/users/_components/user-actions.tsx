@@ -2,6 +2,7 @@
 
 import { MoreHorizontal, Shield, Ban } from "lucide-react";
 import { Button } from "~/components/ui/button";
+import Link from "next/link";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,11 +18,6 @@ interface UserActionsProps {
 }
 
 export function UserActions({ userId, userEmail }: UserActionsProps) {
-  const handleManageRoles = () => {
-    // TODO: Implement role management modal
-    console.log("Manage roles for:", userId);
-  };
-
   const handleToggleStatus = () => {
     // TODO: Implement user status toggle
     console.log("Toggle status for:", userId);
@@ -50,14 +46,16 @@ export function UserActions({ userId, userEmail }: UserActionsProps) {
           </DropdownMenuItem>
         )}
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleManageRoles}>
-          <Shield className="mr-2 h-4 w-4" />
-          Управление ролями
+        <DropdownMenuItem asChild>
+          <Link href={`/admin/users/${userId}`}>
+            <Shield className="mr-2 h-4 w-4" />
+            Редактировать / Детали
+          </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleToggleStatus}>
+        {/* <DropdownMenuItem onClick={handleToggleStatus}>
           <Ban className="mr-2 h-4 w-4" />
           Изменить статус
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
       </DropdownMenuContent>
     </DropdownMenu>
   );

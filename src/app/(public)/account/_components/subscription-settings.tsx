@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
@@ -16,12 +17,17 @@ import {
 } from "lucide-react";
 
 export function SubscriptionSettings() {
+  const router = useRouter();
   const { data: user, isLoading } = api.user.me.useQuery();
   const { data: plans } = api.subscriptions.plans.list.useQuery({
     page: 1,
     pageSize: 10,
     isActive: true,
   });
+
+  const handleSelectPlan = (planId: string) => {
+    router.push(`/checkout?plan=${planId}`);
+  };
 
   if (isLoading) {
     return (
@@ -40,10 +46,12 @@ export function SubscriptionSettings() {
     );
   }
 
-  const hasActiveSubscription = user.subscription?.status === "active";
-  const isTrialing = user.subscription?.trialEndsAt
-    ? new Date(user.subscription.trialEndsAt) > new Date()
-    : false;
+  const hasActiveSubscription = user.subscription?.status === "active" || user.subscription?.status === "trial";
+  const isTrialing = user.subscription?.status === "trial" || (
+    user.subscription?.trialEndsAt
+      ? new Date(user.subscription.trialEndsAt) > new Date()
+      : false
+  );
 
   return (
     <div className="space-y-6">
@@ -260,6 +268,7 @@ export function SubscriptionSettings() {
                     className="w-full"
                     variant={isCurrentPlan ? "outline" : "default"}
                     disabled={isCurrentPlan}
+                    onClick={() => !isCurrentPlan && handleSelectPlan(plan.id)}
                   >
                     {isCurrentPlan ? (
                       "Текущий план"

@@ -15,6 +15,7 @@ import { Alert, AlertDescription } from "~/components/ui/alert";
 import { AlertCircle, Loader2 } from "lucide-react";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
+import { type Decimal } from "decimal.js";
 
 interface EventFormProps {
   event?: {
@@ -31,14 +32,15 @@ interface EventFormProps {
     location: string | null;
     locationUrl: string | null;
     maxParticipants: number | null;
-    price: { toNumber: () => number };
+    price: Decimal;
     currency: string;
     categoryId: string | null;
     minTier: number;
   };
+  onSuccess?: () => void;
 }
 
-export function EventForm({ event }: EventFormProps) {
+export function EventForm({ event, onSuccess }: EventFormProps) {
   const router = useRouter();
   const [error, setError] = useState("");
 
@@ -72,8 +74,12 @@ export function EventForm({ event }: EventFormProps) {
 
   const createEvent = api.event.events.create.useMutation({
     onSuccess: () => {
-      router.push("/admin/events");
-      router.refresh();
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        router.push("/admin/events");
+        router.refresh();
+      }
     },
     onError: (error) => {
       setError(error.message);
@@ -82,8 +88,12 @@ export function EventForm({ event }: EventFormProps) {
 
   const updateEvent = api.event.events.update.useMutation({
     onSuccess: () => {
-      router.push("/admin/events");
-      router.refresh();
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        router.push("/admin/events");
+        router.refresh();
+      }
     },
     onError: (error) => {
       setError(error.message);

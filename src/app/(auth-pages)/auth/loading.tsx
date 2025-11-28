@@ -34,11 +34,7 @@ export default function AuthLoading() {
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-background/95 px-4 backdrop-blur-sm"
-      style={{ 
-        paddingTop: 'calc(var(--header-height) + var(--safe-top))',
-        paddingBottom: 'var(--safe-bottom)'
-      }}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-background/95 px-4 page-pt safe-pb backdrop-blur-sm"
     >
       <div
         ref={cardRef}

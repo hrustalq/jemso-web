@@ -14,8 +14,8 @@ interface CategoryHeroProps {
 
 export function CategoryHero({ category }: CategoryHeroProps) {
   return (
-    <div className="border-b border-border/40 pt-6 md:pt-[calc(var(--header-height)+var(--safe-top)+2rem)]">
-      <div className="container mx-auto px-4 pb-8 text-center">
+    <div className="border-b border-border/40 py-8 md:py-12">
+      <div className="container mx-auto px-4 text-center">
         {/* Back Button */}
         <div className="mb-4 flex justify-center">
           <Link
@@ -28,19 +28,19 @@ export function CategoryHero({ category }: CategoryHeroProps) {
         </div>
 
         {/* Title */}
-        <h1 className="mb-4 text-5xl font-extrabold uppercase tracking-tight text-foreground sm:text-6xl">
+        <h1 className="mb-4 text-4xl font-extrabold uppercase tracking-tight text-foreground sm:text-5xl md:text-6xl">
           {category.name}
         </h1>
 
         {/* Description */}
         {category.description && (
-          <p className="text-xl font-bold text-primary mb-4">
+          <p className="text-lg font-bold text-primary mb-4 sm:text-xl">
             {category.description}
           </p>
         )}
 
         {/* Stats */}
-        <div className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground">
+        <div className="flex flex-wrap justify-center gap-3 text-sm text-muted-foreground sm:gap-4">
           <div className="flex items-center gap-2">
             <FileText className="h-4 w-4" />
             <span>{category._count.posts} статей</span>

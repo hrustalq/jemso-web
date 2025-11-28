@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { hash, compare } from "bcryptjs";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { requirePermission } from "~/server/api/rbac";
 import {
   updateProfileDto,
   updateProfileOutputDto,
@@ -22,8 +23,213 @@ import {
   updateCategoryPreferenceDto,
   removeCategoryPreferenceDto,
 } from "./dto/category-preferences.dto";
+import { createUserDto } from "./dto/create-user.dto";
+import { adminUpdateUserDto } from "./dto/admin-update-user.dto";
 
 export const userRouter = createTRPCRouter({
+  /**
+   * Admin: Get user by ID
+   */
+  getById: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      await requirePermission(ctx.db, ctx.session.user.id, "user", "manage");
+
+      const user = await ctx.db.user.findUnique({
+        where: { id: input.id },
+        include: {
+          userRoles: {
+            include: { role: true },
+          },
+          subscriptions: {
+            where: { status: "active" },
+            include: { plan: true },
+            orderBy: { createdAt: "desc" },
+            take: 1,
+          },
+          _count: {
+            select: {
+              blogPosts: true,
+              comments: true,
+            }
+          }
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      return user;
+    }),
+
+  /**
+   * Admin: Create user
+   */
+  create: protectedProcedure
+    .input(createUserDto)
+    .mutation(async ({ ctx, input }) => {
+      await requirePermission(ctx.db, ctx.session.user.id, "user", "manage");
+
+      const existingUser = await ctx.db.user.findUnique({
+        where: { email: input.email },
+      });
+
+      if (existingUser) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "User with this email already exists",
+        });
+      }
+
+      const hashedPassword = await hash(input.password, 12);
+
+      const user = await ctx.db.user.create({
+        data: {
+          name: input.name,
+          email: input.email,
+          password: hashedPassword,
+        },
+      });
+
+      // Assign roles
+      if (input.roleIds && input.roleIds.length > 0) {
+        await ctx.db.userRole.createMany({
+          data: input.roleIds.map((roleId) => ({
+            userId: user.id,
+            roleId,
+          })),
+        });
+      } else {
+         // Assign default 'user' role if exists
+         const userRole = await ctx.db.role.findUnique({ where: { slug: "user" } });
+         if (userRole) {
+            await ctx.db.userRole.create({
+                data: {
+                    userId: user.id,
+                    roleId: userRole.id
+                }
+            });
+         }
+      }
+
+      // Assign plan if provided
+      if (input.planId) {
+        const plan = await ctx.db.subscriptionPlan.findUnique({ where: { id: input.planId } });
+        if (plan) {
+            let endDate = null;
+            if (plan.billingInterval === 'month') {
+                endDate = new Date();
+                endDate.setMonth(endDate.getMonth() + 1);
+            } else if (plan.billingInterval === 'year') {
+                endDate = new Date();
+                endDate.setFullYear(endDate.getFullYear() + 1);
+            }
+
+            await ctx.db.userSubscription.create({
+                data: {
+                    userId: user.id,
+                    planId: input.planId,
+                    status: "active",
+                    startDate: new Date(),
+                    endDate: endDate,
+                }
+            });
+        }
+      }
+
+      return user;
+    }),
+
+  /**
+   * Admin: Update user
+   */
+  update: protectedProcedure
+    .input(adminUpdateUserDto)
+    .mutation(async ({ ctx, input }) => {
+      await requirePermission(ctx.db, ctx.session.user.id, "user", "manage");
+
+      const user = await ctx.db.user.findUnique({
+        where: { id: input.id },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      const data: { name?: string; email?: string; password?: string } = {
+        ...(input.name !== undefined && { name: input.name }),
+        ...(input.email !== undefined && { email: input.email }),
+      };
+
+      if (input.password) {
+        data.password = await hash(input.password, 12);
+      }
+
+      await ctx.db.user.update({
+        where: { id: input.id },
+        data,
+      });
+
+      // Update roles if provided
+      if (input.roleIds) {
+        // Remove existing roles
+        await ctx.db.userRole.deleteMany({
+          where: { userId: input.id },
+        });
+
+        // Add new roles
+        if (input.roleIds.length > 0) {
+          await ctx.db.userRole.createMany({
+            data: input.roleIds.map((roleId) => ({
+              userId: input.id,
+              roleId,
+            })),
+          });
+        }
+      }
+
+      // Update plan if provided
+      if (input.planId) {
+          // Deactivate current active subscriptions
+          await ctx.db.userSubscription.updateMany({
+              where: { userId: input.id, status: "active" },
+              data: { status: "canceled", canceledAt: new Date() }
+          });
+
+          const plan = await ctx.db.subscriptionPlan.findUnique({ where: { id: input.planId } });
+          if (plan) {
+            let endDate = null;
+            if (plan.billingInterval === 'month') {
+                endDate = new Date();
+                endDate.setMonth(endDate.getMonth() + 1);
+            } else if (plan.billingInterval === 'year') {
+                endDate = new Date();
+                endDate.setFullYear(endDate.getFullYear() + 1);
+            }
+
+            // Create new subscription
+            await ctx.db.userSubscription.create({
+                data: {
+                    userId: input.id,
+                    planId: input.planId,
+                    status: "active",
+                    startDate: new Date(),
+                    endDate: endDate,
+                }
+            });
+          }
+      }
+
+      return { success: true };
+    }),
+
   /**
    * Get current user profile
    */
@@ -38,7 +244,12 @@ export const userRouter = createTRPCRouter({
           },
         },
         subscriptions: {
-          where: { status: "active" },
+          where: {
+            OR: [
+              { status: "active" },
+              { status: "trial" },
+            ],
+          },
           include: {
             plan: {
               include: {

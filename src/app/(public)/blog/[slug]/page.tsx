@@ -21,10 +21,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
     return (
       <HydrateClient>
-        <PageWrapper
-          withHeaderOffset={false}
-          className="pt-[calc(var(--header-height)+var(--safe-top))] md:pt-[calc(var(--header-height)+var(--safe-top)+4rem)]"
-        >
+        <PageWrapper withHeaderOffset={false} className="article-pt">
           <article>
             <div className="container mx-auto px-4 py-4 md:py-10">
               <div className="mx-auto max-w-4xl">

@@ -71,9 +71,9 @@ export function AnimatedHero({ title, subtitle, description }: AnimatedHeroProps
   }, []);
 
   return (
-    <section ref={heroRef} className="border-b border-border/40 pt-6 md:pt-[calc(var(--header-height)+var(--safe-top)+2rem)]">
+    <section ref={heroRef} className="border-b border-border/40 py-8 md:py-12">
       {/* Content */}
-      <div className="text-center">
+      <div className="container mx-auto px-4 text-center">
         <h1
           ref={titleRef}
           className="mb-4 text-5xl font-extrabold uppercase tracking-tight text-foreground sm:text-6xl"
@@ -91,7 +91,7 @@ export function AnimatedHero({ title, subtitle, description }: AnimatedHeroProps
         {description && (
           <p
             ref={descriptionRef}
-            className="mt-2 text-lg text-muted-foreground"
+            className="mt-2 text-base sm:text-lg text-muted-foreground"
           >
             {description}
           </p>

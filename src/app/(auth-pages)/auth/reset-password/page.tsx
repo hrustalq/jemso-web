@@ -84,10 +84,7 @@ export default function ResetPasswordPage() {
   // Loading state while verifying token
   if (verifyTokenQuery.isLoading) {
     return (
-      <PageWrapper 
-        className="flex items-center justify-center px-4 py-8"
-        style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top) + 2rem)' }}
-      >
+      <PageWrapper className="page-pt-lg flex items-center justify-center px-4 py-8">
         <Card className="w-full max-w-md shadow-lg">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -103,10 +100,7 @@ export default function ResetPasswordPage() {
   // Invalid or expired token
   if (!token || verifyTokenQuery.data?.valid === false) {
     return (
-      <PageWrapper 
-        className="flex items-center justify-center px-4 py-8"
-        style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top) + 2rem)' }}
-      >
+      <PageWrapper className="page-pt-lg flex items-center justify-center px-4 py-8">
         <Card className="w-full max-w-md shadow-lg">
           <CardHeader className="space-y-2">
             <CardTitle className="flex items-center gap-2 text-2xl font-bold text-destructive">
@@ -144,10 +138,7 @@ export default function ResetPasswordPage() {
   // Success state
   if (success) {
     return (
-      <PageWrapper 
-        className="flex items-center justify-center px-4 py-8"
-        withHeaderOffset={false}
-      >
+      <PageWrapper className="page-pt-lg flex items-center justify-center px-4 py-8">
         <Card className="w-full max-w-md shadow-lg">
           <CardHeader className="space-y-2">
             <CardTitle className="flex items-center gap-2 text-2xl font-bold text-green-600">
@@ -174,10 +165,7 @@ export default function ResetPasswordPage() {
 
   // Reset password form
   return (
-    <PageWrapper 
-      className="flex items-center justify-center px-4 py-8"
-      withHeaderOffset={false}
-    >
+    <PageWrapper className="page-pt-lg flex items-center justify-center px-4 py-8">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="space-y-2">
           <CardTitle className="text-2xl font-bold">Сброс пароля</CardTitle>

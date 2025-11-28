@@ -67,7 +67,7 @@ export function PageLoader({ variant = "default" }: PageLoaderProps) {
 
   return (
     <div 
-      className="fixed inset-0 z-100 flex min-h-screen items-center justify-center bg-background/98 backdrop-blur-md"
+      className="fixed inset-0 z-[100] flex min-h-screen items-center justify-center bg-background/98 backdrop-blur-md"
       style={{ 
         minHeight: '100dvh',
         height: '100vh',

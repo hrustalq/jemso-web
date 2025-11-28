@@ -12,6 +12,7 @@ import {
   listSubscriptionsDto,
   checkFeatureDto,
 } from "./dto/subscription.dto";
+import { paymentService } from "~/server/services/payment.service";
 
 export const subscriptionsRouter = createTRPCRouter({
   // Get current user's active subscription
@@ -132,6 +133,36 @@ export const subscriptionsRouter = createTRPCRouter({
         });
       }
 
+      // Process payment if price > 0 and not explicitly skipped (e.g. by admin or trial)
+      // Note: Admin might want to bypass payment, but for now we'll just check if paymentMethod is provided
+      // or if price is 0.
+      if (plan.price.toNumber() > 0 && !input.paymentMethod && plan.trialDays <= 0) {
+         throw new TRPCError({
+           code: "BAD_REQUEST",
+           message: "Payment method is required for paid plans",
+         });
+      }
+
+      if (plan.price.toNumber() > 0 && input.paymentMethod && plan.trialDays <= 0) {
+        try {
+          await paymentService.processPayment({
+            amount: plan.price.toNumber(),
+            currency: plan.currency,
+            paymentMethodId: input.paymentMethod,
+            description: `Subscription to ${plan.name} plan`,
+            metadata: {
+              userId: input.userId,
+              planId: input.planId,
+            },
+          });
+        } catch (error) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: error instanceof Error ? error.message : "Payment failed",
+          });
+        }
+      }
+
       // Cancel any existing active subscriptions
       await ctx.db.userSubscription.updateMany({
         where: {
@@ -156,6 +187,8 @@ export const subscriptionsRouter = createTRPCRouter({
           startDate,
           trialEndsAt,
           status: plan.trialDays > 0 ? "trial" : "active",
+          // If trial, we might store payment method for later? For now, we just store it.
+          paymentMethod: input.paymentMethod, 
         },
         include: {
           plan: {
@@ -298,4 +331,3 @@ export const subscriptionsRouter = createTRPCRouter({
     }));
   }),
 });
-

@@ -64,10 +64,7 @@ export default function SignInPage() {
   const displayError = error ? errorMessages[error] ?? errorMessages.default : formError;
 
   return (
-    <PageWrapper 
-      className="flex items-center justify-center px-4 py-8"
-      style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top) + 2rem)' }}
-    >
+    <PageWrapper className="page-pt-lg flex items-center justify-center px-4 py-8">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="space-y-2">
           <CardTitle className="text-2xl font-bold">Вход</CardTitle>

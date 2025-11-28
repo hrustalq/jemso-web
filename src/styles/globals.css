@@ -164,13 +164,13 @@
     }
   }
   
-  /* Responsive header heights - Medium screens+ (≥768px) */
+  /* Responsive header heights - Medium screens+ (≥768px) - Nav bar visible */
   @media (min-width: 768px) {
     :root {
-      /* Top bar h-20 (80px) + Nav bar py-4 (32px total) = 112px */
-      --header-height: 7rem; /* 112px */
-      --header-top-bar-height: 5rem; /* 80px - h-20 */
-      --header-nav-bar-height: 2rem; /* 32px - py-4 (16px top + 16px bottom) */
+      /* Measured: 134px total (top bar 80px + nav bar 54px) */
+      --header-height: 134px;
+      --header-top-bar-height: 80px;
+      --header-nav-bar-height: 54px;
     }
   }
   
@@ -188,5 +188,59 @@
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }
+  }
+}
+
+/* Page content layout utilities */
+@layer utilities {
+  /* Standard page top padding - accounts for header and safe areas + small buffer */
+  .page-pt {
+    padding-top: calc(var(--header-height) + var(--safe-top) + 4px);
+  }
+  
+  /* Larger page top padding - for centered content like auth pages */
+  .page-pt-lg {
+    padding-top: calc(var(--header-height) + var(--safe-top) + 2rem);
+  }
+  
+  /* Article page top padding - standard on mobile, extra on md+ screens */
+  .article-pt {
+    padding-top: calc(var(--header-height) + var(--safe-top) + 4px);
+  }
+  
+  @media (min-width: 768px) {
+    .article-pt {
+      padding-top: calc(var(--header-height) + var(--safe-top) + 4rem);
+    }
+  }
+  
+  /* Section minimum height - full viewport minus header and safe areas */
+  .section-min-h-full {
+    min-height: calc(100vh - var(--header-height) - var(--safe-top));
+  }
+  
+  /* User dashboard sidebar offset */
+  .user-sidebar-pt {
+    padding-top: calc(var(--header-height) + var(--safe-top));
+  }
+  
+  /* Safe area padding for fixed bottom elements */
+  .safe-pb {
+    padding-bottom: var(--safe-bottom);
+  }
+  
+  /* Safe area padding for fixed right elements */
+  .safe-pr {
+    padding-right: var(--safe-right);
+  }
+  
+  /* Admin layout specific - fixed header height without responsive changes */
+  .admin-pt {
+    padding-top: calc(4rem + var(--safe-top));
+  }
+  
+  /* Admin content area minimum height */
+  .admin-content-min-h {
+    min-height: calc(100vh - 4rem - var(--safe-top));
   }
 }

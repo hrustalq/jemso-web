@@ -1,5 +1,7 @@
 import { Suspense } from "react";
+import { redirect } from "next/navigation";
 import { HydrateClient, api } from "~/trpc/server";
+import { auth } from "~/server/auth";
 import { AnimatedHeroSection } from "~/components/animated-hero-section";
 import { AnimatedCardGrid } from "~/components/animated-card-grid";
 import { AnimatedSectionHeader } from "~/components/animated-section-header";
@@ -14,6 +16,11 @@ import { EventsSection } from "./_components/events-section";
 import { EventsSectionSkeleton } from "./_components/events-section-skeleton";
 
 export default async function Home() {
+  // Redirect authenticated users to dashboard
+  const session = await auth();
+  if (session) {
+    redirect("/dashboard");
+  }
   // Fetch data in parallel for better performance
   const [latestPosts, plans] = await Promise.all([
     api.blog.posts.list({

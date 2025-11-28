@@ -80,10 +80,7 @@ export function AdminLayoutClient({ children }: AdminLayoutClientProps) {
   return (
     <div className="min-h-screen bg-background">
       {/* Admin Header */}
-      <header 
-        className="fixed left-0 right-0 top-0 z-50 border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60"
-        style={{ paddingTop: 'var(--safe-top)' }}
-      >
+      <header className="fixed left-0 right-0 top-0 z-50 border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 pt-[var(--safe-top)]">
         <div className="relative flex h-16 items-center justify-center px-4 md:px-6">
           {/* Mobile Menu Button - Absolute Left */}
           <Button
@@ -114,15 +111,9 @@ export function AdminLayoutClient({ children }: AdminLayoutClientProps) {
         </div>
       </header>
 
-      <div className="flex pt-16" style={{ paddingTop: 'calc(4rem + var(--safe-top))' }}>
+      <div className="flex admin-pt">
         {/* Desktop Sidebar */}
-        <aside 
-          className="fixed left-0 hidden h-[calc(100vh-4rem-var(--safe-top))] w-64 border-r border-border/40 bg-card lg:block"
-          style={{ 
-            top: 'calc(4rem + var(--safe-top))',
-            paddingLeft: 'var(--safe-left)'
-          }}
-        >
+        <aside className="fixed left-0 hidden admin-content-min-h w-64 border-r border-border/40 bg-card lg:block top-[calc(4rem+var(--safe-top))] pl-[var(--safe-left)]">
           <nav className="h-full overflow-y-auto p-4">
             <ul className="space-y-1">
               {adminNavItems.map((item) => {
@@ -161,18 +152,10 @@ export function AdminLayoutClient({ children }: AdminLayoutClientProps) {
         {isMobileMenuOpen && (
           <>
             <div 
-              className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm lg:hidden"
-              style={{ top: 'calc(4rem + var(--safe-top))' }}
+              className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm lg:hidden top-[calc(4rem+var(--safe-top))]"
               onClick={() => setIsMobileMenuOpen(false)}
             />
-            <aside 
-              className="fixed left-0 z-50 h-[calc(100vh-4rem-var(--safe-top))] w-64 border-r border-border/40 bg-card lg:hidden"
-              style={{ 
-                top: 'calc(4rem + var(--safe-top))',
-                paddingLeft: 'var(--safe-left)',
-                paddingBottom: 'var(--safe-bottom)'
-              }}
-            >
+            <aside className="fixed left-0 z-50 admin-content-min-h w-64 border-r border-border/40 bg-card lg:hidden top-[calc(4rem+var(--safe-top))] pl-[var(--safe-left)] safe-pb">
               <nav className="h-full overflow-y-auto p-4">
                 <ul className="space-y-1">
                   {adminNavItems.map((item) => {
@@ -211,10 +194,7 @@ export function AdminLayoutClient({ children }: AdminLayoutClientProps) {
         )}
 
         {/* Main Content */}
-        <main 
-          className="min-h-[calc(100vh-4rem-var(--safe-top))] overflow-y-auto overflow-x-hidden flex-1 lg:ml-64"
-          style={{ paddingRight: 'var(--safe-right)' }}
-        >
+        <main className="admin-content-min-h overflow-y-auto overflow-x-hidden flex-1 lg:ml-64 safe-pr">
           <div className="container mx-auto px-4 py-6 md:px-6 md:py-8 lg:px-8">
             {children}
           </div>

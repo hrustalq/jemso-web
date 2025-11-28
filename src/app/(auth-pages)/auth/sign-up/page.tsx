@@ -80,10 +80,7 @@ export default function SignUpPage() {
 
   if (success) {
     return (
-      <PageWrapper 
-        className="flex items-center justify-center px-4 py-8"
-        style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top) + 2rem)' }}
-      >
+      <PageWrapper className="page-pt-lg flex items-center justify-center px-4 py-8">
         <Card className="w-full max-w-md shadow-lg">
           <CardHeader className="space-y-2">
             <CardTitle className="flex items-center gap-2 text-2xl font-bold text-green-600">
@@ -100,10 +97,7 @@ export default function SignUpPage() {
   }
 
   return (
-    <PageWrapper 
-      className="flex items-center justify-center px-4 py-8"
-      style={{ paddingTop: 'calc(var(--header-height) + var(--safe-top) + 2rem)' }}
-    >
+    <PageWrapper className="page-pt-lg flex items-center justify-center px-4 py-8">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="space-y-2">
           <CardTitle className="text-2xl font-bold">Регистрация</CardTitle>

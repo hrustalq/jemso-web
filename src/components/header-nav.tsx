@@ -1,7 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, User, LogOut } from "lucide-react";
+import { 
+  Menu, 
+  User, 
+  LogOut, 
+  LayoutDashboard,
+  Calendar,
+  Newspaper,
+  BookOpen,
+  Settings,
+  CreditCard,
+} from "lucide-react";
 import { Button } from "~/components/ui/button";
 import {
   Sheet,
@@ -109,13 +119,69 @@ export function HeaderNav({ categories, staticNavItems, session }: HeaderNavProp
                 </p>
               </div>
             </div>
+            
+            {/* User Space Links */}
+            <div className="space-y-1">
+              <p className="px-2 py-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Личный кабинет
+              </p>
+              <Link 
+                href="/dashboard" 
+                className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm hover:bg-accent transition-colors"
+              >
+                <LayoutDashboard className="h-4 w-4" />
+                Главная
+              </Link>
+              <Link 
+                href="/dashboard/events" 
+                className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm hover:bg-accent transition-colors"
+              >
+                <Calendar className="h-4 w-4" />
+                Мои события
+              </Link>
+              <Link 
+                href="/dashboard/content" 
+                className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm hover:bg-accent transition-colors"
+              >
+                <BookOpen className="h-4 w-4" />
+                Контент
+              </Link>
+              <Link 
+                href="/dashboard/news" 
+                className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm hover:bg-accent transition-colors"
+              >
+                <Newspaper className="h-4 w-4" />
+                Новости
+              </Link>
+            </div>
+
+            <Separator />
+            
+            {/* Settings Links */}
+            <div className="space-y-1">
+              <p className="px-2 py-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                <Settings className="inline-block h-3 w-3 mr-1" />
+                Настройки
+              </p>
+              <Link 
+                href="/dashboard/settings/profile" 
+                className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm hover:bg-accent transition-colors"
+              >
+                <User className="h-4 w-4" />
+                Профиль
+              </Link>
+              <Link 
+                href="/dashboard/settings/subscription" 
+                className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm hover:bg-accent transition-colors"
+              >
+                <CreditCard className="h-4 w-4" />
+                Подписка
+              </Link>
+            </div>
+
+            <Separator />
+
             <div className="flex flex-col gap-2">
-              <Button variant="outline" className="w-full h-11 justify-start gap-2" asChild>
-                <Link href="/account">
-                  <User className="h-4 w-4" />
-                  Мой профиль
-                </Link>
-              </Button>
               <Button 
                 variant="ghost" 
                 className="w-full h-11 justify-start gap-2 text-destructive hover:bg-destructive/10 hover:text-destructive" 

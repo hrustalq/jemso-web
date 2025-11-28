@@ -3,10 +3,7 @@ import { Card, CardContent } from "~/components/ui/card";
 
 export default function CategoryLoading() {
   return (
-    <main
-      className="min-h-(--content-height)"
-      style={{ paddingTop: "calc(var(--header-height) + var(--safe-top))" }}
-    >
+    <main className="min-h-(--content-height) page-pt">
       {/* Hero Section Skeleton */}
       <div className="relative overflow-hidden border-b border-border/40 bg-linear-to-br from-background via-background/95 to-primary/5">
         {/* Decorative gradient orbs */}

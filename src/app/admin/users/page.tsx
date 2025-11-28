@@ -9,6 +9,9 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { Badge } from "~/components/ui/badge";
+import { Button } from "~/components/ui/button";
+import { Plus } from "lucide-react";
+import Link from "next/link";
 import { UserActions } from "./_components/user-actions";
 import type { Metadata } from "next";
 
@@ -41,11 +44,19 @@ export default async function UsersPage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Пользователи</h1>
-        <p className="mt-2 text-muted-foreground">
-          Управление пользователями и их ролями
-        </p>
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Пользователи</h1>
+          <p className="mt-2 text-muted-foreground">
+            Управление пользователями и их ролями
+          </p>
+        </div>
+        <Button asChild>
+          <Link href="/admin/users/create">
+            <Plus className="mr-2 h-4 w-4" />
+            Создать пользователя
+          </Link>
+        </Button>
       </div>
 
       <Card>

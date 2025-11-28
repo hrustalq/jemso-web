@@ -2,10 +2,10 @@ import { Skeleton } from "~/components/ui/skeleton";
 
 export function HeaderSkeleton() {
   return (
-    <header className="fixed top-0 z-50 w-full bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+    <header className="fixed top-0 z-50 w-full bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 pt-[var(--safe-top)]">
       {/* Top Bar */}
       <div className="border-b border-border/40">
-        <div className="container mx-auto flex h-20 items-center justify-between px-4 sm:h-24">
+        <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:h-20">
           {/* Left Section: Social Links Skeleton */}
           <div className="hidden items-center gap-2 md:flex">
             <Skeleton className="h-9 w-9 rounded-full" />
@@ -32,10 +32,10 @@ export function HeaderSkeleton() {
         </div>
       </div>
 
-      {/* Navigation Bar - Second Layer */}
-      <div className="border-b border-border/40">
+      {/* Navigation Bar - Second Layer - Hidden on mobile */}
+      <div className="hidden md:block border-b border-border/40">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-center gap-6 py-4 sm:gap-8 sm:py-5">
+          <div className="flex items-center justify-center gap-6 py-3 sm:gap-8 sm:py-4">
             <Skeleton className="h-5 w-16" />
             <Skeleton className="h-5 w-20" />
             <Skeleton className="h-5 w-16" />

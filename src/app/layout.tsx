@@ -7,6 +7,8 @@ import { TRPCReactProvider } from "~/trpc/react";
 import { Providers } from "~/components/providers";
 import { AnimatedMeshBackground } from "~/components/animated-mesh-background";
 
+import { Toaster } from "~/components/ui/sonner"
+
 export const metadata: Metadata = {
   title: "Jemso",
   description: "Modern web application",
@@ -34,6 +36,7 @@ export default function RootLayout({
         <AnimatedMeshBackground />
         <Providers>
           <TRPCReactProvider>{children}</TRPCReactProvider>
+          <Toaster />
         </Providers>
       </body>
     </html>

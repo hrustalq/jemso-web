@@ -14,6 +14,7 @@ import {
   listRegistrationsDto,
   confirmPaymentDto,
 } from "./dto/registration.dto";
+import { paymentService } from "~/server/services/payment.service";
 
 export const registrationsRouter = createTRPCRouter({
   // List registrations
@@ -180,15 +181,56 @@ export const registrationsRouter = createTRPCRouter({
         });
       }
 
+      const isFree = event.price.equals(0);
+      let paymentStatus = isFree ? "paid" : "pending";
+      let status = isFree ? "confirmed" : "pending";
+      let paidAmount: Decimal | null = null;
+      let confirmedAt = isFree ? new Date() : null;
+
+      if (!isFree) {
+        if (!input.paymentMethod) {
+            throw new TRPCError({
+                code: "BAD_REQUEST",
+                message: "Payment method is required for paid events",
+            });
+        }
+
+        try {
+            await paymentService.processPayment({
+                amount: event.price.toNumber(),
+                currency: event.currency,
+                paymentMethodId: input.paymentMethod,
+                description: `Registration for ${event.title}`,
+                metadata: {
+                    userId: ctx.session.user.id,
+                    eventId: event.id,
+                },
+            });
+            
+            // If payment succeeds
+            paymentStatus = "paid";
+            status = "confirmed";
+            paidAmount = event.price;
+            confirmedAt = new Date();
+
+        } catch (error) {
+            throw new TRPCError({
+                code: "BAD_REQUEST",
+                message: error instanceof Error ? error.message : "Payment failed",
+            });
+        }
+      }
+
       // Create registration
       const registration = await ctx.db.eventRegistration.create({
         data: {
           eventId: input.eventId,
           userId: ctx.session.user.id,
           paymentMethod: input.paymentMethod,
-          paymentStatus: event.price.equals(0) ? "paid" : "pending",
-          status: event.price.equals(0) ? "confirmed" : "pending",
-          confirmedAt: event.price.equals(0) ? new Date() : null,
+          paymentStatus,
+          status,
+          paidAmount,
+          confirmedAt,
         },
         include: {
           event: true,
@@ -344,4 +386,3 @@ export const registrationsRouter = createTRPCRouter({
       return { success: true };
     }),
 });
-

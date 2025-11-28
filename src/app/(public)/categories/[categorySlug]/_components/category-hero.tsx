@@ -12,7 +12,7 @@ interface CategoryHeroProps {
 export function CategoryHero({ category }: CategoryHeroProps) {
   return (
     <section
-      className="relative py-20"
+      className="relative py-12 md:py-16 lg:py-20"
       style={{
         backgroundColor: category.color
           ? `${category.color}20`
@@ -32,7 +32,7 @@ export function CategoryHero({ category }: CategoryHeroProps) {
       <div className="container relative z-10 mx-auto px-4">
         <div className="max-w-3xl">
           <h1
-            className="text-4xl font-bold uppercase tracking-tight text-foreground md:text-5xl lg:text-6xl"
+            className="text-3xl font-bold uppercase tracking-tight text-foreground sm:text-4xl md:text-5xl lg:text-6xl"
             style={{
               color: category.color ?? undefined,
             }}
@@ -40,7 +40,7 @@ export function CategoryHero({ category }: CategoryHeroProps) {
             {category.name}
           </h1>
           {category.description && (
-            <p className="mt-4 text-lg text-muted-foreground md:text-xl">
+            <p className="mt-3 text-base text-muted-foreground sm:mt-4 sm:text-lg md:text-xl">
               {category.description}
             </p>
           )}
