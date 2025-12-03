@@ -22,21 +22,22 @@ function PromoBannerHeroSkeleton() {
   return (
     <div className="space-y-6 sm:space-y-8">
       {/* Main Banner Skeleton */}
-      <div className="overflow-hidden rounded-2xl border border-border/40 bg-card/50">
+      <div className="overflow-hidden rounded-2xl border border-border/50 bg-card shadow-xl">
         <div className="flex flex-col lg:flex-row">
-          <Skeleton className="aspect-video lg:aspect-21/9 w-full lg:w-2/3" />
-          <div className="flex flex-col justify-center p-6 sm:p-8 lg:w-1/2">
+          <Skeleton className="aspect-video lg:aspect-[21/9] w-full lg:w-2/3" />
+          <div className="flex flex-col justify-center p-6 sm:p-8 lg:w-1/2 lg:p-10 bg-card">
+            <Skeleton className="mb-2 h-5 w-28 rounded-full" />
             <Skeleton className="mb-2 h-4 w-24" />
-            <Skeleton className="mb-4 h-10 w-3/4 sm:h-12" />
-            <Skeleton className="mb-2 h-4 w-full" />
-            <Skeleton className="mb-6 h-4 w-2/3" />
-            <div className="mb-6 flex gap-4">
-              <Skeleton className="h-4 w-24" />
-              <Skeleton className="h-4 w-32" />
+            <Skeleton className="mb-4 h-12 w-3/4 sm:h-14" />
+            <Skeleton className="mb-2 h-5 w-full" />
+            <Skeleton className="mb-6 h-5 w-2/3" />
+            <div className="mb-6 flex gap-3">
+              <Skeleton className="h-9 w-32 rounded-full" />
+              <Skeleton className="h-9 w-36 rounded-full" />
             </div>
-            <div className="flex gap-4">
-              <Skeleton className="h-12 w-36" />
-              <Skeleton className="h-8 w-20" />
+            <div className="flex gap-4 items-center">
+              <Skeleton className="h-12 w-40 rounded-lg" />
+              <Skeleton className="h-10 w-24 rounded-lg" />
             </div>
           </div>
         </div>
@@ -47,14 +48,20 @@ function PromoBannerHeroSkeleton() {
         {[1, 2, 3, 4].map((i) => (
           <div
             key={i}
-            className="flex overflow-hidden rounded-xl border border-border/40 bg-card/50"
+            className="flex overflow-hidden rounded-xl border border-border/50 bg-card shadow-md"
           >
-            <Skeleton className="w-1/3 min-w-[120px] sm:min-w-[160px] aspect-4/3" />
-            <div className="flex-1 p-4 sm:p-5">
-              <Skeleton className="mb-1 h-3 w-20" />
-              <Skeleton className="mb-2 h-5 w-full" />
-              <Skeleton className="mb-2 h-4 w-2/3" />
+            <Skeleton className="w-1/3 min-w-[120px] sm:min-w-[160px] aspect-[4/3]" />
+            <div className="flex-1 p-4 sm:p-5 space-y-3">
               <Skeleton className="h-3 w-24" />
+              <Skeleton className="h-5 w-full" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-28" />
+                <Skeleton className="h-4 w-32" />
+              </div>
+              <div className="flex justify-between items-center pt-2">
+                <Skeleton className="h-7 w-20 rounded-md" />
+                <Skeleton className="h-4 w-4" />
+              </div>
             </div>
           </div>
         ))}

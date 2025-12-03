@@ -67,8 +67,8 @@ export async function PromoBannerHero({ className }: PromoBannerHeroProps) {
   if (!mainItem) {
     return (
       <div className={className}>
-        <div className="rounded-2xl border border-border/40 bg-card/50 p-12 text-center backdrop-blur">
-          <p className="text-lg text-muted-foreground">{t("noContent")}</p>
+        <div className="rounded-2xl border border-border/50 bg-card/80 p-12 text-center backdrop-blur-md shadow-lg">
+          <p className="text-lg text-foreground/70 font-medium">{t("noContent")}</p>
         </div>
       </div>
     );
@@ -124,7 +124,7 @@ export async function PromoBannerHero({ className }: PromoBannerHeroProps) {
 function MainEventBanner({
   event,
   t,
-  locale,
+  locale: _locale,
   formatDate,
 }: {
   event: {
@@ -147,7 +147,7 @@ function MainEventBanner({
   return (
     <Link
       href={`/events/${event.slug}`}
-      className="group relative block overflow-hidden rounded-2xl border border-border/40 bg-linear-to-br from-background via-background/95 to-primary/5"
+      className="group relative block overflow-hidden rounded-2xl border border-border/50 bg-card shadow-xl shadow-primary/5 transition-shadow hover:shadow-2xl hover:shadow-primary/10"
     >
       <div className="flex flex-col lg:flex-row">
         {/* Image Section */}
@@ -161,16 +161,16 @@ function MainEventBanner({
               priority
             />
           ) : (
-            <div className="h-full w-full bg-gradient-to-br from-primary/30 via-primary/10 to-transparent" />
+            <div className="h-full w-full bg-linear-to-br from-primary/40 via-primary/20 to-primary/5" />
           )}
-          {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-background/90 lg:block hidden" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent lg:hidden" />
+          {/* Enhanced Gradient Overlays for better text readability */}
+          <div className="absolute inset-0 bg-linear-to-r from-transparent via-background/40 to-background lg:block hidden" />
+          <div className="absolute inset-0 bg-linear-to-t from-background via-background/60 to-transparent lg:hidden" />
           
           {/* Category Badge - Mobile */}
           {event.category && (
             <Badge
-              className="absolute left-4 top-4 lg:hidden text-xs font-semibold uppercase tracking-wide"
+              className="absolute left-4 top-4 lg:hidden text-xs font-bold uppercase tracking-wide shadow-lg"
               style={{ backgroundColor: event.category.color ?? undefined }}
             >
               {event.category.name}
@@ -178,58 +178,65 @@ function MainEventBanner({
           )}
         </div>
 
-        {/* Content Section */}
-        <div className="relative flex flex-col justify-center p-6 sm:p-8 lg:absolute lg:right-0 lg:top-0 lg:h-full lg:w-1/2 lg:p-10">
-          {/* Desktop Category Badge */}
-          {event.category && (
-            <Badge
-              className="hidden lg:inline-flex w-fit mb-4 text-xs font-semibold uppercase tracking-wide"
-              style={{ backgroundColor: event.category.color ?? undefined }}
-            >
-              {event.category.name}
-            </Badge>
-          )}
-
-          {/* Label */}
-          <span className="mb-2 text-xs font-bold uppercase tracking-widest text-primary">
-            {t("upcomingEvent")}
-          </span>
-
-          {/* Title */}
-          <h2 className="mb-4 text-2xl font-extrabold uppercase tracking-tight text-foreground sm:text-3xl lg:text-4xl xl:text-5xl group-hover:text-primary transition-colors">
-            {event.title}
-          </h2>
-
-          {/* Excerpt */}
-          {event.excerpt && (
-            <p className="mb-6 text-sm text-foreground/70 line-clamp-2 sm:text-base lg:line-clamp-3">
-              {event.excerpt}
-            </p>
-          )}
-
-          {/* Meta Info */}
-          <div className="mb-6 flex flex-wrap items-center gap-4 text-sm text-foreground/60">
-            <span className="flex items-center gap-1.5">
-              <Calendar className="h-4 w-4" />
-              {formatDate(event.startDate)}
-            </span>
-            {(event.location ?? event.city) && (
-              <span className="flex items-center gap-1.5">
-                <MapPin className="h-4 w-4" />
-                {event.location ?? event.city}
-              </span>
+        {/* Content Section with frosted glass effect */}
+        <div className="relative flex flex-col justify-center p-6 sm:p-8 lg:absolute lg:right-0 lg:top-0 lg:h-full lg:w-1/2 lg:p-8 lg:py-6">
+          {/* Frosted glass backdrop for desktop */}
+          <div className="absolute inset-0 hidden lg:block bg-background/85 backdrop-blur-md" />
+          
+          <div className="relative z-10">
+            {/* Desktop Category Badge */}
+            {event.category && (
+              <div className="hidden lg:block mb-2">
+                <Badge
+                  className="text-xs font-bold uppercase tracking-wide shadow-md"
+                  style={{ backgroundColor: event.category.color ?? undefined }}
+                >
+                  {event.category.name}
+                </Badge>
+              </div>
             )}
-          </div>
 
-          {/* Price and CTA */}
-          <div className="flex flex-wrap items-center gap-4">
-            <Button size="lg" className="font-semibold uppercase tracking-wide group/btn">
-              {t("register")}
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
-            </Button>
-            <span className="text-xl font-bold text-primary">
-              {event.price === 0 ? t("free") : `${event.price} ${event.currency}`}
+            {/* Label */}
+            <span className="block mb-2 text-xs font-bold uppercase tracking-widest text-primary drop-shadow-sm">
+              {t("upcomingEvent")}
             </span>
+
+            {/* Title */}
+            <h2 className="mb-3 text-2xl font-extrabold uppercase tracking-tight text-foreground sm:text-3xl lg:text-3xl xl:text-4xl group-hover:text-primary transition-colors leading-tight">
+              {event.title}
+            </h2>
+
+            {/* Excerpt */}
+            {event.excerpt && (
+              <p className="mb-4 text-sm text-foreground/80 line-clamp-2 sm:text-base lg:line-clamp-2 leading-relaxed font-medium">
+                {event.excerpt}
+              </p>
+            )}
+
+            {/* Meta Info */}
+            <div className="mb-4 flex flex-wrap items-center gap-3 text-sm text-foreground/70 font-medium">
+              <span className="flex items-center gap-2 bg-muted/50 px-3 py-1.5 rounded-full">
+                <Calendar className="h-4 w-4 text-primary" />
+                {formatDate(event.startDate)}
+              </span>
+              {(event.location ?? event.city) && (
+                <span className="flex items-center gap-2 bg-muted/50 px-3 py-1.5 rounded-full">
+                  <MapPin className="h-4 w-4 text-primary" />
+                  {event.location ?? event.city}
+                </span>
+              )}
+            </div>
+
+            {/* Price and CTA */}
+            <div className="flex flex-wrap items-center gap-3">
+              <Button size="default" className="font-bold uppercase tracking-wide group/btn shadow-lg shadow-primary/20">
+                {t("register")}
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
+              </Button>
+              <span className="text-lg font-extrabold text-primary bg-primary/10 px-3 py-1.5 rounded-lg">
+                {event.price === 0 ? t("free") : `${event.price} ${event.currency}`}
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -241,7 +248,7 @@ function MainEventBanner({
 function MainNewsBanner({
   news,
   t,
-  locale,
+  locale: _locale,
   formatDate,
 }: {
   news: {
@@ -261,11 +268,11 @@ function MainNewsBanner({
   return (
     <Link
       href={`/blog/${news.slug}`}
-      className="group relative block overflow-hidden rounded-2xl border border-border/40 bg-gradient-to-br from-background via-background/95 to-accent/5"
+      className="group relative block overflow-hidden rounded-2xl border border-border/50 bg-card shadow-xl shadow-accent/5 transition-shadow hover:shadow-2xl hover:shadow-accent/10"
     >
       <div className="flex flex-col lg:flex-row">
         {/* Image Section */}
-        <div className="relative aspect-[16/9] lg:aspect-[21/9] w-full lg:w-2/3 overflow-hidden">
+        <div className="relative aspect-video lg:aspect-21/9 w-full lg:w-2/3 overflow-hidden">
           {news.coverImage ? (
             <Image
               src={news.coverImage}
@@ -275,61 +282,68 @@ function MainNewsBanner({
               priority
             />
           ) : (
-            <div className="h-full w-full bg-gradient-to-br from-accent/30 via-accent/10 to-transparent flex items-center justify-center">
-              <Newspaper className="h-16 w-16 text-accent/40" />
+            <div className="h-full w-full bg-linear-to-br from-primary/30 via-primary/15 to-primary/5 flex items-center justify-center">
+              <Newspaper className="h-16 w-16 text-primary/50" />
             </div>
           )}
-          {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-background/90 lg:block hidden" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent lg:hidden" />
+          {/* Enhanced Gradient Overlays */}
+          <div className="absolute inset-0 bg-linear-to-r from-transparent via-background/40 to-background lg:block hidden" />
+          <div className="absolute inset-0 bg-linear-to-t from-background via-background/60 to-transparent lg:hidden" />
           
           {/* Category Badge - Mobile */}
           {news.category && (
-            <Badge className="absolute left-4 top-4 lg:hidden text-xs font-semibold uppercase tracking-wide bg-accent text-accent-foreground">
+            <Badge className="absolute left-4 top-4 lg:hidden text-xs font-bold uppercase tracking-wide bg-primary text-primary-foreground shadow-lg">
               {news.category.name}
             </Badge>
           )}
         </div>
 
-        {/* Content Section */}
-        <div className="relative flex flex-col justify-center p-6 sm:p-8 lg:absolute lg:right-0 lg:top-0 lg:h-full lg:w-1/2 lg:p-10">
-          {/* Desktop Category Badge */}
-          {news.category && (
-            <Badge className="hidden lg:inline-flex w-fit mb-4 text-xs font-semibold uppercase tracking-wide bg-accent text-accent-foreground">
-              {news.category.name}
-            </Badge>
-          )}
+        {/* Content Section with frosted glass effect */}
+        <div className="relative flex flex-col justify-center p-6 sm:p-8 lg:absolute lg:right-0 lg:top-0 lg:h-full lg:w-1/2 lg:p-8 lg:py-6">
+          {/* Frosted glass backdrop for desktop */}
+          <div className="absolute inset-0 hidden lg:block bg-background/85 backdrop-blur-md" />
+          
+          <div className="relative z-10">
+            {/* Desktop Category Badge */}
+            {news.category && (
+              <div className="hidden lg:block mb-2">
+                <Badge className="text-xs font-bold uppercase tracking-wide bg-primary text-primary-foreground shadow-md">
+                  {news.category.name}
+                </Badge>
+              </div>
+            )}
 
-          {/* Label */}
-          <span className="mb-2 text-xs font-bold uppercase tracking-widest text-accent-foreground/70">
-            {t("latestNews")}
-          </span>
-
-          {/* Title */}
-          <h2 className="mb-4 text-2xl font-extrabold uppercase tracking-tight text-foreground sm:text-3xl lg:text-4xl xl:text-5xl group-hover:text-primary transition-colors">
-            {news.title}
-          </h2>
-
-          {/* Excerpt */}
-          {news.excerpt && (
-            <p className="mb-6 text-sm text-foreground/70 line-clamp-2 sm:text-base lg:line-clamp-3">
-              {news.excerpt}
-            </p>
-          )}
-
-          {/* Date */}
-          <div className="mb-6 flex items-center gap-4 text-sm text-foreground/60">
-            <span className="flex items-center gap-1.5">
-              <Calendar className="h-4 w-4" />
-              {formatDate(news.publishedAt ?? news.createdAt)}
+            {/* Label */}
+            <span className="block mb-2 text-xs font-bold uppercase tracking-widest text-primary drop-shadow-sm">
+              {t("latestNews")}
             </span>
-          </div>
 
-          {/* CTA */}
-          <Button size="lg" variant="outline" className="w-fit font-semibold uppercase tracking-wide group/btn">
-            {t("readMore")}
-            <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
-          </Button>
+            {/* Title */}
+            <h2 className="mb-3 text-2xl font-extrabold uppercase tracking-tight text-foreground sm:text-3xl lg:text-3xl xl:text-4xl group-hover:text-primary transition-colors leading-tight">
+              {news.title}
+            </h2>
+
+            {/* Excerpt */}
+            {news.excerpt && (
+              <p className="mb-4 text-sm text-foreground/80 line-clamp-2 sm:text-base lg:line-clamp-2 leading-relaxed font-medium">
+                {news.excerpt}
+              </p>
+            )}
+
+            {/* Date */}
+            <div className="mb-4 flex items-center gap-3 text-sm text-foreground/70 font-medium">
+              <span className="flex items-center gap-2 bg-muted/50 px-3 py-1.5 rounded-full">
+                <Calendar className="h-4 w-4 text-primary" />
+                {formatDate(news.publishedAt ?? news.createdAt)}
+              </span>
+            </div>
+
+            {/* CTA */}
+            <Button size="default" className="w-fit font-bold uppercase tracking-wide group/btn shadow-lg shadow-primary/20">
+              {t("readMore")}
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
+            </Button>
+          </div>
         </div>
       </div>
     </Link>
@@ -340,7 +354,7 @@ function MainNewsBanner({
 function SecondaryEventCard({
   event,
   t,
-  locale,
+  locale: _locale,
   formatDate,
   index,
 }: {
@@ -365,7 +379,7 @@ function SecondaryEventCard({
   return (
     <Link
       href={`/events/${event.slug}`}
-      className={`animate animate-fadeInUp stagger-${index + 1} group relative flex overflow-hidden rounded-xl border border-border/40 bg-card/50 backdrop-blur transition-all hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5`}
+      className={`animate animate-fadeInUp stagger-${index + 1} group relative flex overflow-hidden rounded-xl border border-border/50 bg-card shadow-md transition-all hover:border-primary/60 hover:shadow-xl hover:shadow-primary/10`}
     >
       {/* Image */}
       <div className="relative w-1/3 min-w-[120px] sm:min-w-[160px] overflow-hidden">
@@ -377,12 +391,12 @@ function SecondaryEventCard({
             className="object-cover transition-transform duration-500 group-hover:scale-110"
           />
         ) : (
-          <div className="h-full w-full bg-gradient-to-br from-primary/20 to-primary/5" />
+          <div className="h-full w-full bg-linear-to-br from-primary/30 to-primary/10" />
         )}
         {/* Category Badge */}
         {event.category && (
           <Badge
-            className="absolute left-2 top-2 text-[10px] font-semibold uppercase tracking-wide"
+            className="absolute left-2 top-2 text-[10px] font-bold uppercase tracking-wide shadow-md"
             style={{ backgroundColor: event.category.color ?? undefined }}
           >
             {event.category.name}
@@ -391,27 +405,27 @@ function SecondaryEventCard({
       </div>
 
       {/* Content */}
-      <div className="flex flex-1 flex-col justify-between p-4 sm:p-5">
+      <div className="flex flex-1 flex-col justify-between p-4 sm:p-5 bg-card">
         <div>
           {/* Label */}
-          <span className="mb-1 text-[10px] font-bold uppercase tracking-widest text-primary">
+          <span className="mb-1.5 inline-block text-[10px] font-bold uppercase tracking-widest text-primary">
             {t("upcomingEvent")}
           </span>
           
           {/* Title */}
-          <h3 className="mb-2 text-sm font-bold text-foreground line-clamp-2 sm:text-base group-hover:text-primary transition-colors">
+          <h3 className="mb-2.5 text-sm font-bold text-foreground line-clamp-2 sm:text-base group-hover:text-primary transition-colors leading-snug">
             {event.title}
           </h3>
 
           {/* Date & Location */}
-          <div className="flex flex-col gap-1 text-xs text-foreground/60">
-            <span className="flex items-center gap-1">
-              <Calendar className="h-3 w-3" />
+          <div className="flex flex-col gap-1.5 text-xs text-foreground/70 font-medium">
+            <span className="flex items-center gap-1.5">
+              <Calendar className="h-3.5 w-3.5 text-primary/70" />
               {formatDate(event.startDate)}
             </span>
             {(event.location ?? event.city) && (
-              <span className="flex items-center gap-1 truncate">
-                <MapPin className="h-3 w-3 shrink-0" />
+              <span className="flex items-center gap-1.5 truncate">
+                <MapPin className="h-3.5 w-3.5 shrink-0 text-primary/70" />
                 <span className="truncate">{event.location ?? event.city}</span>
               </span>
             )}
@@ -420,10 +434,10 @@ function SecondaryEventCard({
 
         {/* Price */}
         <div className="mt-3 flex items-center justify-between">
-          <span className="text-sm font-bold text-primary">
+          <span className="text-sm font-extrabold text-primary bg-primary/10 px-2.5 py-1 rounded-md">
             {event.price === 0 ? t("free") : `${event.price} ${event.currency}`}
           </span>
-          <ArrowRight className="h-4 w-4 text-foreground/40 transition-transform group-hover:translate-x-1 group-hover:text-primary" />
+          <ArrowRight className="h-4 w-4 text-foreground/50 transition-transform group-hover:translate-x-1 group-hover:text-primary" />
         </div>
       </div>
     </Link>
@@ -434,7 +448,7 @@ function SecondaryEventCard({
 function SecondaryNewsCard({
   news,
   t,
-  locale,
+  locale: _locale,
   formatDate,
   index,
 }: {
@@ -456,7 +470,7 @@ function SecondaryNewsCard({
   return (
     <Link
       href={`/blog/${news.slug}`}
-      className={`animate animate-fadeInUp stagger-${index + 1} group relative flex overflow-hidden rounded-xl border border-border/40 bg-card/50 backdrop-blur transition-all hover:border-accent/50 hover:shadow-lg hover:shadow-accent/5`}
+      className={`animate animate-fadeInUp stagger-${index + 1} group relative flex overflow-hidden rounded-xl border border-border/50 bg-card shadow-md transition-all hover:border-primary/60 hover:shadow-xl hover:shadow-primary/10`}
     >
       {/* Image */}
       <div className="relative w-1/3 min-w-[120px] sm:min-w-[160px] overflow-hidden">
@@ -468,41 +482,44 @@ function SecondaryNewsCard({
             className="object-cover transition-transform duration-500 group-hover:scale-110"
           />
         ) : (
-          <div className="h-full w-full bg-gradient-to-br from-accent/20 to-accent/5 flex items-center justify-center">
-            <Newspaper className="h-8 w-8 text-accent/40" />
+          <div className="h-full w-full bg-linear-to-br from-primary/25 to-primary/10 flex items-center justify-center">
+            <Newspaper className="h-8 w-8 text-primary/50" />
           </div>
         )}
         {/* Category Badge */}
         {news.category && (
-          <Badge className="absolute left-2 top-2 text-[10px] font-semibold uppercase tracking-wide bg-accent text-accent-foreground">
+          <Badge className="absolute left-2 top-2 text-[10px] font-bold uppercase tracking-wide bg-primary text-primary-foreground shadow-md">
             {news.category.name}
           </Badge>
         )}
       </div>
 
       {/* Content */}
-      <div className="flex flex-1 flex-col justify-between p-4 sm:p-5">
+      <div className="flex flex-1 flex-col justify-between p-4 sm:p-5 bg-card">
         <div>
           {/* Label */}
-          <span className="mb-1 text-[10px] font-bold uppercase tracking-widest text-accent-foreground/70">
+          <span className="mb-1.5 inline-block text-[10px] font-bold uppercase tracking-widest text-primary">
             {t("latestNews")}
           </span>
           
           {/* Title */}
-          <h3 className="mb-2 text-sm font-bold text-foreground line-clamp-2 sm:text-base group-hover:text-primary transition-colors">
+          <h3 className="mb-2.5 text-sm font-bold text-foreground line-clamp-2 sm:text-base group-hover:text-primary transition-colors leading-snug">
             {news.title}
           </h3>
 
           {/* Date */}
-          <div className="flex items-center gap-1 text-xs text-foreground/60">
-            <Calendar className="h-3 w-3" />
+          <div className="flex items-center gap-1.5 text-xs text-foreground/70 font-medium">
+            <Calendar className="h-3.5 w-3.5 text-primary/70" />
             {formatDate(news.publishedAt ?? news.createdAt)}
           </div>
         </div>
 
         {/* CTA Arrow */}
         <div className="mt-3 flex items-center justify-end">
-          <ArrowRight className="h-4 w-4 text-foreground/40 transition-transform group-hover:translate-x-1 group-hover:text-primary" />
+          <span className="text-xs font-semibold text-primary/80 mr-2 opacity-0 group-hover:opacity-100 transition-opacity">
+            {t("readMore")}
+          </span>
+          <ArrowRight className="h-4 w-4 text-foreground/50 transition-transform group-hover:translate-x-1 group-hover:text-primary" />
         </div>
       </div>
     </Link>

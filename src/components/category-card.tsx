@@ -44,14 +44,14 @@ export function CategoryCard({ categories }: CategoryCardProps) {
   };
 
   return (
-    <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+    <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
       {categories.map((category, index) => (
         <Link
           key={category.id}
           href={`/categories/${category.slug}`}
           onMouseEnter={() => handleMouseEnter(category.id)}
           onMouseLeave={() => handleMouseLeave(category.id)}
-          className={`animate animate-fadeInUp stagger-${index + 1} group flex flex-col`}
+          className={`animate animate-fadeInUp stagger-${index + 1} group flex flex-col w-[calc(50%-0.375rem)] md:w-[calc(33.333%-0.5rem)] lg:w-[calc(25%-0.5rem)] xl:w-[calc(16.666%-0.5rem)]`}
         >
           {/* Image Container */}
           <div className="relative aspect-square overflow-hidden rounded-xl bg-muted/50 ring-1 ring-border/40 transition-all duration-300 group-hover:ring-primary/50 group-hover:shadow-lg group-hover:shadow-primary/10">
