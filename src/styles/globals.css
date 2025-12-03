@@ -51,10 +51,11 @@
   --radius: 0.5rem;
   
   /* Layout variables - Two-layer header with Gran Turismo inspired design */
-  /* Mobile (< 640px): Top bar only h-16 (64px) - Nav bar hidden on mobile */
-  --header-height: 4rem; /* 64px - mobile default (top bar only) */
-  --header-top-bar-height: 4rem; /* 64px - h-16 */
-  --header-nav-bar-height: 0rem; /* Nav bar hidden on mobile */
+  /* Header heights include border-bottom (1px each) + buffer for proper spacing */
+  /* Mobile (< 640px): Top bar only h-16 (64px) + 1px border + 4px buffer */
+  --header-height: 69px; /* 64px (h-16) + 1px border + 4px buffer */
+  --header-top-bar-height: 69px; /* 64px (h-16) + 1px border + 4px buffer */
+  --header-nav-bar-height: 0px; /* Nav bar hidden on mobile */
   
   /* Safe area insets for mobile devices (notches, rounded corners, home indicators) */
   --safe-top: env(safe-area-inset-top, 0px);
@@ -136,6 +137,28 @@
   --sidebar-ring: oklch(0.55 0.16 245);
 }
 
+/* Responsive header heights - Small screens (≥640px) */
+@media (min-width: 640px) {
+  :root {
+    /* Top bar h-20 (80px) + 1px border + 4px buffer - Nav bar still hidden until md breakpoint */
+    --header-height: 85px; /* 80px (h-20) + 1px border + 4px buffer */
+    --header-top-bar-height: 85px; /* 80px (h-20) + 1px border + 4px buffer */
+    --header-nav-bar-height: 0px; /* Nav bar hidden on small screens */
+  }
+}
+
+/* Responsive header heights - Medium screens+ (≥768px) - Nav bar visible */
+@media (min-width: 768px) {
+  :root {
+    /* Top bar: 80px (h-20) + 1px border = 81px */
+    /* Nav bar: 32px (py-4) + ~22px content + 1px border = ~55px */
+    /* Total: 81px + 55px + 4px buffer = 140px */
+    --header-height: 140px;
+    --header-top-bar-height: 85px;
+    --header-nav-bar-height: 55px;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -152,26 +175,6 @@
     padding-right: var(--safe-right);
     padding-bottom: var(--safe-bottom);
     padding-left: var(--safe-left);
-  }
-  
-  /* Responsive header heights - Small screens (≥640px) */
-  @media (min-width: 640px) {
-    :root {
-      /* Top bar h-20 (80px) only - Nav bar still hidden until md breakpoint */
-      --header-height: 5rem; /* 80px */
-      --header-top-bar-height: 5rem; /* 80px - h-20 */
-      --header-nav-bar-height: 0rem; /* Nav bar hidden on small screens */
-    }
-  }
-  
-  /* Responsive header heights - Medium screens+ (≥768px) - Nav bar visible */
-  @media (min-width: 768px) {
-    :root {
-      /* Measured: 134px total (top bar 80px + nav bar 54px) */
-      --header-height: 134px;
-      --header-top-bar-height: 80px;
-      --header-nav-bar-height: 54px;
-    }
   }
   
   /* Smooth scroll snapping */
@@ -193,9 +196,9 @@
 
 /* Page content layout utilities */
 @layer utilities {
-  /* Standard page top padding - accounts for header and safe areas + small buffer */
+  /* Standard page top padding - accounts for header and safe areas */
   .page-pt {
-    padding-top: calc(var(--header-height) + var(--safe-top) + 4px);
+    padding-top: calc(var(--header-height) + var(--safe-top));
   }
   
   /* Larger page top padding - for centered content like auth pages */
@@ -205,7 +208,7 @@
   
   /* Article page top padding - standard on mobile, extra on md+ screens */
   .article-pt {
-    padding-top: calc(var(--header-height) + var(--safe-top) + 4px);
+    padding-top: calc(var(--header-height) + var(--safe-top));
   }
   
   @media (min-width: 768px) {

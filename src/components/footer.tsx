@@ -1,29 +1,11 @@
-import Link from "next/link";
 import { Facebook, Twitter, Youtube, Instagram } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { Separator } from "~/components/ui/separator";
 import { auth } from "~/server/auth";
 import { api } from "~/trpc/server";
 import { AnimatedFooterWrapper } from "./animated-footer";
 import { NewsletterForm } from "./newsletter-form";
-
-const staticFooterSections = [
-  {
-    title: "Сообщество",
-    links: [
-      { label: "Клуб", href: "/club" },
-      { label: "Блог", href: "/blog" },
-      { label: "Магазин", href: "/shop" },
-    ],
-  },
-  {
-    title: "Компания",
-    links: [
-      { label: "О нас", href: "/about" },
-      { label: "Контакты", href: "/contact" },
-      { label: "Конфиденциальность", href: "/privacy" },
-    ],
-  },
-];
+import { Link } from "~/i18n/navigation";
 
 const socialLinks = [
   { icon: Instagram, href: "https://www.instagram.com/jemso_drive/", label: "Instagram" },
@@ -33,6 +15,7 @@ const socialLinks = [
 ];
 
 export async function Footer() {
+  const t = await getTranslations("Footer");
   const session = await auth();
   
   // Load dynamic categories
@@ -40,29 +23,48 @@ export async function Footer() {
 
   // Dynamic categories section
   const categoriesSection = {
-    title: "Мероприятия",
+    title: t("sections.events"),
     links: [
       ...categories.slice(0, 3).map((category) => ({
         label: category.name,
         href: `/categories/${category.slug}`,
       })),
-      { label: "Новости", href: "/news" },
+      { label: t("links.news"), href: "/news" },
     ],
   };
 
+  const staticFooterSections = [
+    {
+      title: t("sections.community"),
+      links: [
+        { label: t("links.club"), href: "/club" },
+        { label: t("links.blog"), href: "/blog" },
+        { label: t("links.shop"), href: "/shop" },
+      ],
+    },
+    {
+      title: t("sections.company"),
+      links: [
+        { label: t("links.about"), href: "/about" },
+        { label: t("links.contact"), href: "/contact" },
+        { label: t("links.privacy"), href: "/privacy" },
+      ],
+    },
+  ];
+
   // Dynamic account section based on auth state
   const accountSection = {
-    title: session?.user ? "Аккаунт" : "Начать",
+    title: session?.user ? t("sections.account") : t("sections.getStarted"),
     links: session?.user
       ? [
-          { label: "Профиль", href: "/account" },
-          { label: "Настройки", href: "/account?tab=settings" },
-          { label: "Подписка", href: "/account?tab=subscription" },
+          { label: t("links.profile"), href: "/account" },
+          { label: t("links.settings"), href: "/account?tab=settings" },
+          { label: t("links.subscription"), href: "/account?tab=subscription" },
         ]
       : [
-          { label: "Вход", href: "/auth/sign-in" },
-          { label: "Регистрация", href: "/auth/sign-up" },
-          { label: "Условия", href: "/terms" },
+          { label: t("links.signIn"), href: "/auth/sign-in" },
+          { label: t("links.signUp"), href: "/auth/sign-up" },
+          { label: t("links.terms"), href: "/terms" },
         ],
   };
 
@@ -76,16 +78,16 @@ export async function Footer() {
             <div className="footer-section space-y-4 sm:col-span-2 lg:col-span-3">
               <Link href="/" className="inline-block transition-colors hover:text-primary">
                 <span className="text-xl font-bold uppercase tracking-wider sm:text-2xl">
-                  JEMSO
+                  {t("company")}
                 </span>
               </Link>
               <p className="max-w-xs text-sm text-foreground/70">
-                Радость в движении!
+                {t("slogan")}
               </p>
               {/* Social Links - Responsive sizing */}
               <div className="flex flex-wrap gap-3 sm:gap-4">
                 {socialLinks.map((social) => (
-                  <Link
+                  <a
                     key={social.label}
                     href={social.href}
                     className="text-foreground/70 transition-colors hover:text-primary"
@@ -94,7 +96,7 @@ export async function Footer() {
                     rel="noopener noreferrer"
                   >
                     <social.icon className="h-5 w-5" />
-                  </Link>
+                  </a>
                 ))}
               </div>
             </div>
@@ -170,13 +172,13 @@ export async function Footer() {
           <div className="mb-6 rounded-lg p-4 text-sm text-foreground/90">
             <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 sm:justify-start">
               <div>
-                <span className="font-medium text-foreground">ИП Хайбулаев Ш.М.</span>
+                <span className="font-medium text-foreground">{t("legal.entity")}</span>
               </div>
               <div className="text-foreground/80">
-                <span className="font-medium">ИНН:</span> 056203350846
+                <span className="font-medium">{t("legal.inn")}:</span> 056203350846
               </div>
               <div className="text-foreground/80">
-                <span className="font-medium">ОГРНИП:</span> 319057100022896
+                <span className="font-medium">{t("legal.ogrn")}:</span> 319057100022896
               </div>
               <div>
                 <a 
@@ -192,26 +194,26 @@ export async function Footer() {
           {/* Copyright and Legal Links */}
           <div className="flex flex-col items-center justify-between gap-3 text-center text-sm text-foreground/70 sm:flex-row sm:gap-4 sm:text-left">
             <p className="order-2 sm:order-1">
-              © {new Date().getFullYear()} Jemso. Все права защищены.
+              {t("copyright", { year: new Date().getFullYear() })}
             </p>
             <div className="order-1 flex flex-col gap-2 sm:order-2 sm:flex-row sm:gap-4 md:gap-6">
               <Link
                 href="/privacy"
                 className="transition-colors hover:text-primary"
               >
-                Политика конфиденциальности
+                {t("links.privacyFull")}
               </Link>
               <Link
                 href="/terms"
                 className="transition-colors hover:text-primary"
               >
-                Условия использования
+                {t("links.terms")}
               </Link>
               <Link
                 href="/contact"
                 className="transition-colors hover:text-primary"
               >
-                Контакты
+                {t("links.contact")}
               </Link>
             </div>
           </div>
@@ -220,4 +222,3 @@ export async function Footer() {
     </AnimatedFooterWrapper>
   );
 }
-

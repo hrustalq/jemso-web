@@ -1,13 +1,101 @@
-/* GSAP Animation Enhancements */
+/* CSS Animation System - Replaces GSAP */
 
-/* Smooth transitions for hover effects */
-.hover-lift {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+/* ============================================
+   Base Keyframes
+   ============================================ */
+
+/* Fade In */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-.hover-lift:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+/* Fade In Up */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade In Down */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade In Left */
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Fade In Right */
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Scale In */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Blur In */
+@keyframes blurIn {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+/* Scale X (for accent lines) */
+@keyframes scaleX {
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
 }
 
 /* Gradient animation for backgrounds */
@@ -20,6 +108,102 @@
   }
 }
 
+/* Shimmer effect */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Subtle float animation for backgrounds */
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(10px, -10px);
+  }
+  50% {
+    transform: translate(-5px, 5px);
+  }
+  75% {
+    transform: translate(-10px, -5px);
+  }
+}
+
+/* ============================================
+   Animation Classes
+   ============================================ */
+
+/* Base animate class - sets up animation defaults */
+.animate {
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+  animation-fill-mode: both;
+}
+
+/* Animation types */
+.animate-fadeIn { animation-name: fadeIn; }
+.animate-fadeInUp { animation-name: fadeInUp; }
+.animate-fadeInDown { animation-name: fadeInDown; }
+.animate-fadeInLeft { animation-name: fadeInLeft; }
+.animate-fadeInRight { animation-name: fadeInRight; }
+.animate-scaleIn { animation-name: scaleIn; }
+.animate-blurIn { animation-name: blurIn; }
+.animate-scaleX { animation-name: scaleX; transform-origin: left center; }
+
+/* Stagger delays for grid items */
+.stagger-1 { animation-delay: 0ms; }
+.stagger-2 { animation-delay: 60ms; }
+.stagger-3 { animation-delay: 120ms; }
+.stagger-4 { animation-delay: 180ms; }
+.stagger-5 { animation-delay: 240ms; }
+.stagger-6 { animation-delay: 300ms; }
+.stagger-7 { animation-delay: 360ms; }
+.stagger-8 { animation-delay: 420ms; }
+.stagger-9 { animation-delay: 480ms; }
+.stagger-10 { animation-delay: 540ms; }
+
+/* Sequential delays for hero content */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+.delay-600 { animation-delay: 600ms; }
+.delay-700 { animation-delay: 700ms; }
+
+/* ============================================
+   Hover Effects
+   ============================================ */
+
+/* Smooth transitions for hover effects */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+}
+
+/* Card hover effect */
+.card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================
+   Background Effects
+   ============================================ */
+
 .animated-gradient {
   background: linear-gradient(
     -45deg,
@@ -30,16 +214,6 @@
   );
   background-size: 400% 400%;
   animation: gradient-shift 15s ease infinite;
-}
-
-/* Shimmer effect */
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
 }
 
 .shimmer {
@@ -63,6 +237,59 @@
   animation: shimmer 2s infinite;
 }
 
+/* Section mesh background alternative - CSS only */
+.mesh-background {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.mesh-background::before,
+.mesh-background::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  animation: float 20s ease-in-out infinite;
+}
+
+.mesh-background::before {
+  width: 400px;
+  height: 400px;
+  top: 10%;
+  left: 20%;
+  background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+  opacity: 0.08;
+}
+
+.mesh-background::after {
+  width: 300px;
+  height: 300px;
+  bottom: 20%;
+  right: 20%;
+  background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+  opacity: 0.05;
+  animation-delay: -10s;
+}
+
+/* Mesh variants */
+.mesh-background-red::before { background: radial-gradient(circle, oklch(0.55 0.16 245) 0%, transparent 70%); }
+.mesh-background-red::after { background: radial-gradient(circle, oklch(0.55 0.16 245) 0%, transparent 70%); }
+
+.mesh-background-purple::before { background: radial-gradient(circle, oklch(0.55 0.20 280) 0%, transparent 70%); }
+.mesh-background-purple::after { background: radial-gradient(circle, oklch(0.55 0.20 280) 0%, transparent 70%); }
+
+.mesh-background-pink::before { background: radial-gradient(circle, oklch(0.65 0.18 350) 0%, transparent 70%); }
+.mesh-background-pink::after { background: radial-gradient(circle, oklch(0.65 0.18 350) 0%, transparent 70%); }
+
+.mesh-background-slate::before { background: radial-gradient(circle, oklch(0.5 0.02 250) 0%, transparent 70%); }
+.mesh-background-slate::after { background: radial-gradient(circle, oklch(0.5 0.02 250) 0%, transparent 70%); }
+
+/* ============================================
+   Utility Classes
+   ============================================ */
+
 /* Smooth scroll behavior */
 html {
   scroll-behavior: smooth;
@@ -73,7 +300,9 @@ html {
   will-change: transform, opacity;
 }
 
-/* Reduce motion for accessibility */
+/* ============================================
+   Accessibility - Reduce motion
+   ============================================ */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -82,6 +311,21 @@ html {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+  
+  .animate,
+  .animate-fadeIn,
+  .animate-fadeInUp,
+  .animate-fadeInDown,
+  .animate-fadeInLeft,
+  .animate-fadeInRight,
+  .animate-scaleIn,
+  .animate-blurIn,
+  .animate-scaleX {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
   }
 }
 

@@ -17,6 +17,9 @@ import {
   updatePreferencesDto,
   userPreferencesOutputDto,
   type UserPreferencesOutputDto,
+  updateLocationPreferencesDto,
+  locationPreferencesOutputDto,
+  type LocationPreferencesOutputDto,
 } from "./dto/preferences.dto";
 import {
   addCategoryPreferenceDto,
@@ -457,6 +460,83 @@ export const userRouter = createTRPCRouter({
         marketingEmails: input.marketingEmails ?? false,
         securityAlerts: input.securityAlerts ?? true,
         newsletterSubscribed: newsletterSub?.active ?? false,
+      };
+    }),
+
+  /**
+   * Get user location preferences
+   */
+  getLocationPreferences: protectedProcedure
+    .output(locationPreferencesOutputDto)
+    .query(async ({ ctx }): Promise<LocationPreferencesOutputDto> => {
+      const user = await ctx.db.user.findUnique({
+        where: { id: ctx.session.user.id },
+        select: {
+          preferredLocale: true,
+          city: true,
+          country: true,
+          latitude: true,
+          longitude: true,
+          timezone: true,
+          maxEventDistance: true,
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      return {
+        preferredLocale: user.preferredLocale,
+        city: user.city,
+        country: user.country,
+        latitude: user.latitude,
+        longitude: user.longitude,
+        timezone: user.timezone,
+        maxEventDistance: user.maxEventDistance,
+      };
+    }),
+
+  /**
+   * Update user location preferences
+   */
+  updateLocationPreferences: protectedProcedure
+    .input(updateLocationPreferencesDto)
+    .output(locationPreferencesOutputDto)
+    .mutation(async ({ ctx, input }): Promise<LocationPreferencesOutputDto> => {
+      const user = await ctx.db.user.update({
+        where: { id: ctx.session.user.id },
+        data: {
+          ...(input.preferredLocale !== undefined && { preferredLocale: input.preferredLocale }),
+          ...(input.city !== undefined && { city: input.city }),
+          ...(input.country !== undefined && { country: input.country }),
+          ...(input.latitude !== undefined && { latitude: input.latitude }),
+          ...(input.longitude !== undefined && { longitude: input.longitude }),
+          ...(input.timezone !== undefined && { timezone: input.timezone }),
+          ...(input.maxEventDistance !== undefined && { maxEventDistance: input.maxEventDistance }),
+        },
+        select: {
+          preferredLocale: true,
+          city: true,
+          country: true,
+          latitude: true,
+          longitude: true,
+          timezone: true,
+          maxEventDistance: true,
+        },
+      });
+
+      return {
+        preferredLocale: user.preferredLocale,
+        city: user.city,
+        country: user.country,
+        latitude: user.latitude,
+        longitude: user.longitude,
+        timezone: user.timezone,
+        maxEventDistance: user.maxEventDistance,
       };
     }),
 

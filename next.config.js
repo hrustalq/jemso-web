@@ -3,6 +3,9 @@
  * for Docker builds.
  */
 import "./src/env.js";
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 /** @type {import("next").NextConfig} */
 const config = {
@@ -15,7 +18,6 @@ const config = {
     ],
   },
   serverExternalPackages: ["@prisma/client", "@prisma/engines"],
-  transpilePackages: ['gsap', '@gsap/react'],
 };
 
-export default config;
+export default withNextIntl(config);

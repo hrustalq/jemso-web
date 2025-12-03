@@ -6,7 +6,12 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
-import { calculatePagination } from "~/server/api/utils";
+import { 
+  calculatePagination, 
+  calculateDistance,
+  applyTranslations,
+  type Translations,
+} from "~/server/api/utils";
 import { requirePermission, hasPermission, getUserTier } from "~/server/api/rbac";
 import { createEventDto } from "./dto/create-event.dto";
 import { updateEventDto } from "./dto/update-event.dto";
@@ -27,6 +32,7 @@ export const eventsRouter = createTRPCRouter({
             select: { id: true, name: true, image: true },
           },
           category: true,
+          venue: true,
           _count: {
             select: { registrations: true },
           },
@@ -65,13 +71,42 @@ export const eventsRouter = createTRPCRouter({
         data: { views: { increment: 1 } },
       });
 
+      // Apply translations if locale is specified
+      const locale = input.locale;
+      if (locale && event.translations) {
+        const translatedEvent = applyTranslations(
+          event,
+          event.translations as Translations,
+          locale,
+          ["title", "excerpt", "content", "htmlContent"]
+        );
+        return translatedEvent;
+      }
+
       return event;
     }),
 
   // Public: List events
   list: publicProcedure.input(listEventsDto).query(async ({ ctx, input }) => {
-    const { page, pageSize, published, categoryId, authorId, search, upcoming, past } =
-      input;
+    const { 
+      page, 
+      pageSize, 
+      published, 
+      categoryId, 
+      authorId, 
+      search, 
+      upcoming, 
+      past,
+      locale,
+      city,
+      country,
+      isOnline,
+      latitude,
+      longitude,
+      maxDistance,
+      sortByDistance,
+      venueId,
+    } = input;
     const { skip, take } = calculatePagination(page, pageSize, 0);
 
     const now = new Date();
@@ -100,22 +135,37 @@ export const eventsRouter = createTRPCRouter({
           { title: { contains: search, mode: "insensitive" as const } },
           { excerpt: { contains: search, mode: "insensitive" as const } },
           { content: { contains: search, mode: "insensitive" as const } },
+          { location: { contains: search, mode: "insensitive" as const } },
+          { city: { contains: search, mode: "insensitive" as const } },
         ],
       }),
+      // Location-based filters
+      ...(city && { city: { equals: city, mode: "insensitive" as const } }),
+      ...(country && { country }),
+      ...(isOnline !== undefined && { isOnline }),
+      ...(venueId && { venueId }),
     };
+
+    // Determine sort order
+    const orderBy: Prisma.EventOrderByWithRelationInput = { startDate: "desc" };
+    
+    // If sorting by distance, we need to fetch all matching events first
+    // and then sort/paginate in memory (for distance-based sorting)
+    const needsDistanceSort = sortByDistance && latitude !== undefined && longitude !== undefined;
 
     const [total, items] = await ctx.db.$transaction([
       ctx.db.event.count({ where }),
       ctx.db.event.findMany({
         where,
-        skip,
-        take,
-        orderBy: { startDate: "desc" },
+        // If distance sorting, fetch all items then paginate in memory
+        ...(needsDistanceSort ? {} : { skip, take }),
+        orderBy,
         include: {
           author: {
             select: { id: true, name: true, image: true },
           },
           category: true,
+          venue: true,
           _count: {
             select: { registrations: true },
           },
@@ -123,13 +173,62 @@ export const eventsRouter = createTRPCRouter({
       }),
     ]);
 
+    // Process items with distance calculation and filtering
+    let processedItems = items.map((event) => {
+      // Calculate distance if user location is provided
+      let distance: number | null = null;
+      if (latitude !== undefined && longitude !== undefined && event.latitude && event.longitude) {
+        distance = calculateDistance(latitude, longitude, event.latitude, event.longitude);
+      }
+      
+      // Apply translations if locale is specified
+      let translatedEvent = event;
+      if (locale && event.translations) {
+        translatedEvent = applyTranslations(
+          event,
+          event.translations as Translations,
+          locale,
+          ["title", "excerpt", "content", "htmlContent"]
+        );
+      }
+      
+      return {
+        ...translatedEvent,
+        distance,
+      };
+    });
+
+    // Filter by max distance if specified
+    if (maxDistance !== undefined && latitude !== undefined && longitude !== undefined) {
+      processedItems = processedItems.filter(
+        (event) => event.distance === null || event.distance <= maxDistance
+      );
+    }
+
+    // Sort by distance if requested
+    if (needsDistanceSort) {
+      processedItems.sort((a, b) => {
+        // Events without coordinates go to the end
+        if (a.distance === null && b.distance === null) return 0;
+        if (a.distance === null) return 1;
+        if (b.distance === null) return -1;
+        return a.distance - b.distance;
+      });
+      
+      // Apply pagination after distance sorting
+      processedItems = processedItems.slice(skip, skip + take);
+    }
+
+    // Recalculate total if distance filtering was applied
+    const finalTotal = maxDistance !== undefined ? processedItems.length : total;
+
     return {
-      items,
+      items: processedItems,
       page,
       pageSize,
-      total,
-      totalPages: Math.ceil(total / pageSize),
-      hasMore: page < Math.ceil(total / pageSize),
+      total: finalTotal,
+      totalPages: Math.ceil(finalTotal / pageSize),
+      hasMore: page < Math.ceil(finalTotal / pageSize),
     };
   }),
 
@@ -139,7 +238,13 @@ export const eventsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await requirePermission(ctx.db, ctx.session.user.id, "event", "create");
 
-      const { blocks, htmlContent, ...eventData } = input;
+      const { 
+        blocks, 
+        htmlContent, 
+        translations,
+        venueId,
+        ...eventData 
+      } = input;
 
       // Check if slug already exists
       const existing = await ctx.db.event.findUnique({
@@ -153,6 +258,17 @@ export const eventsRouter = createTRPCRouter({
         });
       }
 
+      // Verify venue exists if provided
+      if (venueId) {
+        const venue = await ctx.db.venue.findUnique({ where: { id: venueId } });
+        if (!venue) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Venue not found",
+          });
+        }
+      }
+
       // Ensure content field has a value (use empty string if blocks/htmlContent are provided)
       const content = input.content ?? (blocks || htmlContent ? "" : "");
 
@@ -162,6 +278,8 @@ export const eventsRouter = createTRPCRouter({
           content,
           blocks: blocks ? (blocks as unknown as Prisma.InputJsonValue) : undefined,
           htmlContent: htmlContent ?? undefined,
+          translations: translations ? (translations as unknown as Prisma.InputJsonValue) : undefined,
+          venueId: venueId ?? undefined,
           authorId: ctx.session.user.id,
           publishedAt: input.published ? new Date() : null,
         },
@@ -170,6 +288,7 @@ export const eventsRouter = createTRPCRouter({
             select: { id: true, name: true, image: true },
           },
           category: true,
+          venue: true,
           _count: {
             select: { registrations: true },
           },
@@ -181,7 +300,7 @@ export const eventsRouter = createTRPCRouter({
   update: protectedProcedure
     .input(updateEventDto)
     .mutation(async ({ ctx, input }) => {
-      const { id, blocks, htmlContent, ...updateData } = input;
+      const { id, blocks, htmlContent, translations, venueId, ...updateData } = input;
 
       const event = await ctx.db.event.findUnique({
         where: { id },
@@ -209,12 +328,25 @@ export const eventsRouter = createTRPCRouter({
         });
       }
 
+      // Verify venue exists if provided (and not null)
+      if (venueId !== undefined && venueId !== null) {
+        const venue = await ctx.db.venue.findUnique({ where: { id: venueId } });
+        if (!venue) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Venue not found",
+          });
+        }
+      }
+
       return await ctx.db.event.update({
         where: { id },
         data: {
           ...updateData,
           ...(blocks !== undefined && { blocks: blocks as unknown as Prisma.InputJsonValue }),
           ...(htmlContent !== undefined && { htmlContent }),
+          ...(translations !== undefined && { translations: translations as unknown as Prisma.InputJsonValue }),
+          ...(venueId !== undefined && { venueId }),
           ...(updateData.published !== undefined &&
             updateData.published &&
             !event.publishedAt && { publishedAt: new Date() }),
@@ -224,6 +356,7 @@ export const eventsRouter = createTRPCRouter({
             select: { id: true, name: true, image: true },
           },
           category: true,
+          venue: true,
           _count: {
             select: { registrations: true },
           },

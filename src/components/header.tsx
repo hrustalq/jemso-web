@@ -1,5 +1,5 @@
-import Link from "next/link";
 import Image from "next/image";
+import { getTranslations } from "next-intl/server";
 import { auth } from "~/server/auth";
 import { HeaderNav } from "./header-nav";
 import { UserMenu } from "./user-menu";
@@ -7,6 +7,8 @@ import { Button } from "~/components/ui/button";
 import { AnimatedHeaderWrapper } from "./animated-header";
 import { User } from "lucide-react";
 import { api } from "~/trpc/server";
+import { Link } from "~/i18n/navigation";
+import { LanguageSwitcherCompact } from "./language-switcher";
 
 // Social media links
 const socialLinks = [
@@ -15,15 +17,6 @@ const socialLinks = [
   { icon: "youtube", href: "#", label: "YouTube" },
   { icon: "instagram", href: "#", label: "Instagram" },
 ] as const;
-
-// Static navigation items
-const staticNavItems = [
-  { title: "Новости", href: "/news" },
-  { title: "Магазин", href: "/shop" },
-  { title: "Блог", href: "/blog" },
-  { title: "О нас", href: "/about" },
-  { title: "Контакты", href: "/contact" },
-];
 
 // Social icon SVG components
 const SocialIcon = ({ icon }: { icon: string }) => {
@@ -50,14 +43,24 @@ const SocialIcon = ({ icon }: { icon: string }) => {
 };
 
 export async function Header() {
+  const t = await getTranslations("Navigation");
   const session = await auth();
   
   // Load dynamic categories for navigation
   const categories = await api.blog.categories.navigation();
 
+  // Translated static navigation items
+  const staticNavItems = [
+    { title: t("news"), href: "/news" },
+    { title: t("shop"), href: "/shop" },
+    { title: t("blog"), href: "/blog" },
+    { title: t("about"), href: "/about" },
+    { title: t("contact"), href: "/contact" },
+  ];
+
   return (
     <AnimatedHeaderWrapper>
-      <header className="fixed top-0 z-50 w-full bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 pt-[var(--safe-top)]">
+      <header className="fixed top-0 z-50 w-full bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 pt-(--safe-top)">
         {/* Top Bar */}
         <div 
           className="border-b border-border/40"
@@ -104,6 +107,9 @@ export async function Header() {
 
             {/* Right Section: User Actions */}
             <div className="flex items-center gap-2">
+              {/* Language Switcher */}
+              <LanguageSwitcherCompact />
+
               {/* My Page / Auth */}
               {session?.user ? (
                 <UserMenu user={session.user} />
@@ -118,7 +124,7 @@ export async function Header() {
                   >
                     <Link href="/auth/sign-in">
                       <User className="h-4 w-4" />
-                      <span className="sr-only">Мой профиль</span>
+                      <span className="sr-only">{t("myProfile")}</span>
                     </Link>
                   </Button>
                   
@@ -131,7 +137,7 @@ export async function Header() {
                   >
                     <Link href="/auth/sign-in">
                       <User className="h-4 w-4" />
-                      <span className="text-sm">Мой профиль</span>
+                      <span className="text-sm">{t("myProfile")}</span>
                     </Link>
                   </Button>
                 </>
@@ -169,4 +175,3 @@ export async function Header() {
     </AnimatedHeaderWrapper>
   );
 }
-

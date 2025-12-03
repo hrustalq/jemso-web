@@ -1,44 +1,13 @@
-"use client";
-
-import { useRef, useEffect } from "react";
-import { gsap } from "gsap";
 import { Card } from "~/components/ui/card";
 import { Skeleton } from "~/components/ui/skeleton";
 
 export function CategorySkeleton() {
-  const cardsRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!cardsRef.current) return;
-
-    const cards = cardsRef.current.querySelectorAll(".skeleton-card");
-    if (cards.length === 0) return;
-
-    // Simple fade-in only
-    const tl = gsap.timeline();
-    
-    cards.forEach((card, index) => {
-      gsap.set(card, { opacity: 0, y: 20 });
-      tl.to(card, {
-        opacity: 1,
-        y: 0,
-        duration: 0.4,
-        ease: "power2.out",
-      }, index * 0.1);
-    });
-
-    // Cleanup
-    return () => {
-      tl.kill();
-    };
-  }, []);
-
   return (
-    <div ref={cardsRef} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {Array.from({ length: 4 }).map((_, index) => (
         <Card
           key={index}
-          className="skeleton-card animate-pulse border-border bg-card p-6"
+          className={`animate animate-fadeInUp stagger-${index + 1} border-border bg-card p-6`}
         >
           <div className="space-y-3">
             {/* Icon skeleton */}
@@ -64,4 +33,3 @@ export function CategorySkeleton() {
     </div>
   );
 }
-

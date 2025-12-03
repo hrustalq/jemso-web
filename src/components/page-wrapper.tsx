@@ -17,7 +17,7 @@ export function PageWrapper({
         "min-h-(--content-height)",
         withHeaderOffset && "page-pt",
         className
-      )} 
+      )}
       {...props}
     >
       {children}

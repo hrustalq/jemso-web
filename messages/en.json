@@ -1,0 +1,666 @@
+{
+  "Metadata": {
+    "title": "JEMSO - Joy in Motion!",
+    "description": "JEMSO DRIVE - automotive community, organizing festivals, races, drift and drag racing championships."
+  },
+  "Navigation": {
+    "home": "Home",
+    "about": "About",
+    "events": "Events",
+    "news": "News",
+    "blog": "Blog",
+    "shop": "Shop",
+    "pricing": "Pricing",
+    "contact": "Contact",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "dashboard": "Dashboard",
+    "account": "Account",
+    "settings": "Settings",
+    "myProfile": "My Profile",
+    "club": "Club"
+  },
+  "Common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Try again",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "viewAll": "View all",
+    "readMore": "Read more",
+    "learnMore": "Learn more",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "details": "Details",
+    "free": "Free",
+    "allRightsReserved": "All rights reserved"
+  },
+  "HomePage": {
+    "title": "Home",
+    "hero": {
+      "title": "JEMSO DRIVE",
+      "tagline": "The emotion you experience at the heart of automotive culture",
+      "description": "JEMSO Drive is a platform for motorsport and drift enthusiasts. We organize track days, competitions, and meetups, create educational content, and unite people who live automotive culture.",
+      "subdescription": "From professional racers to beginners — everyone will find something for themselves. Join the community, participate in events, and get access to exclusive content.",
+      "benefits": {
+        "content": {
+          "title": "Educational Content",
+          "description": "Videos, articles, guides on drift and motorsport"
+        },
+        "events": {
+          "title": "Events",
+          "description": "Track days, competitions, participant meetups"
+        },
+        "community": {
+          "title": "Community",
+          "description": "Networking with racers and enthusiasts"
+        }
+      },
+      "buttons": {
+        "content": "Content",
+        "events": "Events",
+        "blog": "Blog"
+      }
+    },
+    "promoBanner": {
+      "upcomingEvent": "Upcoming Event",
+      "latestNews": "Latest News",
+      "learnMore": "Learn More",
+      "register": "Register",
+      "readMore": "Read More",
+      "viewAllEvents": "All Events",
+      "viewAllNews": "All News",
+      "noContent": "Stay tuned for upcoming events and news",
+      "free": "Free"
+    },
+    "categories": {
+      "title": "Directions",
+      "linkText": "All Directions",
+      "noCategories": "Directions coming soon. Stay tuned!"
+    },
+    "events": {
+      "title": "Events",
+      "linkText": "All Events",
+      "noEvents": "No events scheduled yet. Stay tuned!",
+      "upcoming": {
+        "title": "Upcoming Events",
+        "subtitle": "These events are starting soon"
+      },
+      "past": {
+        "title": "Past Events"
+      }
+    },
+    "news": {
+      "title": "Latest News",
+      "linkText": "All Articles",
+      "noNews": "No published articles yet. News coming soon!"
+    },
+    "plans": {
+      "title": "Choose Your Plan",
+      "subtitle": "JEMSO subscriptions unlock access to premium content, exclusive events, and special shop offers. Choose the plan that's right for you."
+    },
+    "shop": {
+      "title": "JEMSO Shop",
+      "linkText": "Go to Shop"
+    },
+    "cta": {
+      "title": "Become Part of the Community",
+      "description": "Join JEMSO DRIVE and get access to exclusive events",
+      "button": "Get Started"
+    }
+  },
+  "Auth": {
+    "signIn": {
+      "title": "Sign In",
+      "description": "Enter your email and password to sign in",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign In",
+      "forgotPassword": "Forgot password?",
+      "noAccount": "Don't have an account?",
+      "createAccount": "Create account",
+      "invalidCredentials": "Invalid email or password",
+      "accountLinked": "This email is linked to another account"
+    },
+    "signUp": {
+      "title": "Sign Up",
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "submit": "Sign Up",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign In"
+    },
+    "forgotPassword": {
+      "title": "Forgot Password",
+      "email": "Email",
+      "submit": "Send reset link",
+      "backToSignIn": "Back to sign in"
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password",
+      "submit": "Reset Password"
+    }
+  },
+  "Footer": {
+    "company": "JEMSO",
+    "slogan": "Joy in Motion!",
+    "description": "Automotive community uniting people passionate about motion",
+    "sections": {
+      "events": "Events",
+      "community": "Community",
+      "company": "Company",
+      "account": "Account",
+      "getStarted": "Get Started"
+    },
+    "links": {
+      "about": "About",
+      "events": "Events",
+      "news": "News",
+      "contact": "Contact",
+      "privacy": "Privacy",
+      "privacyFull": "Privacy Policy",
+      "terms": "Terms of Service",
+      "club": "Club",
+      "blog": "Blog",
+      "shop": "Shop",
+      "profile": "Profile",
+      "settings": "Settings",
+      "subscription": "Subscription",
+      "signIn": "Sign In",
+      "signUp": "Sign Up"
+    },
+    "social": {
+      "title": "Follow Us"
+    },
+    "newsletter": {
+      "title": "Subscribe to Newsletter",
+      "placeholder": "Enter email",
+      "submit": "Subscribe"
+    },
+    "copyright": "© {year} JEMSO. All rights reserved.",
+    "legal": {
+      "entity": "IE Khaibulaev Sh.M.",
+      "inn": "INN",
+      "ogrn": "OGRNIP"
+    }
+  },
+  "Events": {
+    "title": "EVENTS",
+    "subtitle": "Find and participate in exciting events",
+    "upcoming": "Upcoming",
+    "past": "Past",
+    "all": "All",
+    "noEvents": "No upcoming events found.",
+    "register": "Register",
+    "details": "Details",
+    "date": "Date",
+    "location": "Location",
+    "price": "Price",
+    "free": "Free",
+    "metadata": {
+      "title": "Events",
+      "description": "Discover automotive events, track days, drift competitions, and drag racing championships organized by JEMSO DRIVE."
+    },
+    "onlineEvent": "Online Event",
+    "openInMaps": "Open in Maps",
+    "away": "away",
+    "addToCalendar": "Add to calendar",
+    "participants": "participants"
+  },
+  "News": {
+    "title": "News",
+    "latest": "Latest News",
+    "noNews": "No news found",
+    "metadata": {
+      "title": "News",
+      "description": "Latest news and updates from JEMSO DRIVE community. Event coverage, announcements, and automotive industry insights."
+    },
+    "views": "views"
+  },
+  "Blog": {
+    "title": "Blog",
+    "categories": "Categories",
+    "noPosts": "No posts found",
+    "byAuthor": "By {author}",
+    "publishedAt": "Published: {date}",
+    "metadata": {
+      "title": "Blog",
+      "description": "Articles, stories, and insights about automotive culture, motorsport, drift, tuning, and car lifestyle from JEMSO DRIVE."
+    },
+    "emptyStateTitle": "No posts",
+    "emptyStateText": "Interesting content coming soon!",
+    "followContentTitle": "Follow our content",
+    "followContentText": "Subscribe to our YouTube channel for event coverage, behind-the-scenes content, and automotive lifestyle videos.",
+    "youtubeChannel": "Our YouTube Channel"
+  },
+  "Shop": {
+    "title": "Shop",
+    "categories": "Categories",
+    "products": "Products",
+    "noProducts": "No products found",
+    "addToCart": "Add to Cart",
+    "cart": "Cart",
+    "checkout": "Checkout",
+    "price": "Price",
+    "quantity": "Quantity",
+    "total": "Total",
+    "metadata": {
+      "title": "Shop",
+      "description": "Official JEMSO DRIVE merchandise, apparel, and automotive accessories. Exclusive merch coming soon."
+    },
+    "comingSoonIntro": "Our online store is coming soon! Stay tuned for exclusive JEMSO DRIVE merch, clothing, and automotive accessories.",
+    "comingSoonTitle": "Coming Soon",
+    "comingSoonText": "Follow our social media to be the first to know about the store launch."
+  },
+  "Pricing": {
+    "title": "Pricing",
+    "subtitle": "Choose the right plan",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "popular": "Popular",
+    "features": "Features",
+    "subscribe": "Subscribe",
+    "currentPlan": "Current Plan",
+    "metadata": {
+      "title": "Pricing",
+      "description": "Simple and transparent JEMSO pricing plans. Choose the subscription that fits you best for premium content and exclusive events."
+    }
+  },
+  "Dashboard": {
+    "title": "Dashboard",
+    "welcome": "Hello, {name}! 👋",
+    "welcomeSubtitle": "Welcome to your JEMSO personal dashboard",
+    "overview": "Overview",
+    "events": "My Events",
+    "content": "My Content",
+    "settings": "Settings",
+    "user": "user",
+    "sidebar": {
+      "personalCabinet": "Personal Cabinet",
+      "settings": "Settings",
+      "backToSite": "Back to Site"
+    },
+    "nav": {
+      "home": "Home",
+      "myEvents": "My Events",
+      "content": "Content",
+      "news": "News",
+      "profile": "Profile",
+      "security": "Security",
+      "notifications": "Notifications",
+      "subscription": "Subscription"
+    },
+    "subscription": {
+      "trialPeriod": "Trial Period",
+      "activeSubscription": "Active Subscription",
+      "noSubscription": "You don't have an active subscription",
+      "noSubscriptionHint": "Subscribe to access premium content",
+      "choosePlan": "Choose Plan"
+    },
+    "stats": {
+      "myEvents": "My Events",
+      "availableNews": "Available News",
+      "availableArticles": "Available Articles",
+      "accessLevel": "Access Level"
+    },
+    "upcomingEvents": {
+      "title": "My Upcoming Events",
+      "description": "Events you are registered for",
+      "allEvents": "All Events",
+      "noEvents": "You have no upcoming events",
+      "viewAllEvents": "View All Events",
+      "confirmed": "Confirmed"
+    },
+    "latestNews": {
+      "title": "Latest News",
+      "description": "News available for your plan",
+      "allNews": "All News",
+      "noNews": "No available news"
+    },
+    "eventsPage": {
+      "title": "My Events",
+      "subtitle": "Manage your event registrations",
+      "upcoming": "Upcoming",
+      "past": "Past",
+      "noUpcoming": "No Upcoming Events",
+      "noUpcomingHint": "You haven't registered for any events yet",
+      "viewEvents": "View Events",
+      "noPast": "No Past Events",
+      "noPastHint": "Your event attendance history will appear here",
+      "status": {
+        "confirmed": "Confirmed",
+        "pending": "Pending",
+        "canceled": "Canceled",
+        "attended": "Attended"
+      }
+    },
+    "newsPage": {
+      "title": "News",
+      "subtitle": "News available for your plan (Tier {tier})",
+      "yourAccessLevel": "Your access level: Tier {tier}",
+      "plan": "Plan: {plan}",
+      "subscribeHint": "Subscribe to access premium news",
+      "upgrade": "Upgrade",
+      "accessibleNews": "Accessible News",
+      "premiumNews": "Premium News",
+      "upgradeHint": "Upgrade your subscription to access these news",
+      "noNews": "No News",
+      "noNewsHint": "News will appear here soon"
+    },
+    "contentPage": {
+      "title": "Content",
+      "subtitle": "Articles and materials available for your plan (Tier {tier})",
+      "yourAccessLevel": "Your access level: Tier {tier}",
+      "plan": "Plan: {plan}",
+      "subscribeHint": "Subscribe to access premium content",
+      "upgrade": "Upgrade",
+      "accessibleContent": "Accessible Content",
+      "premiumContent": "Premium Content",
+      "upgradeHint": "Upgrade your subscription to access this content",
+      "noContent": "No Content Available",
+      "noContentHint": "Articles and materials will appear here soon"
+    },
+    "mobileNav": {
+      "home": "Home",
+      "events": "Events",
+      "news": "News",
+      "settings": "Settings"
+    }
+  },
+  "Account": {
+    "title": "Account",
+    "profile": "Profile",
+    "security": "Security",
+    "notifications": "Notifications",
+    "subscription": "Subscription"
+  },
+  "Settings": {
+    "profile": {
+      "title": "Profile",
+      "subtitle": "Manage your profile information",
+      "cardTitle": "Profile Information",
+      "cardDescription": "Update your profile information and avatar"
+    },
+    "security": {
+      "title": "Security",
+      "subtitle": "Manage your password and account security",
+      "cardTitle": "Security Settings",
+      "cardDescription": "Change password and manage account"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "subtitle": "Configure notifications and newsletters",
+      "cardTitle": "Notification Settings",
+      "cardDescription": "Manage how you receive notifications and updates"
+    },
+    "subscription": {
+      "title": "Subscription",
+      "subtitle": "Manage your plan and payments",
+      "cardTitle": "Subscription Management",
+      "cardDescription": "View current plan and manage payments"
+    }
+  },
+  "Admin": {
+    "title": "Administration",
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "events": "Events",
+    "news": "News",
+    "posts": "Posts",
+    "blogPosts": "Blog Posts",
+    "categories": "Categories",
+    "plans": "Plans",
+    "subscriptionPlans": "Subscription Plans",
+    "features": "Features",
+    "settings": "Settings",
+    "toggleMenu": "Toggle Menu",
+    "backToSite": "Back to Site",
+    "welcomeBack": "Welcome back, {name}",
+    "stats": {
+      "totalUsers": "Total Users",
+      "blogPosts": "Blog Posts",
+      "events": "Events",
+      "categories": "Categories",
+      "activeSubscriptions": "Active Subscriptions",
+      "subscriptionPlans": "Subscription Plans",
+      "features": "Features"
+    },
+    "recentActivity": {
+      "title": "Recent Activity",
+      "comingSoon": "Activity feed coming soon..."
+    }
+  },
+  "About": {
+    "title": "About Us",
+    "subtitle": "JEMSO DRIVE - JOY IN MOTION!",
+    "subtitleRu": "JEMSO - Joy in Motion!",
+    "intro": "JEMSO is a movement with several directions, all related to automobiles. Today, the brand includes:",
+    "metadata": {
+      "title": "About Us",
+      "description": "Learn about JEMSO DRIVE - automotive community organizing festivals, races, drift and drag racing championships since 2020."
+    },
+    "events": {
+      "title": "JEMSO EVENTS",
+      "description": "A company organizing automotive festivals, races, drift and drag racing championships, car shows, and road trips."
+    },
+    "motorsport": {
+      "title": "JEMSO MOTORSPORT",
+      "description": "A service for tuning and maintaining vehicles, including race cars."
+    },
+    "club": {
+      "title": "JEMSO DRIVE CLUB",
+      "description": "An automotive community available by subscription for everyone, as well as a Closed Automotive Club with its own structure - membership is only possible through personal approval by the club's founder.",
+      "cities": "The club currently has permanent offices in 3 cities: Makhachkala, Derbent, Khasavyurt."
+    },
+    "media": {
+      "title": "JEMSO MEDIA",
+      "description": "A YouTube channel and other media platforms dedicated to automotive topics."
+    },
+    "history": {
+      "title": "Historical Background",
+      "intro": "JEMSO is an abbreviation that stands for:",
+      "letters": {
+        "j": "JDM",
+        "e": "EURO, ELITE",
+        "m": "MUSCLE CAR, MOTORCYCLE",
+        "s": "STANCE, SPORT",
+        "o": "OFF ROAD, OLD SCHOOL"
+      }
+    },
+    "timeline": {
+      "title": "Our History",
+      "2020": {
+        "title": "The Beginning",
+        "p1": "We started as a club gathering in the directions mentioned above on the streets of Makhachkala. Our underground meetings quickly gained popularity due to the cozy atmosphere and mutual respect.",
+        "p2": "From the very first meetings, we managed to create an environment for productive communication - at our second event, the first car exchange deal between participants took place. We just enjoy hanging out with our iron horses and we're open to mutually beneficial offers.",
+        "quote": "As JEMSO founder Shamil MS Khaibulaev says: \"JEMSO is the emotion you feel being at the center of an automotive gathering\"",
+        "p3": "That same year, due to the overwhelming number of people wanting to participate, we came out of the shadows and started organizing official events and making our first collaborations."
+      },
+      "2021": {
+        "title": "AutoGodekan",
+        "p1": "We held AutoGodekan - our largest festival that we organize once every 4 years. We awarded prizes and gifts to the best representatives of each direction according to the jury, followed by a demonstration performance by Dagestani drifters.",
+        "note": "The first AutoGodekan was organized by our founder together with Mansory Club back in 2017, when JEMSO didn't even exist yet."
+      },
+      "2022": {
+        "title": "Legalization",
+        "p1": "We held our first large legal gathering in the city center. It was the season opening, and we dedicated it to the memory of Zaur Ibragimov and Said Gubdensky.",
+        "p2": "Then we organized another event - a joint meetup of Mercedes Club W124 and BMW E34. By the way, at this event we held Gymkhana-style races for the first time.",
+        "p3": "After that, Shamil traveled across Russia, helping organize numerous automotive events throughout the country, both exhibitions and sports events, to learn from the best."
+      },
+      "2023": {
+        "title": "Expansion",
+        "p1": "2023 was the most productive year in terms of exhibitions. We held 5 exhibitions that year:",
+        "list1": "2 exhibitions were held in winter in a hangar in Tokyo style",
+        "list2": "2 more were timed to the release of the beloved Fast & Furious 10",
+        "list3": "A vintage car exhibition in Derbent - for the first time outside Makhachkala",
+        "p2": "And finally, in October of the same year, we held the first official races in Dagestan in 12 years."
+      },
+      "2024": {
+        "title": "Breakthrough",
+        "apr_sep": "April - September",
+        "apr_sep_text": "The first-ever Dagestan Drag Racing Championship!",
+        "sep": "September",
+        "sep_text": "A week before the final stage of the races - we break our own (and therefore regional) record for the scale of an exhibition in the city center.",
+        "oct": "October",
+        "oct_text": "We bring official drift back to Dagestan."
+      }
+    }
+  },
+  "Contact": {
+    "title": "Contact",
+    "subtitle": "Get in touch with us",
+    "metadata": {
+      "title": "Contact",
+      "description": "Contact JEMSO DRIVE team. Business inquiries, partnership opportunities, and legal details."
+    },
+    "contactInfoTitle": "Contact Information",
+    "phone": "Phone",
+    "legalDetailsTitle": "Legal Details",
+    "entityName": "Name",
+    "entityFullName": "Individual Entrepreneur Khaibulaev Shamil Magomedrashidovich",
+    "bankAccount": "Bank Account",
+    "bankName": "Bank Name",
+    "bankNameValue": "Tochka Bank LLC",
+    "bankBic": "Bank BIC",
+    "bankInn": "Bank INN",
+    "correspondentAccount": "Correspondent Account",
+    "bankLegalAddress": "Bank Legal Address",
+    "bankLegalAddressValue": "109044, Russian Federation, Moscow, 3rd Krutitsky Lane, 11, Premise 7N",
+    "socialMediaTitle": "Social Media"
+  },
+  "Privacy": {
+    "title": "Privacy Policy",
+    "metadata": {
+      "title": "Privacy Policy",
+      "description": "JEMSO privacy policy. Learn how we collect, use, and protect your personal data."
+    },
+    "content": "Learn how we collect, use, and protect your data."
+  },
+  "Terms": {
+    "title": "Terms of Service",
+    "metadata": {
+      "title": "Terms of Service",
+      "description": "JEMSO terms of service. Rules for using the platform, content, and participating in events."
+    },
+    "content": "Review our terms of service."
+  },
+  "Categories": {
+    "title": "Categories",
+    "metadata": {
+      "title": "Categories",
+      "description": "Explore content by category: drift, tuning, motorsport news, and technical reviews from JEMSO DRIVE."
+    },
+    "noCategories": "No categories found"
+  },
+  "Club": {
+    "title": "Club",
+    "metadata": {
+      "title": "JEMSO Club",
+      "description": "JEMSO DRIVE CLUB - subscription-based automotive community and exclusive Closed Car Club with chapters in Makhachkala, Derbent, and Khasavyurt."
+    },
+    "clubDescription": "Subscription-based automotive community for everyone, as well as",
+    "closedClub": "Closed Car Club",
+    "clubDescriptionEnd": "with its own structure - membership is only possible through personal approval by the club's founder.",
+    "chaptersIntro": "Club chapters currently operate in 3 cities on a permanent basis:",
+    "makhachkala": "Makhachkala",
+    "derbent": "Derbent",
+    "khasavyurt": "Khasavyurt",
+    "eventRegistrationTitle": "Event Registration",
+    "eventRegistrationText": "To participate in our upcoming events, please contact us through social media or email. Registration details and requirements will be provided for each specific event.",
+    "contactInfo": "Contact Information",
+    "phone": "Phone",
+    "membershipTitle": "Membership Benefits",
+    "exclusiveEventsTitle": "Exclusive Events",
+    "exclusiveEventsDesc": "Access to members-only meetups and competitions",
+    "networkingTitle": "Networking",
+    "networkingDesc": "Connect with like-minded car enthusiasts",
+    "earlyRegistrationTitle": "Early Registration",
+    "earlyRegistrationDesc": "Priority access to event registration",
+    "discountsTitle": "Discounts",
+    "discountsDesc": "Special prices on merchandise and event fees"
+  },
+  "Drag": {
+    "title": "Drag Racing",
+    "metadata": {
+      "title": "Drag Racing",
+      "description": "First ever Dagestan Drag Racing Championship 2024 by JEMSO. Pure speed, pure adrenaline. Classes: STREET, PRO, SUV, UNLIMITED."
+    },
+    "championship2024Title": "Championship 2024",
+    "championship2024Text": "In the 2024 season, we held the first-ever open Dagestan Drag Racing Championship. The championship took place in three stages. Over 100 racers participated in our championship across various car classes.",
+    "carClassesTitle": "Car Classes",
+    "streetDesc": "Street cars with basic modifications",
+    "proDesc": "Heavily modified cars with turbo",
+    "suvDesc": "Crossovers and SUVs in their own category",
+    "unlimitedDesc": "No limits - pure performance",
+    "historicTitle": "Historic Achievement",
+    "historicText": "Our drag racing competitions marked the return of official racing to Dagestan after 12 years. We are proud to continue this tradition and provide a safe, legal platform for speed enthusiasts."
+  },
+  "Drift": {
+    "title": "Drift",
+    "metadata": {
+      "title": "Drift",
+      "description": "JEMSO DRIVE organizes professional drift competitions and shows across Dagestan. We brought official drift back to Dagestan in October 2024."
+    },
+    "aboutTitle": "About Drift Events",
+    "aboutText": "JEMSO DRIVE organizes professional drift competitions and shows across Dagestan. We bring together the best drivers and provide a platform for both experienced drifters and newcomers to showcase their skills.",
+    "october2024Title": "October 2024",
+    "october2024Text": "We brought official drift back to Dagestan after years of absence. Our championship attracted drivers from across the region and set a new standard for motorsport events in the area.",
+    "joinTitle": "Join Us",
+    "joinText": "Whether you're a seasoned pro or just starting out, JEMSO DRIVE welcomes all skill levels. Follow our news section for information about upcoming events and registration."
+  },
+  "Permissions": {
+    "location": {
+      "title": "Enable Location",
+      "description": "Allow location access to discover events near you and get personalized recommendations",
+      "benefits": {
+        "nearby": "Find events near you",
+        "distance": "See distance to venues",
+        "recommendations": "Get location-based recommendations"
+      },
+      "enable": "Enable Location",
+      "notNow": "Not Now",
+      "detecting": "Detecting location...",
+      "success": "Location enabled",
+      "error": "Could not get location",
+      "denied": "Location access denied",
+      "deniedDescription": "You can enable location access in your browser settings",
+      "unsupported": "Location not supported",
+      "unsupportedDescription": "Your browser doesn't support geolocation"
+    },
+    "notifications": {
+      "title": "Stay Updated",
+      "description": "Enable notifications to never miss event updates, new content, and special offers",
+      "benefits": {
+        "events": "Event reminders and updates",
+        "content": "New content alerts",
+        "offers": "Special offers and promotions"
+      },
+      "enable": "Enable Notifications",
+      "notNow": "Not Now",
+      "success": "Notifications enabled",
+      "error": "Could not enable notifications",
+      "denied": "Notifications blocked",
+      "deniedDescription": "You can enable notifications in your browser settings",
+      "unsupported": "Notifications not supported",
+      "unsupportedDescription": "Your browser doesn't support push notifications"
+    },
+    "common": {
+      "later": "Maybe Later",
+      "dismiss": "Dismiss",
+      "settings": "Open Settings"
+    }
+  }
+}

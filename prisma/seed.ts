@@ -12,6 +12,23 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
   console.log("🌱 Seeding database...");
 
+  // Create supported languages
+  console.log("Creating languages...");
+  
+  const languages = [
+    { code: "ru", name: "Russian", nativeName: "Русский", isDefault: true, isActive: true, order: 1 },
+    { code: "en", name: "English", nativeName: "English", isDefault: false, isActive: true, order: 2 },
+  ];
+
+  for (const language of languages) {
+    await prisma.language.upsert({
+      where: { code: language.code },
+      update: {},
+      create: language,
+    });
+  }
+  console.log(`✅ Created ${languages.length} languages`);
+
   // Create basic permissions
   const permissions = [
     // Blog permissions
@@ -500,26 +517,26 @@ async function main() {
   console.log("Creating features...");
   
   const features = [
-    { name: "Доступ к базовым событиям", slug: "basic-events-access", featureType: "boolean" },
-    { name: "Доступ к премиум событиям", slug: "premium-events-access", featureType: "boolean" },
-    { name: "Доступ к закрытым событиям", slug: "private-events-access", featureType: "boolean" },
-    { name: "Ранний доступ к регистрации", slug: "early-registration", featureType: "boolean" },
-    { name: "Бесплатный гость +1", slug: "free-guest", featureType: "boolean" },
-    { name: "Цифровые фото с мероприятий", slug: "event-photos", featureType: "boolean" },
-    { name: "Скидка на участие", slug: "event-discount", featureType: "numeric" },
-    { name: "Доступ к дрифт-школе", slug: "drift-school-access", featureType: "boolean" },
-    { name: "Персональный инструктор", slug: "personal-instructor", featureType: "boolean" },
-    { name: "Приоритетная поддержка", slug: "priority-support", featureType: "boolean" },
-    { name: "Доступ к закрытому клубу", slug: "exclusive-club-access", featureType: "boolean" },
-    { name: "Фирменный мерч", slug: "branded-merch", featureType: "boolean" },
-    { name: "VIP парковка", slug: "vip-parking", featureType: "boolean" },
-    { name: "Количество мероприятий в месяц", slug: "monthly-events-limit", featureType: "numeric" },
+    { name: "Доступ к базовым событиям", slug: "basic-events-access", featureType: "boolean", defaultLocale: "ru", translations: { en: { name: "Basic Events Access" } } },
+    { name: "Доступ к премиум событиям", slug: "premium-events-access", featureType: "boolean", defaultLocale: "ru", translations: { en: { name: "Premium Events Access" } } },
+    { name: "Доступ к закрытым событиям", slug: "private-events-access", featureType: "boolean", defaultLocale: "ru", translations: { en: { name: "Private Events Access" } } },
+    { name: "Ранний доступ к регистрации", slug: "early-registration", featureType: "boolean", defaultLocale: "ru", translations: { en: { name: "Early Registration Access" } } },
+    { name: "Бесплатный гость +1", slug: "free-guest", featureType: "boolean", defaultLocale: "ru", translations: { en: { name: "Free Guest +1" } } },
+    { name: "Цифровые фото с мероприятий", slug: "event-photos", featureType: "boolean", defaultLocale: "ru", translations: { en: { name: "Digital Event Photos" } } },
+    { name: "Скидка на участие", slug: "event-discount", featureType: "numeric", defaultLocale: "ru", translations: { en: { name: "Participation Discount" } } },
+    { name: "Доступ к дрифт-школе", slug: "drift-school-access", featureType: "boolean", defaultLocale: "ru", translations: { en: { name: "Drift School Access" } } },
+    { name: "Персональный инструктор", slug: "personal-instructor", featureType: "boolean", defaultLocale: "ru", translations: { en: { name: "Personal Instructor" } } },
+    { name: "Приоритетная поддержка", slug: "priority-support", featureType: "boolean", defaultLocale: "ru", translations: { en: { name: "Priority Support" } } },
+    { name: "Доступ к закрытому клубу", slug: "exclusive-club-access", featureType: "boolean", defaultLocale: "ru", translations: { en: { name: "Exclusive Club Access" } } },
+    { name: "Фирменный мерч", slug: "branded-merch", featureType: "boolean", defaultLocale: "ru", translations: { en: { name: "Branded Merchandise" } } },
+    { name: "VIP парковка", slug: "vip-parking", featureType: "boolean", defaultLocale: "ru", translations: { en: { name: "VIP Parking" } } },
+    { name: "Количество мероприятий в месяц", slug: "monthly-events-limit", featureType: "numeric", defaultLocale: "ru", translations: { en: { name: "Monthly Events Limit" } } },
   ];
 
   for (const feature of features) {
     await prisma.feature.upsert({
       where: { slug: feature.slug },
-      update: {},
+      update: { translations: feature.translations },
       create: feature,
     });
   }
@@ -538,6 +555,13 @@ async function main() {
       featured: true,
       order: 1,
       showInNav: true,
+      defaultLocale: "ru",
+      translations: {
+        en: {
+          name: "Drift",
+          description: "A motorsport discipline where the main goal is to control the car while sliding at high speeds",
+        },
+      },
     },
     {
       name: "Дрэг",
@@ -548,6 +572,13 @@ async function main() {
       featured: true,
       order: 2,
       showInNav: true,
+      defaultLocale: "ru",
+      translations: {
+        en: {
+          name: "Drag",
+          description: "Straight-line racing where the winner is the first to cross the finish line",
+        },
+      },
     },
     {
       name: "Кольцевые гонки",
@@ -558,6 +589,13 @@ async function main() {
       featured: true,
       order: 3,
       showInNav: true,
+      defaultLocale: "ru",
+      translations: {
+        en: {
+          name: "Circuit Racing",
+          description: "Circuit racing on specialized tracks with turns of varying difficulty",
+        },
+      },
     },
     {
       name: "Клуб",
@@ -568,13 +606,20 @@ async function main() {
       featured: false,
       order: 4,
       showInNav: true,
+      defaultLocale: "ru",
+      translations: {
+        en: {
+          name: "Club",
+          description: "JEMSO Car Club - meetups, events and networking with like-minded enthusiasts",
+        },
+      },
     },
   ];
 
   for (const category of racingCategories) {
     await prisma.category.upsert({
       where: { slug: category.slug },
-      update: {},
+      update: { translations: category.translations },
       create: category,
     });
   }
@@ -586,7 +631,14 @@ async function main() {
 
   const basicPlan = await prisma.subscriptionPlan.upsert({
     where: { slug: "basic" },
-    update: {},
+    update: {
+      translations: {
+        en: {
+          name: "Basic",
+          description: "Entry level for getting acquainted with the world of motorsport",
+        },
+      },
+    },
     create: {
       name: "Базовый",
       slug: "basic",
@@ -597,6 +649,13 @@ async function main() {
       trialDays: 7,
       isActive: true,
       order: 1,
+      defaultLocale: "ru",
+      translations: {
+        en: {
+          name: "Basic",
+          description: "Entry level for getting acquainted with the world of motorsport",
+        },
+      },
     },
   });
 
@@ -630,7 +689,14 @@ async function main() {
 
   const advancedPlan = await prisma.subscriptionPlan.upsert({
     where: { slug: "advanced" },
-    update: {},
+    update: {
+      translations: {
+        en: {
+          name: "Advanced",
+          description: "For active participants with access to premium events and drift school",
+        },
+      },
+    },
     create: {
       name: "Продвинутый",
       slug: "advanced",
@@ -641,6 +707,13 @@ async function main() {
       trialDays: 14,
       isActive: true,
       order: 2,
+      defaultLocale: "ru",
+      translations: {
+        en: {
+          name: "Advanced",
+          description: "For active participants with access to premium events and drift school",
+        },
+      },
     },
   });
 
@@ -679,7 +752,14 @@ async function main() {
 
   const vipPlan = await prisma.subscriptionPlan.upsert({
     where: { slug: "vip" },
-    update: {},
+    update: {
+      translations: {
+        en: {
+          name: "VIP",
+          description: "Maximum level with access to all privileges and exclusive events",
+        },
+      },
+    },
     create: {
       name: "VIP",
       slug: "vip",
@@ -690,6 +770,13 @@ async function main() {
       trialDays: 14,
       isActive: true,
       order: 3,
+      defaultLocale: "ru",
+      translations: {
+        en: {
+          name: "VIP",
+          description: "Maximum level with access to all privileges and exclusive events",
+        },
+      },
     },
   });
 
@@ -772,23 +859,23 @@ async function main() {
   console.log("Creating tags...");
   
   const tags = [
-    { name: "Тюнинг", slug: "tuning" },
-    { name: "Техника", slug: "technique" },
-    { name: "Новости", slug: "news" },
-    { name: "Обзоры", slug: "reviews" },
-    { name: "Гайды", slug: "guides" },
-    { name: "Интервью", slug: "interviews" },
-    { name: "Соревнования", slug: "competitions" },
-    { name: "Автомобили", slug: "cars" },
-    { name: "Запчасти", slug: "parts" },
-    { name: "Безопасность", slug: "safety" },
+    { name: "Тюнинг", slug: "tuning", defaultLocale: "ru", translations: { en: { name: "Tuning" } } },
+    { name: "Техника", slug: "technique", defaultLocale: "ru", translations: { en: { name: "Technique" } } },
+    { name: "Новости", slug: "news", defaultLocale: "ru", translations: { en: { name: "News" } } },
+    { name: "Обзоры", slug: "reviews", defaultLocale: "ru", translations: { en: { name: "Reviews" } } },
+    { name: "Гайды", slug: "guides", defaultLocale: "ru", translations: { en: { name: "Guides" } } },
+    { name: "Интервью", slug: "interviews", defaultLocale: "ru", translations: { en: { name: "Interviews" } } },
+    { name: "Соревнования", slug: "competitions", defaultLocale: "ru", translations: { en: { name: "Competitions" } } },
+    { name: "Автомобили", slug: "cars", defaultLocale: "ru", translations: { en: { name: "Cars" } } },
+    { name: "Запчасти", slug: "parts", defaultLocale: "ru", translations: { en: { name: "Parts" } } },
+    { name: "Безопасность", slug: "safety", defaultLocale: "ru", translations: { en: { name: "Safety" } } },
   ];
 
   const createdTags = [];
   for (const tag of tags) {
     const createdTag = await prisma.tag.upsert({
       where: { slug: tag.slug },
-      update: {},
+      update: { translations: tag.translations },
       create: tag,
     });
     createdTags.push(createdTag);
@@ -816,24 +903,42 @@ async function main() {
       views: 1245,
       categoryId: driftCategory?.id,
       authorId: adminUser.id,
-      coverImage: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=1200&h=600&fit=crop",
+      coverImage: "https://images.unsplash.com/photo-1542362567-b07e54358753?w=1200&h=600&fit=crop",
       tags: ["tuning", "technique", "guides"],
       minTier: 0,
+      defaultLocale: "ru",
+      translations: {
+        en: {
+          title: "Top 5 Drift Car Modifications in 2024",
+          excerpt: "Learn which modifications will take your drift car to the next level",
+          content: "<h2>1. Limited Slip Differential (LSD)</h2><p>One of the most important elements of a drift car. LSD allows both wheels to rotate at the same speed, which is critical for controlled sliding.</p><blockquote><p>For beginner drifters, an LSD with a 1.5-2 way locking ratio is recommended. More aggressive options are suitable for experienced drivers.</p></blockquote><h2>2. Hydraulic Handbrake</h2><p>A hydraulic handbrake is an essential tool for initiating slides and correcting trajectory. Professional drifters use it constantly.</p><h2>3. Upgraded Suspension</h2><p>Coilovers with adjustable stiffness allow you to tune the car's balance to your driving style and track conditions.</p><h2>4. Increased Front Wheel Steering Angle</h2><p>Special suspension arms allow increasing the steering angle to 60-70 degrees, which is critical for large drift angles.</p><h2>5. Cooling System</h2><p>An upgraded radiator and oil cooler will help maintain optimal engine temperature even under extreme loads.</p><p>All these modifications will significantly improve your drift car's performance and help you achieve better results on the track.</p>",
+          htmlContent: "<h2>1. Limited Slip Differential (LSD)</h2><p>One of the most important elements of a drift car. LSD allows both wheels to rotate at the same speed, which is critical for controlled sliding.</p><blockquote><p>For beginner drifters, an LSD with a 1.5-2 way locking ratio is recommended. More aggressive options are suitable for experienced drivers.</p></blockquote><h2>2. Hydraulic Handbrake</h2><p>A hydraulic handbrake is an essential tool for initiating slides and correcting trajectory. Professional drifters use it constantly.</p><h2>3. Upgraded Suspension</h2><p>Coilovers with adjustable stiffness allow you to tune the car's balance to your driving style and track conditions.</p><h2>4. Increased Front Wheel Steering Angle</h2><p>Special suspension arms allow increasing the steering angle to 60-70 degrees, which is critical for large drift angles.</p><h2>5. Cooling System</h2><p>An upgraded radiator and oil cooler will help maintain optimal engine temperature even under extreme loads.</p><p>All these modifications will significantly improve your drift car's performance and help you achieve better results on the track.</p>",
+        },
+      },
     },
     {
       title: "История дрэг-рейсинга: от улиц до профессиональных треков",
       slug: "drag-racing-history",
       excerpt: "Погрузитесь в увлекательную историю развития дрэг-рейсинга от подпольных гонок до международных чемпионатов",
-      content: "<p>Дрэг-рейсинг зародился в США в 1940-х годах как уличные гонки на прямых участках дорог. Со временем это движение превратилось в полноценный вид автоспорта с профессиональными трассами и международными соревнованиями.</p><h2>Ранние годы (1940-1950)</h2><p>После Второй мировой войны многие демобилизованные солдаты привезли с собой опыт работы с техникой. Они начали модифицировать свои автомобили и соревноваться на заброшенных взлетных полосах.</p><h2>Профессионализация (1960-1980)</h2><p>В 1951 году была основана National Hot Rod Association (NHRA), которая стандартизировала правила и создала безопасную среду для соревнований. Появились специализированные drag strips - прямые трассы длиной четверть мили (402 метра).</p><figure><img src=\"https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=1200&h=600&fit=crop\" alt=\"Дрэг-рейсинг трек\"><figcaption>Современная drag strip трасса</figcaption></figure><h2>Современная эра (1990-настоящее время)</h2><p>Сегодня дрэг-рейсинг - это высокотехнологичный спорт, где автомобили развивают скорость более 530 км/ч и проходят четверть мили менее чем за 4 секунды. В России дрэг-рейсинг активно развивается с начала 2000-х годов.</p>",
-      htmlContent: "<p>Дрэг-рейсинг зародился в США в 1940-х годах как уличные гонки на прямых участках дорог. Со временем это движение превратилось в полноценный вид автоспорта с профессиональными трассами и международными соревнованиями.</p><h2>Ранние годы (1940-1950)</h2><p>После Второй мировой войны многие демобилизованные солдаты привезли с собой опыт работы с техникой. Они начали модифицировать свои автомобили и соревноваться на заброшенных взлетных полосах.</p><h2>Профессионализация (1960-1980)</h2><p>В 1951 году была основана National Hot Rod Association (NHRA), которая стандартизировала правила и создала безопасную среду для соревнований. Появились специализированные drag strips - прямые трассы длиной четверть мили (402 метра).</p><figure><img src=\"https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=1200&h=600&fit=crop\" alt=\"Дрэг-рейсинг трек\"><figcaption>Современная drag strip трасса</figcaption></figure><h2>Современная эра (1990-настоящее время)</h2><p>Сегодня дрэг-рейсинг - это высокотехнологичный спорт, где автомобили развивают скорость более 530 км/ч и проходят четверть мили менее чем за 4 секунды. В России дрэг-рейсинг активно развивается с начала 2000-х годов.</p>",
+      content: "<p>Дрэг-рейсинг зародился в США в 1940-х годах как уличные гонки на прямых участках дорог. Со временем это движение превратилось в полноценный вид автоспорта с профессиональными трассами и международными соревнованиями.</p><h2>Ранние годы (1940-1950)</h2><p>После Второй мировой войны многие демобилизованные солдаты привезли с собой опыт работы с техникой. Они начали модифицировать свои автомобили и соревноваться на заброшенных взлетных полосах.</p><h2>Профессионализация (1960-1980)</h2><p>В 1951 году была основана National Hot Rod Association (NHRA), которая стандартизировала правила и создала безопасную среду для соревнований. Появились специализированные drag strips - прямые трассы длиной четверть мили (402 метра).</p><figure><img src=\"https://images.unsplash.com/photo-1606611013016-969c19ba27bb?w=1200&h=600&fit=crop\" alt=\"Дрэг-рейсинг трек\"><figcaption>Современная drag strip трасса</figcaption></figure><h2>Современная эра (1990-настоящее время)</h2><p>Сегодня дрэг-рейсинг - это высокотехнологичный спорт, где автомобили развивают скорость более 530 км/ч и проходят четверть мили менее чем за 4 секунды. В России дрэг-рейсинг активно развивается с начала 2000-х годов.</p>",
+      htmlContent: "<p>Дрэг-рейсинг зародился в США в 1940-х годах как уличные гонки на прямых участках дорог. Со временем это движение превратилось в полноценный вид автоспорта с профессиональными трассами и международными соревнованиями.</p><h2>Ранние годы (1940-1950)</h2><p>После Второй мировой войны многие демобилизованные солдаты привезли с собой опыт работы с техникой. Они начали модифицировать свои автомобили и соревноваться на заброшенных взлетных полосах.</p><h2>Профессионализация (1960-1980)</h2><p>В 1951 году была основана National Hot Rod Association (NHRA), которая стандартизировала правила и создала безопасную среду для соревнований. Появились специализированные drag strips - прямые трассы длиной четверть мили (402 метра).</p><figure><img src=\"https://images.unsplash.com/photo-1606611013016-969c19ba27bb?w=1200&h=600&fit=crop\" alt=\"Дрэг-рейсинг трек\"><figcaption>Современная drag strip трасса</figcaption></figure><h2>Современная эра (1990-настоящее время)</h2><p>Сегодня дрэг-рейсинг - это высокотехнологичный спорт, где автомобили развивают скорость более 530 км/ч и проходят четверть мили менее чем за 4 секунды. В России дрэг-рейсинг активно развивается с начала 2000-х годов.</p>",
       published: true,
       publishedAt: new Date("2024-01-20"),
       views: 856,
       categoryId: dragCategory?.id,
       authorId: adminUser.id,
-      coverImage: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1200&h=600&fit=crop",
+      coverImage: "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=1200&h=600&fit=crop",
       tags: ["news", "competitions"],
       minTier: 0,
+      defaultLocale: "ru",
+      translations: {
+        en: {
+          title: "History of Drag Racing: From Streets to Professional Tracks",
+          excerpt: "Dive into the fascinating history of drag racing from underground races to international championships",
+          content: "<p>Drag racing originated in the USA in the 1940s as street racing on straight road sections. Over time, this movement evolved into a full-fledged motorsport with professional tracks and international competitions.</p><h2>Early Years (1940-1950)</h2><p>After World War II, many demobilized soldiers brought their mechanical experience with them. They began modifying their cars and competing on abandoned airstrips.</p><h2>Professionalization (1960-1980)</h2><p>In 1951, the National Hot Rod Association (NHRA) was founded, standardizing rules and creating a safe environment for competitions. Specialized drag strips appeared - straight tracks a quarter mile (402 meters) long.</p><h2>Modern Era (1990-present)</h2><p>Today, drag racing is a high-tech sport where cars reach speeds over 330 mph and cover a quarter mile in less than 4 seconds. In Russia, drag racing has been actively developing since the early 2000s.</p>",
+          htmlContent: "<p>Drag racing originated in the USA in the 1940s as street racing on straight road sections. Over time, this movement evolved into a full-fledged motorsport with professional tracks and international competitions.</p><h2>Early Years (1940-1950)</h2><p>After World War II, many demobilized soldiers brought their mechanical experience with them. They began modifying their cars and competing on abandoned airstrips.</p><h2>Professionalization (1960-1980)</h2><p>In 1951, the National Hot Rod Association (NHRA) was founded, standardizing rules and creating a safe environment for competitions. Specialized drag strips appeared - straight tracks a quarter mile (402 meters) long.</p><h2>Modern Era (1990-present)</h2><p>Today, drag racing is a high-tech sport where cars reach speeds over 330 mph and cover a quarter mile in less than 4 seconds. In Russia, drag racing has been actively developing since the early 2000s.</p>",
+        },
+      },
     },
     {
       title: "Подготовка к первому трек-дню: чек-лист для начинающих",
@@ -846,24 +951,42 @@ async function main() {
       views: 2103,
       categoryId: ringCategory?.id,
       authorId: adminUser.id,
-      coverImage: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&h=600&fit=crop",
+      coverImage: "https://images.unsplash.com/photo-1504215680853-026ed2a45def?w=1200&h=600&fit=crop",
       tags: ["guides", "safety", "technique"],
       minTier: 0,
+      defaultLocale: "ru",
+      translations: {
+        en: {
+          title: "Preparing for Your First Track Day: A Beginner's Checklist",
+          excerpt: "Complete guide to preparing your car and yourself for your first track outing",
+          content: "<p>Going to your first track day? It's an exciting experience, but it's important to prepare properly. Here's a complete checklist to help you avoid problems and get the most enjoyment.</p><h2>Car Preparation</h2><h3>Technical Inspection</h3><ul><li>Check all fluid levels</li><li>Inspect brake pads and discs</li><li>Check tire pressure</li><li>Make sure wheel bolts are properly tightened</li></ul><h3>Safety</h3><ul><li>Remove all loose items from the cabin</li><li>Check battery mounting security</li><li>Ensure seatbelts are in good condition</li></ul><h3>Consumables</h3><ul><li>Bring spare oil and brake fluid</li><li>Prepare a tool kit</li><li>Bring spare brake pads</li></ul><h2>Personal Preparation</h2><h3>Equipment</h3><ul><li>Helmet (mandatory!)</li><li>Closed-toe shoes</li><li>Long pants and long-sleeve shirt</li><li>Gloves</li></ul><h3>Documents</h3><ul><li>Driver's license</li><li>Vehicle registration</li><li>Insurance</li></ul><h2>At the Track</h2><ul><li>Arrive early for registration</li><li>Attend the beginner's briefing</li><li>Start with slow laps to warm up</li><li>Listen to instructors</li><li>Don't be afraid to ask questions</li></ul><blockquote><p>The goal of your first track day is to learn proper racing lines and basic techniques, not to set a lap record!</p></blockquote>",
+          htmlContent: "<p>Going to your first track day? It's an exciting experience, but it's important to prepare properly. Here's a complete checklist to help you avoid problems and get the most enjoyment.</p><h2>Car Preparation</h2><h3>Technical Inspection</h3><ul><li>Check all fluid levels</li><li>Inspect brake pads and discs</li><li>Check tire pressure</li><li>Make sure wheel bolts are properly tightened</li></ul><h3>Safety</h3><ul><li>Remove all loose items from the cabin</li><li>Check battery mounting security</li><li>Ensure seatbelts are in good condition</li></ul><h3>Consumables</h3><ul><li>Bring spare oil and brake fluid</li><li>Prepare a tool kit</li><li>Bring spare brake pads</li></ul><h2>Personal Preparation</h2><h3>Equipment</h3><ul><li>Helmet (mandatory!)</li><li>Closed-toe shoes</li><li>Long pants and long-sleeve shirt</li><li>Gloves</li></ul><h3>Documents</h3><ul><li>Driver's license</li><li>Vehicle registration</li><li>Insurance</li></ul><h2>At the Track</h2><ul><li>Arrive early for registration</li><li>Attend the beginner's briefing</li><li>Start with slow laps to warm up</li><li>Listen to instructors</li><li>Don't be afraid to ask questions</li></ul><blockquote><p>The goal of your first track day is to learn proper racing lines and basic techniques, not to set a lap record!</p></blockquote>",
+        },
+      },
     },
     {
       title: "Интервью с чемпионом RDS: секреты успеха в дрифте",
       slug: "rds-champion-interview",
       excerpt: "Эксклюзивное интервью с победителем российской дрифт серии о тренировках, настройке автомобиля и психологии",
-      content: "<p>Мы встретились с Александром Грачевым, чемпионом Russian Drift Series 2023 года, чтобы узнать о его пути к вершине российского дрифта.</p><h3>JEMSO: Александр, расскажи, как ты начал заниматься дрифтом?</h3><blockquote><p>Все началось лет 10 назад, когда я впервые увидел дрифт-шоу. Меня поразило, как пилоты контролируют машину в заносе. Купил старую BMW E36, установил welded diff и начал учиться на пустых парковках.</p><cite>Александр Грачев</cite></blockquote><h3>JEMSO: Что самое сложное в дрифте?</h3><blockquote><p>Многие думают, что это физика и техника, но на самом деле самое сложное - это психология. Когда ты едешь в паре, нужно одновременно контролировать свою машину, следить за соперником, реагировать на его действия. Это требует огромной концентрации.</p><cite>Александр Грачев</cite></blockquote><h3>JEMSO: Какие модификации критичны для соревновательного дрифта?</h3><blockquote><p>На соревновательном уровне важна надежность. У меня был случай, когда в квалификации порвался шланг интеркулера - и всё, выступление закончилось. Поэтому я всегда говорю: сначала надежность, потом мощность. Конечно, нужен мощный двигатель (минимум 400-500 л.с.), хороший LSD, правильная геометрия подвески.</p><cite>Александр Грачев</cite></blockquote><figure><img src=\"https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1200&h=600&fit=crop\" alt=\"Александр Грачев на треке\"><figcaption>Александр Грачев на Russian Drift Series</figcaption></figure><h3>JEMSO: Совет для начинающих дрифтеров?</h3><blockquote><p>Не гонитесь за мощностью! Начинайте с небольшой машины - 200-250 л.с. вполне достаточно, чтобы научиться базовой технике. И обязательно найдите опытного наставника или запишитесь в дрифт-школу. Это сэкономит вам годы и деньги.</p><cite>Александр Грачев</cite></blockquote>",
-      htmlContent: "<p>Мы встретились с Александром Грачевым, чемпионом Russian Drift Series 2023 года, чтобы узнать о его пути к вершине российского дрифта.</p><h3>JEMSO: Александр, расскажи, как ты начал заниматься дрифтом?</h3><blockquote><p>Все началось лет 10 назад, когда я впервые увидел дрифт-шоу. Меня поразило, как пилоты контролируют машину в заносе. Купил старую BMW E36, установил welded diff и начал учиться на пустых парковках.</p><cite>Александр Грачев</cite></blockquote><h3>JEMSO: Что самое сложное в дрифте?</h3><blockquote><p>Многие думают, что это физика и техника, но на самом деле самое сложное - это психология. Когда ты едешь в паре, нужно одновременно контролировать свою машину, следить за соперником, реагировать на его действия. Это требует огромной концентрации.</p><cite>Александр Грачев</cite></blockquote><h3>JEMSO: Какие модификации критичны для соревновательного дрифта?</h3><blockquote><p>На соревновательном уровне важна надежность. У меня был случай, когда в квалификации порвался шланг интеркулера - и всё, выступление закончилось. Поэтому я всегда говорю: сначала надежность, потом мощность. Конечно, нужен мощный двигатель (минимум 400-500 л.с.), хороший LSD, правильная геометрия подвески.</p><cite>Александр Грачев</cite></blockquote><figure><img src=\"https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1200&h=600&fit=crop\" alt=\"Александр Грачев на треке\"><figcaption>Александр Грачев на Russian Drift Series</figcaption></figure><h3>JEMSO: Совет для начинающих дрифтеров?</h3><blockquote><p>Не гонитесь за мощностью! Начинайте с небольшой машины - 200-250 л.с. вполне достаточно, чтобы научиться базовой технике. И обязательно найдите опытного наставника или запишитесь в дрифт-школу. Это сэкономит вам годы и деньги.</p><cite>Александр Грачев</cite></blockquote>",
+      content: "<p>Мы встретились с Александром Грачевым, чемпионом Russian Drift Series 2023 года, чтобы узнать о его пути к вершине российского дрифта.</p><h3>JEMSO: Александр, расскажи, как ты начал заниматься дрифтом?</h3><blockquote><p>Все началось лет 10 назад, когда я впервые увидел дрифт-шоу. Меня поразило, как пилоты контролируют машину в заносе. Купил старую BMW E36, установил welded diff и начал учиться на пустых парковках.</p><cite>Александр Грачев</cite></blockquote><h3>JEMSO: Что самое сложное в дрифте?</h3><blockquote><p>Многие думают, что это физика и техника, но на самом деле самое сложное - это психология. Когда ты едешь в паре, нужно одновременно контролировать свою машину, следить за соперником, реагировать на его действия. Это требует огромной концентрации.</p><cite>Александр Грачев</cite></blockquote><h3>JEMSO: Какие модификации критичны для соревновательного дрифта?</h3><blockquote><p>На соревновательном уровне важна надежность. У меня был случай, когда в квалификации порвался шланг интеркулера - и всё, выступление закончилось. Поэтому я всегда говорю: сначала надежность, потом мощность. Конечно, нужен мощный двигатель (минимум 400-500 л.с.), хороший LSD, правильная геометрия подвески.</p><cite>Александр Грачев</cite></blockquote><figure><img src=\"https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=1200&h=600&fit=crop\" alt=\"Александр Грачев на треке\"><figcaption>Александр Грачев на Russian Drift Series</figcaption></figure><h3>JEMSO: Совет для начинающих дрифтеров?</h3><blockquote><p>Не гонитесь за мощностью! Начинайте с небольшой машины - 200-250 л.с. вполне достаточно, чтобы научиться базовой технике. И обязательно найдите опытного наставника или запишитесь в дрифт-школу. Это сэкономит вам годы и деньги.</p><cite>Александр Грачев</cite></blockquote>",
+      htmlContent: "<p>Мы встретились с Александром Грачевым, чемпионом Russian Drift Series 2023 года, чтобы узнать о его пути к вершине российского дрифта.</p><h3>JEMSO: Александр, расскажи, как ты начал заниматься дрифтом?</h3><blockquote><p>Все началось лет 10 назад, когда я впервые увидел дрифт-шоу. Меня поразило, как пилоты контролируют машину в заносе. Купил старую BMW E36, установил welded diff и начал учиться на пустых парковках.</p><cite>Александр Грачев</cite></blockquote><h3>JEMSO: Что самое сложное в дрифте?</h3><blockquote><p>Многие думают, что это физика и техника, но на самом деле самое сложное - это психология. Когда ты едешь в паре, нужно одновременно контролировать свою машину, следить за соперником, реагировать на его действия. Это требует огромной концентрации.</p><cite>Александр Грачев</cite></blockquote><h3>JEMSO: Какие модификации критичны для соревновательного дрифта?</h3><blockquote><p>На соревновательном уровне важна надежность. У меня был случай, когда в квалификации порвался шланг интеркулера - и всё, выступление закончилось. Поэтому я всегда говорю: сначала надежность, потом мощность. Конечно, нужен мощный двигатель (минимум 400-500 л.с.), хороший LSD, правильная геометрия подвески.</p><cite>Александр Грачев</cite></blockquote><figure><img src=\"https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=1200&h=600&fit=crop\" alt=\"Александр Грачев на треке\"><figcaption>Александр Грачев на Russian Drift Series</figcaption></figure><h3>JEMSO: Совет для начинающих дрифтеров?</h3><blockquote><p>Не гонитесь за мощностью! Начинайте с небольшой машины - 200-250 л.с. вполне достаточно, чтобы научиться базовой технике. И обязательно найдите опытного наставника или запишитесь в дрифт-школу. Это сэкономит вам годы и деньги.</p><cite>Александр Грачев</cite></blockquote>",
       published: true,
       publishedAt: new Date("2024-02-10"),
       views: 3421,
       categoryId: driftCategory?.id,
       authorId: adminUser.id,
-      coverImage: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1200&h=600&fit=crop",
+      coverImage: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&h=600&fit=crop",
       tags: ["interviews", "competitions", "technique"],
       minTier: 2, // Advanced only
+      defaultLocale: "ru",
+      translations: {
+        en: {
+          title: "Interview with RDS Champion: Secrets of Drift Success",
+          excerpt: "Exclusive interview with the Russian Drift Series winner about training, car setup, and psychology",
+          content: "<p>We met with Alexander Grachev, the 2023 Russian Drift Series champion, to learn about his path to the top of Russian drifting.</p><h3>JEMSO: Alexander, tell us how you started drifting?</h3><blockquote><p>It all started about 10 years ago when I first saw a drift show. I was amazed at how pilots control the car while sliding. I bought an old BMW E36, installed a welded diff, and started learning in empty parking lots.</p><cite>Alexander Grachev</cite></blockquote><h3>JEMSO: What's the hardest part of drifting?</h3><blockquote><p>Many think it's physics and technique, but actually the hardest part is psychology. When you're tandem drifting, you need to simultaneously control your car, watch your opponent, and react to their actions. It requires enormous concentration.</p><cite>Alexander Grachev</cite></blockquote><h3>JEMSO: What modifications are critical for competitive drifting?</h3><blockquote><p>At the competitive level, reliability is key. I had a case when the intercooler hose broke during qualifying - and that was it, the performance was over. That's why I always say: reliability first, then power. Of course, you need a powerful engine (at least 400-500 hp), a good LSD, proper suspension geometry.</p><cite>Alexander Grachev</cite></blockquote><h3>JEMSO: Advice for beginner drifters?</h3><blockquote><p>Don't chase power! Start with a small car - 200-250 hp is quite enough to learn the basics. And definitely find an experienced mentor or enroll in a drift school. It will save you years and money.</p><cite>Alexander Grachev</cite></blockquote>",
+          htmlContent: "<p>We met with Alexander Grachev, the 2023 Russian Drift Series champion, to learn about his path to the top of Russian drifting.</p><h3>JEMSO: Alexander, tell us how you started drifting?</h3><blockquote><p>It all started about 10 years ago when I first saw a drift show. I was amazed at how pilots control the car while sliding. I bought an old BMW E36, installed a welded diff, and started learning in empty parking lots.</p><cite>Alexander Grachev</cite></blockquote><h3>JEMSO: What's the hardest part of drifting?</h3><blockquote><p>Many think it's physics and technique, but actually the hardest part is psychology. When you're tandem drifting, you need to simultaneously control your car, watch your opponent, and react to their actions. It requires enormous concentration.</p><cite>Alexander Grachev</cite></blockquote><h3>JEMSO: What modifications are critical for competitive drifting?</h3><blockquote><p>At the competitive level, reliability is key. I had a case when the intercooler hose broke during qualifying - and that was it, the performance was over. That's why I always say: reliability first, then power. Of course, you need a powerful engine (at least 400-500 hp), a good LSD, proper suspension geometry.</p><cite>Alexander Grachev</cite></blockquote><h3>JEMSO: Advice for beginner drifters?</h3><blockquote><p>Don't chase power! Start with a small car - 200-250 hp is quite enough to learn the basics. And definitely find an experienced mentor or enroll in a drift school. It will save you years and money.</p><cite>Alexander Grachev</cite></blockquote>",
+        },
+      },
     },
     {
       title: "Выбор первого дрифт-кара: BMW vs Nissan",
@@ -876,9 +999,18 @@ async function main() {
       views: 4231,
       categoryId: driftCategory?.id,
       authorId: adminUser.id,
-      coverImage: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=1200&h=600&fit=crop",
+      coverImage: "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=600&fit=crop",
       tags: ["guides", "cars", "tuning"],
       minTier: 0,
+      defaultLocale: "ru",
+      translations: {
+        en: {
+          title: "Choosing Your First Drift Car: BMW vs Nissan",
+          excerpt: "Comparing two popular options for beginner drifters: BMW E46 and Nissan Silvia S14",
+          content: "<p>Choosing your first drift car is an important decision that affects your learning speed and budget. Let's look at two popular options.</p><h2>BMW E46 (1998-2006)</h2><h3>Pros</h3><ul><li>Parts availability</li><li>Reliable inline 6-cylinder engine</li><li>Good weight distribution (50/50)</li><li>Large community and knowledge base</li></ul><h3>Cons</h3><ul><li>Higher weight (about 1400 kg)</li><li>Expensive repairs for serious breakdowns</li><li>Often requires wheel bearing and bushing replacement</li></ul><h3>Budget</h3><ul><li>Purchase: $5,000-8,000</li><li>Preparation: $2,500-4,000</li><li><strong>Total: $7,500-12,000</strong></li></ul><hr><h2>Nissan Silvia S14 (1993-1998)</h2><h3>Pros</h3><ul><li>Lower weight (about 1200 kg)</li><li>SR20DET engine with great tuning potential</li><li>\"Proper\" drift geometry out of the box</li><li>Cult status in drift culture</li></ul><h3>Cons</h3><ul><li>More expensive to buy</li><li>Parts need to be ordered</li><li>Right-hand drive (not convenient for everyone)</li><li>Age of vehicles (often require restoration)</li></ul><h3>Budget</h3><ul><li>Purchase: $10,000-15,000</li><li>Preparation: $2,500-4,000</li><li><strong>Total: $12,500-19,000</strong></li></ul><hr><h2>Verdict</h2><blockquote><p>For a beginner with a limited budget, the BMW E46 is the better choice. If your budget allows and you want a \"real\" drift car with history - the Nissan Silvia will be an excellent choice. The main thing is not to chase power in the early stages!</p></blockquote>",
+          htmlContent: "<p>Choosing your first drift car is an important decision that affects your learning speed and budget. Let's look at two popular options.</p><h2>BMW E46 (1998-2006)</h2><h3>Pros</h3><ul><li>Parts availability</li><li>Reliable inline 6-cylinder engine</li><li>Good weight distribution (50/50)</li><li>Large community and knowledge base</li></ul><h3>Cons</h3><ul><li>Higher weight (about 1400 kg)</li><li>Expensive repairs for serious breakdowns</li><li>Often requires wheel bearing and bushing replacement</li></ul><h3>Budget</h3><ul><li>Purchase: $5,000-8,000</li><li>Preparation: $2,500-4,000</li><li><strong>Total: $7,500-12,000</strong></li></ul><hr><h2>Nissan Silvia S14 (1993-1998)</h2><h3>Pros</h3><ul><li>Lower weight (about 1200 kg)</li><li>SR20DET engine with great tuning potential</li><li>\"Proper\" drift geometry out of the box</li><li>Cult status in drift culture</li></ul><h3>Cons</h3><ul><li>More expensive to buy</li><li>Parts need to be ordered</li><li>Right-hand drive (not convenient for everyone)</li><li>Age of vehicles (often require restoration)</li></ul><h3>Budget</h3><ul><li>Purchase: $10,000-15,000</li><li>Preparation: $2,500-4,000</li><li><strong>Total: $12,500-19,000</strong></li></ul><hr><h2>Verdict</h2><blockquote><p>For a beginner with a limited budget, the BMW E46 is the better choice. If your budget allows and you want a \"real\" drift car with history - the Nissan Silvia will be an excellent choice. The main thing is not to chase power in the early stages!</p></blockquote>",
+        },
+      },
     },
   ];
 
@@ -895,6 +1027,7 @@ async function main() {
         coverImage: postData.coverImage,
         minTier: postData.minTier,
         categoryId: postData.categoryId,
+        translations: postData.translations,
       },
       create: postData,
     });
@@ -934,16 +1067,25 @@ async function main() {
       title: "JEMSO Club: итоги встречи февраля 2024",
       slug: "jemso-club-february-2024-meetup",
       excerpt: "Более 50 участников, интересные автомобили и отличная атмосфера - отчет о февральской встрече клуба",
-      content: "<p>18 февраля состоялась очередная встреча автомобильного клуба JEMSO. Несмотря на морозную погоду, более 50 энтузиастов собрались на парковке торгового центра \"Мега\", чтобы пообщаться, обменяться опытом и просто провести время среди единомышленников.</p><h2>Highlights встречи</h2><h3>Автомобили месяца</h3><p>На этот раз нас порадовали несколько интересных проектов:</p><ul><li><strong>Toyota Supra A80</strong> с двигателем 2JZ-GTE на 650 л.с. - владелец Дмитрий рассказал о процессе постройки и поделился опытом настройки турбины</li><li><strong>Nissan Silvia S15</strong> в дрифт-спеке - свежий импорт из Японии с оригинальным пробегом всего 89 000 км</li><li><strong>BMW E46 M3</strong> в Ring-конфигурации - владелец активно участвует в трек-днях и делится своим опытом</li></ul><figure><img src=\"https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1200&h=600&fit=crop\" alt=\"Встреча клуба JEMSO\"><figcaption>Участники февральской встречи JEMSO Club</figcaption></figure><h3>Технические доклады</h3><p>Наш постоянный участник и механик Сергей провел мини-лекцию о подготовке автомобиля к сезону:</p><ul><li>Замена технических жидкостей</li><li>Проверка тормозной системы</li><li>Диагностика подвески</li><li>Подготовка к техосмотру</li></ul><h3>Планы на сезон 2024</h3><p>Обсудили календарь мероприятий клуба:</p><ul><li>Март - выезд на картинг</li><li>Апрель - открытие сезона трек-дней</li><li>Май - совместная поездка на Moscow Raceway</li><li>Июнь - летний караван в горы</li></ul><h2>Присоединяйтесь!</h2><p>Встречи клуба JEMSO проходят каждое третье воскресенье месяца. Следите за анонсами в нашем Telegram-канале. Участие бесплатное, приветствуются все марки и модели автомобилей!</p>",
-      htmlContent: "<p>18 февраля состоялась очередная встреча автомобильного клуба JEMSO. Несмотря на морозную погоду, более 50 энтузиастов собрались на парковке торгового центра \"Мега\", чтобы пообщаться, обменяться опытом и просто провести время среди единомышленников.</p><h2>Highlights встречи</h2><h3>Автомобили месяца</h3><p>На этот раз нас порадовали несколько интересных проектов:</p><ul><li><strong>Toyota Supra A80</strong> с двигателем 2JZ-GTE на 650 л.с. - владелец Дмитрий рассказал о процессе постройки и поделился опытом настройки турбины</li><li><strong>Nissan Silvia S15</strong> в дрифт-спеке - свежий импорт из Японии с оригинальным пробегом всего 89 000 км</li><li><strong>BMW E46 M3</strong> в Ring-конфигурации - владелец активно участвует в трек-днях и делится своим опытом</li></ul><figure><img src=\"https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1200&h=600&fit=crop\" alt=\"Встреча клуба JEMSO\"><figcaption>Участники февральской встречи JEMSO Club</figcaption></figure><h3>Технические доклады</h3><p>Наш постоянный участник и механик Сергей провел мини-лекцию о подготовке автомобиля к сезону:</p><ul><li>Замена технических жидкостей</li><li>Проверка тормозной системы</li><li>Диагностика подвески</li><li>Подготовка к техосмотру</li></ul><h3>Планы на сезон 2024</h3><p>Обсудили календарь мероприятий клуба:</p><ul><li>Март - выезд на картинг</li><li>Апрель - открытие сезона трек-дней</li><li>Май - совместная поездка на Moscow Raceway</li><li>Июнь - летний караван в горы</li></ul><h2>Присоединяйтесь!</h2><p>Встречи клуба JEMSO проходят каждое третье воскресенье месяца. Следите за анонсами в нашем Telegram-канале. Участие бесплатное, приветствуются все марки и модели автомобилей!</p>",
+      content: "<p>18 февраля состоялась очередная встреча автомобильного клуба JEMSO. Несмотря на морозную погоду, более 50 энтузиастов собрались на парковке торгового центра \"Мега\", чтобы пообщаться, обменяться опытом и просто провести время среди единомышленников.</p><h2>Highlights встречи</h2><h3>Автомобили месяца</h3><p>На этот раз нас порадовали несколько интересных проектов:</p><ul><li><strong>Toyota Supra A80</strong> с двигателем 2JZ-GTE на 650 л.с. - владелец Дмитрий рассказал о процессе постройки и поделился опытом настройки турбины</li><li><strong>Nissan Silvia S15</strong> в дрифт-спеке - свежий импорт из Японии с оригинальным пробегом всего 89 000 км</li><li><strong>BMW E46 M3</strong> в Ring-конфигурации - владелец активно участвует в трек-днях и делится своим опытом</li></ul><figure><img src=\"https://images.unsplash.com/photo-1469285994282-454ceb49e63c?w=1200&h=600&fit=crop\" alt=\"Встреча клуба JEMSO\"><figcaption>Участники февральской встречи JEMSO Club</figcaption></figure><h3>Технические доклады</h3><p>Наш постоянный участник и механик Сергей провел мини-лекцию о подготовке автомобиля к сезону:</p><ul><li>Замена технических жидкостей</li><li>Проверка тормозной системы</li><li>Диагностика подвески</li><li>Подготовка к техосмотру</li></ul><h3>Планы на сезон 2024</h3><p>Обсудили календарь мероприятий клуба:</p><ul><li>Март - выезд на картинг</li><li>Апрель - открытие сезона трек-дней</li><li>Май - совместная поездка на Moscow Raceway</li><li>Июнь - летний караван в горы</li></ul><h2>Присоединяйтесь!</h2><p>Встречи клуба JEMSO проходят каждое третье воскресенье месяца. Следите за анонсами в нашем Telegram-канале. Участие бесплатное, приветствуются все марки и модели автомобилей!</p>",
+      htmlContent: "<p>18 февраля состоялась очередная встреча автомобильного клуба JEMSO. Несмотря на морозную погоду, более 50 энтузиастов собрались на парковке торгового центра \"Мега\", чтобы пообщаться, обменяться опытом и просто провести время среди единомышленников.</p><h2>Highlights встречи</h2><h3>Автомобили месяца</h3><p>На этот раз нас порадовали несколько интересных проектов:</p><ul><li><strong>Toyota Supra A80</strong> с двигателем 2JZ-GTE на 650 л.с. - владелец Дмитрий рассказал о процессе постройки и поделился опытом настройки турбины</li><li><strong>Nissan Silvia S15</strong> в дрифт-спеке - свежий импорт из Японии с оригинальным пробегом всего 89 000 км</li><li><strong>BMW E46 M3</strong> в Ring-конфигурации - владелец активно участвует в трек-днях и делится своим опытом</li></ul><figure><img src=\"https://images.unsplash.com/photo-1469285994282-454ceb49e63c?w=1200&h=600&fit=crop\" alt=\"Встреча клуба JEMSO\"><figcaption>Участники февральской встречи JEMSO Club</figcaption></figure><h3>Технические доклады</h3><p>Наш постоянный участник и механик Сергей провел мини-лекцию о подготовке автомобиля к сезону:</p><ul><li>Замена технических жидкостей</li><li>Проверка тормозной системы</li><li>Диагностика подвески</li><li>Подготовка к техосмотру</li></ul><h3>Планы на сезон 2024</h3><p>Обсудили календарь мероприятий клуба:</p><ul><li>Март - выезд на картинг</li><li>Апрель - открытие сезона трек-дней</li><li>Май - совместная поездка на Moscow Raceway</li><li>Июнь - летний караван в горы</li></ul><h2>Присоединяйтесь!</h2><p>Встречи клуба JEMSO проходят каждое третье воскресенье месяца. Следите за анонсами в нашем Telegram-канале. Участие бесплатное, приветствуются все марки и модели автомобилей!</p>",
       published: true,
       publishedAt: new Date("2024-02-19"),
       views: 892,
       categoryId: clubCategory?.id,
       authorId: adminUser.id,
-      coverImage: "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1200&h=600&fit=crop",
+      coverImage: "https://images.unsplash.com/photo-1469285994282-454ceb49e63c?w=1200&h=600&fit=crop",
       tags: ["news", "club"],
       minTier: 0,
+      defaultLocale: "ru",
+      translations: {
+        en: {
+          title: "JEMSO Club: February 2024 Meetup Recap",
+          excerpt: "Over 50 participants, interesting cars and great atmosphere - report from the February club meeting",
+          content: "<p>On February 18, another meeting of the JEMSO car club took place. Despite the freezing weather, over 50 enthusiasts gathered in the Mega shopping center parking lot to chat, share experiences, and simply spend time among like-minded people.</p><h2>Meeting Highlights</h2><h3>Cars of the Month</h3><p>This time we were delighted by several interesting projects:</p><ul><li><strong>Toyota Supra A80</strong> with a 650 hp 2JZ-GTE engine - owner Dmitry talked about the build process and shared his turbo tuning experience</li><li><strong>Nissan Silvia S15</strong> in drift spec - fresh import from Japan with original mileage of only 89,000 km</li><li><strong>BMW E46 M3</strong> in Ring configuration - the owner actively participates in track days and shares his experience</li></ul><h3>Technical Talks</h3><p>Our regular participant and mechanic Sergey gave a mini-lecture on preparing the car for the season:</p><ul><li>Changing technical fluids</li><li>Checking the brake system</li><li>Suspension diagnostics</li><li>Preparing for inspection</li></ul><h3>Plans for 2024 Season</h3><p>We discussed the club's event calendar:</p><ul><li>March - karting trip</li><li>April - track day season opening</li><li>May - group trip to Moscow Raceway</li><li>June - summer caravan to the mountains</li></ul><h2>Join Us!</h2><p>JEMSO club meetings are held every third Sunday of the month. Follow announcements in our Telegram channel. Participation is free, all car makes and models are welcome!</p>",
+          htmlContent: "<p>On February 18, another meeting of the JEMSO car club took place. Despite the freezing weather, over 50 enthusiasts gathered in the Mega shopping center parking lot to chat, share experiences, and simply spend time among like-minded people.</p><h2>Meeting Highlights</h2><h3>Cars of the Month</h3><p>This time we were delighted by several interesting projects:</p><ul><li><strong>Toyota Supra A80</strong> with a 650 hp 2JZ-GTE engine - owner Dmitry talked about the build process and shared his turbo tuning experience</li><li><strong>Nissan Silvia S15</strong> in drift spec - fresh import from Japan with original mileage of only 89,000 km</li><li><strong>BMW E46 M3</strong> in Ring configuration - the owner actively participates in track days and shares his experience</li></ul><h3>Technical Talks</h3><p>Our regular participant and mechanic Sergey gave a mini-lecture on preparing the car for the season:</p><ul><li>Changing technical fluids</li><li>Checking the brake system</li><li>Suspension diagnostics</li><li>Preparing for inspection</li></ul><h3>Plans for 2024 Season</h3><p>We discussed the club's event calendar:</p><ul><li>March - karting trip</li><li>April - track day season opening</li><li>May - group trip to Moscow Raceway</li><li>June - summer caravan to the mountains</li></ul><h2>Join Us!</h2><p>JEMSO club meetings are held every third Sunday of the month. Follow announcements in our Telegram channel. Participation is free, all car makes and models are welcome!</p>",
+        },
+      },
     },
     {
       title: "Новые правила участия в трек-днях 2024",
@@ -956,9 +1098,18 @@ async function main() {
       views: 543,
       categoryId: ringCategory?.id,
       authorId: adminUser.id,
-      coverImage: "https://images.unsplash.com/photo-1547038577-e4887ac57f10?w=1200&h=600&fit=crop",
+      coverImage: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1200&h=600&fit=crop",
       tags: ["news", "safety"],
       minTier: 0,
+      defaultLocale: "ru",
+      translations: {
+        en: {
+          title: "New Track Day Participation Rules 2024",
+          excerpt: "Important changes in safety regulations and vehicle admission to track days in the new season",
+          content: "<p>Dear participants! Starting from 2024, new rules for vehicle admission to track days are being introduced.</p><h2>Main Changes</h2><ul><li>Mandatory tow hooks front and rear</li><li>Prohibition on tires with treadwear below 140 for Street class</li><li>Mandatory fire extinguisher in the cabin</li></ul><p>Please review the complete regulations on the organizer's website.</p>",
+          htmlContent: "<p>Dear participants! Starting from 2024, new rules for vehicle admission to track days are being introduced.</p><h2>Main Changes</h2><ul><li>Mandatory tow hooks front and rear</li><li>Prohibition on tires with treadwear below 140 for Street class</li><li>Mandatory fire extinguisher in the cabin</li></ul><p>Please review the complete regulations on the organizer's website.</p>",
+        },
+      },
     },
     {
       title: "Эксклюзив: Фотоотчет с закрытой презентации JEMSO X",
@@ -971,9 +1122,18 @@ async function main() {
       views: 120,
       categoryId: clubCategory?.id,
       authorId: adminUser.id,
-      coverImage: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1200&h=600&fit=crop",
+      coverImage: "https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?w=1200&h=600&fit=crop",
       tags: ["news"],
       minTier: 1, // Basic plan required
+      defaultLocale: "ru",
+      translations: {
+        en: {
+          title: "Exclusive: Photo Report from Private JEMSO X Presentation",
+          excerpt: "Subscribers only: exclusive shots from the new JEMSO X project presentation",
+          content: "<p>This is exclusive content available only for subscribers.</p><p>Last week, a secret presentation of our new project took place. We're ready to share the first shots with you!</p><h2>Gallery</h2><p>[Photos available only for subscribers]</p>",
+          htmlContent: "<p>This is exclusive content available only for subscribers.</p><p>Last week, a secret presentation of our new project took place. We're ready to share the first shots with you!</p><h2>Gallery</h2><p>[Photos available only for subscribers]</p>",
+        },
+      },
     },
   ];
 
@@ -990,6 +1150,7 @@ async function main() {
         coverImage: newsData.coverImage,
         minTier: newsData.minTier,
         categoryId: newsData.categoryId,
+        translations: newsData.translations,
       },
       create: newsData,
     });
@@ -1043,8 +1204,17 @@ async function main() {
       currency: "RUB",
       categoryId: driftCategory?.id,
       authorId: adminUser.id,
-      coverImage: "https://images.unsplash.com/photo-1547038577-e4887ac57f10?w=1200&h=600&fit=crop",
+      coverImage: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1200&h=600&fit=crop",
       minTier: 0,
+      defaultLocale: "ru",
+      translations: {
+        en: {
+          title: "Drift Season Opening 2024",
+          excerpt: "First competition of the season at ADM Raceway",
+          content: "<p>We invite all drift enthusiasts to the 2024 season opening!</p><h2>Event Schedule</h2><h3>10:00 - Registration</h3><p>Administrative checks, technical vehicle inspection</p><h3>11:00 - Qualifying</h3><p>Solo runs to determine tandem bracket</p><h3>14:00 - Tandem Battles</h3><p>Main competition in one-on-one battle format</p><h3>17:00 - Finals and Awards</h3><p>Determining winners and award ceremony</p><h2>Participant Requirements</h2><ul><li>Sports license or beginner's license</li><li>Technically sound vehicle</li><li>Helmet (rental available on site)</li><li>Drift experience welcome but not required</li></ul><blockquote><p>Spectators welcome! Free admission.</p></blockquote>",
+          htmlContent: "<p>We invite all drift enthusiasts to the 2024 season opening!</p><h2>Event Schedule</h2><h3>10:00 - Registration</h3><p>Administrative checks, technical vehicle inspection</p><h3>11:00 - Qualifying</h3><p>Solo runs to determine tandem bracket</p><h3>14:00 - Tandem Battles</h3><p>Main competition in one-on-one battle format</p><h3>17:00 - Finals and Awards</h3><p>Determining winners and award ceremony</p><h2>Participant Requirements</h2><ul><li>Sports license or beginner's license</li><li>Technically sound vehicle</li><li>Helmet (rental available on site)</li><li>Drift experience welcome but not required</li></ul><blockquote><p>Spectators welcome! Free admission.</p></blockquote>",
+        },
+      },
     },
     {
       title: "Drag Racing Championship - 1 этап",
@@ -1064,8 +1234,17 @@ async function main() {
       currency: "RUB",
       categoryId: dragCategory?.id,
       authorId: adminUser.id,
-      coverImage: "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=1200&h=600&fit=crop",
+      coverImage: "https://images.unsplash.com/photo-1606611013016-969c19ba27bb?w=1200&h=600&fit=crop",
       minTier: 0,
+      defaultLocale: "ru",
+      translations: {
+        en: {
+          title: "Drag Racing Championship - Stage 1",
+          excerpt: "First stage of the Russian Drag Racing Championship",
+          content: "<p>Russian Drag Racing Championship opens the 2024 season!</p><h2>Participant Classes</h2><h3>Street Class</h3><p>Street cars with minimal modifications</p><ul><li>Up to 400 hp</li><li>Street tires</li><li>Full interior</li></ul><h3>Pro Street</h3><ul><li>Up to 800 hp</li><li>Slicks allowed</li><li>Roll cage mandatory</li></ul><h3>Pro Modified</h3><ul><li>No power limit</li><li>Specialized drag cars</li><li>Professional drivers</li></ul><h2>Schedule</h2><h3>Friday, May 10</h3><ul><li>14:00-20:00 - Test & tune, practice</li></ul><h3>Saturday, May 11</h3><ul><li>10:00-12:00 - Street Class qualifying</li><li>13:00-15:00 - Pro Street qualifying</li><li>16:00-18:00 - Pro Modified qualifying</li></ul><h3>Sunday, May 12</h3><ul><li>10:00 - Eliminations start</li><li>16:00 - Finals</li><li>17:00 - Awards ceremony</li></ul><blockquote><p>Registration open until May 1 on the RDRC website.</p></blockquote>",
+          htmlContent: "<p>Russian Drag Racing Championship opens the 2024 season!</p><h2>Participant Classes</h2><h3>Street Class</h3><p>Street cars with minimal modifications</p><ul><li>Up to 400 hp</li><li>Street tires</li><li>Full interior</li></ul><h3>Pro Street</h3><ul><li>Up to 800 hp</li><li>Slicks allowed</li><li>Roll cage mandatory</li></ul><h3>Pro Modified</h3><ul><li>No power limit</li><li>Specialized drag cars</li><li>Professional drivers</li></ul><h2>Schedule</h2><h3>Friday, May 10</h3><ul><li>14:00-20:00 - Test & tune, practice</li></ul><h3>Saturday, May 11</h3><ul><li>10:00-12:00 - Street Class qualifying</li><li>13:00-15:00 - Pro Street qualifying</li><li>16:00-18:00 - Pro Modified qualifying</li></ul><h3>Sunday, May 12</h3><ul><li>10:00 - Eliminations start</li><li>16:00 - Finals</li><li>17:00 - Awards ceremony</li></ul><blockquote><p>Registration open until May 1 on the RDRC website.</p></blockquote>",
+        },
+      },
     },
     {
       title: "Track Day для начинающих",
@@ -1085,8 +1264,17 @@ async function main() {
       currency: "RUB",
       categoryId: ringCategory?.id,
       authorId: adminUser.id,
-      coverImage: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=1200&h=600&fit=crop",
+      coverImage: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=1200&h=600&fit=crop",
       minTier: 1, // Basic plan required
+      defaultLocale: "ru",
+      translations: {
+        en: {
+          title: "Track Day for Beginners",
+          excerpt: "Special track day for beginners with instructors",
+          content: "<p>First time on track? This track day is made for you!</p><h2>What's Included</h2><h3>Theory Session (1 hour)</h3><ul><li>Track safety rules</li><li>Proper racing line</li><li>Cornering technique</li><li>Braking technique</li></ul><h3>Practical Sessions (4 hours)</h3><ul><li>Personal instructor in your car</li><li>4 sessions of 20 minutes</li><li>Feedback after each session</li><li>Video analysis of your laps</li></ul><h3>Additionally</h3><ul><li>Coffee break</li><li>Lunch</li><li>Video recording of your sessions</li><li>Participation certificate</li></ul><h2>Requirements</h2><ul><li>Technically sound vehicle</li><li>At least 1 year of driving experience</li><li>Willingness to learn!</li></ul><blockquote><p>Limited to 20 participants.</p></blockquote>",
+          htmlContent: "<p>First time on track? This track day is made for you!</p><h2>What's Included</h2><h3>Theory Session (1 hour)</h3><ul><li>Track safety rules</li><li>Proper racing line</li><li>Cornering technique</li><li>Braking technique</li></ul><h3>Practical Sessions (4 hours)</h3><ul><li>Personal instructor in your car</li><li>4 sessions of 20 minutes</li><li>Feedback after each session</li><li>Video analysis of your laps</li></ul><h3>Additionally</h3><ul><li>Coffee break</li><li>Lunch</li><li>Video recording of your sessions</li><li>Participation certificate</li></ul><h2>Requirements</h2><ul><li>Technically sound vehicle</li><li>At least 1 year of driving experience</li><li>Willingness to learn!</li></ul><blockquote><p>Limited to 20 participants.</p></blockquote>",
+        },
+      },
     },
     {
       title: "JEMSO Summer Meet 2024",
@@ -1106,8 +1294,17 @@ async function main() {
       currency: "RUB",
       categoryId: clubCategory?.id,
       authorId: adminUser.id,
-      coverImage: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1200&h=600&fit=crop",
+      coverImage: "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=1200&h=600&fit=crop",
       minTier: 0,
+      defaultLocale: "ru",
+      translations: {
+        en: {
+          title: "JEMSO Summer Meet 2024",
+          excerpt: "Club summer meeting with show program, BBQ and prize giveaway",
+          content: "<p>The biggest club event of the year!</p><h2>Schedule</h2><h3>12:00 - Opening</h3><p>Participant registration, car placement</p><h3>13:00 - Car Contest</h3><ul><li>Best drift car</li><li>Best drag car</li><li>Best show car</li><li>People's choice</li></ul><h3>15:00 - BBQ and Networking</h3><p>Great food and drinks in a casual atmosphere</p><h3>17:00 - Demo Runs</h3><p>Professional driver performances</p><h3>19:00 - Prize Draw</h3><p>Valuable prizes from sponsors:</p><ul><li>Set of sport brake pads</li><li>Service certificates</li><li>JEMSO merch</li></ul><h3>20:00 - After-party</h3><p>Continuation in a casual atmosphere</p><hr><h2>Participation</h2><ul><li><strong>Club members:</strong> free</li><li><strong>Guests:</strong> ~$10</li><li><strong>Car contest entry:</strong> free</li></ul><blockquote><p>All enthusiasts welcome, regardless of car make or model!</p></blockquote>",
+          htmlContent: "<p>The biggest club event of the year!</p><h2>Schedule</h2><h3>12:00 - Opening</h3><p>Participant registration, car placement</p><h3>13:00 - Car Contest</h3><ul><li>Best drift car</li><li>Best drag car</li><li>Best show car</li><li>People's choice</li></ul><h3>15:00 - BBQ and Networking</h3><p>Great food and drinks in a casual atmosphere</p><h3>17:00 - Demo Runs</h3><p>Professional driver performances</p><h3>19:00 - Prize Draw</h3><p>Valuable prizes from sponsors:</p><ul><li>Set of sport brake pads</li><li>Service certificates</li><li>JEMSO merch</li></ul><h3>20:00 - After-party</h3><p>Continuation in a casual atmosphere</p><hr><h2>Participation</h2><ul><li><strong>Club members:</strong> free</li><li><strong>Guests:</strong> ~$10</li><li><strong>Car contest entry:</strong> free</li></ul><blockquote><p>All enthusiasts welcome, regardless of car make or model!</p></blockquote>",
+        },
+      },
     },
     {
       title: "JEMSO Winter Drift Festival 2026",
@@ -1127,8 +1324,17 @@ async function main() {
       currency: "RUB",
       categoryId: driftCategory?.id,
       authorId: adminUser.id,
-      coverImage: "https://images.unsplash.com/photo-1605218427368-35b804245dc9?w=1200&h=600&fit=crop",
+      coverImage: "https://images.unsplash.com/photo-1610647752706-3bb12232b3ab?w=1200&h=600&fit=crop",
       minTier: 0,
+      defaultLocale: "ru",
+      translations: {
+        en: {
+          title: "JEMSO Winter Drift Festival 2026",
+          excerpt: "Large winter drift festival open to everyone",
+          content: "<p>Winter drifting is a culture of its own! We invite everyone to our annual festival.</p><h2>Schedule</h2><ul><li>Ice Matsuri</li><li>\"Lada\" class competition</li><li>Drift taxi</li><li>Hot tea and field kitchen</li></ul>",
+          htmlContent: "<p>Winter drifting is a culture of its own! We invite everyone to our annual festival.</p><h2>Schedule</h2><ul><li>Ice Matsuri</li><li>\"Lada\" class competition</li><li>Drift taxi</li><li>Hot tea and field kitchen</li></ul>",
+        },
+      },
     },
     {
       title: "Ice Drift Training Camp",
@@ -1148,8 +1354,17 @@ async function main() {
       currency: "RUB",
       categoryId: driftCategory?.id,
       authorId: adminUser.id,
-      coverImage: "https://images.unsplash.com/photo-1543859664-5047b774577e?w=1200&h=600&fit=crop",
+      coverImage: "https://images.unsplash.com/photo-1580894894513-541e068a3e2b?w=1200&h=600&fit=crop",
       minTier: 1, // Basic
+      defaultLocale: "ru",
+      translations: {
+        en: {
+          title: "Ice Drift Training Camp",
+          excerpt: "Winter drift training course for Basic subscribers and above",
+          content: "<p>Learn to control a car on ice under the guidance of experienced instructors.</p><h2>What We'll Do</h2><ul><li>Theory of driving on slippery surfaces</li><li>Practice: \"figure eight\", \"slalom\", transitions</li><li>Throttle and steering work</li></ul>",
+          htmlContent: "<p>Learn to control a car on ice under the guidance of experienced instructors.</p><h2>What We'll Do</h2><ul><li>Theory of driving on slippery surfaces</li><li>Practice: \"figure eight\", \"slalom\", transitions</li><li>Throttle and steering work</li></ul>",
+        },
+      },
     },
     {
       title: "Advanced Ring Taxi & Coaching",
@@ -1169,8 +1384,17 @@ async function main() {
       currency: "RUB",
       categoryId: ringCategory?.id,
       authorId: adminUser.id,
-      coverImage: "https://images.unsplash.com/photo-1558981285-6f0c94958bb6?w=1200&h=600&fit=crop",
+      coverImage: "https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?w=1200&h=600&fit=crop",
       minTier: 2, // Advanced
+      defaultLocale: "ru",
+      translations: {
+        en: {
+          title: "Advanced Ring Taxi & Coaching",
+          excerpt: "Individual track training with telemetry for Advanced level",
+          content: "<p>Advanced circuit driving course.</p><h2>Program</h2><ul><li>Telemetry analysis</li><li>Suspension setup for the track</li><li>Finding the ideal racing line</li><li>Working with RaceLogic</li></ul>",
+          htmlContent: "<p>Advanced circuit driving course.</p><h2>Program</h2><ul><li>Telemetry analysis</li><li>Suspension setup for the track</li><li>Finding the ideal racing line</li><li>Working with RaceLogic</li></ul>",
+        },
+      },
     },
     {
       title: "Private Hypercar Test Day",
@@ -1190,8 +1414,17 @@ async function main() {
       currency: "RUB",
       categoryId: clubCategory?.id,
       authorId: adminUser.id,
-      coverImage: "https://images.unsplash.com/photo-1614200187524-dc4b892acf16?w=1200&h=600&fit=crop",
+      coverImage: "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1200&h=600&fit=crop",
       minTier: 3, // VIP
+      defaultLocale: "ru",
+      translations: {
+        en: {
+          title: "Private Hypercar Test Day",
+          excerpt: "Private test drive of supercars for VIP club members",
+          content: "<p>A unique opportunity to test the world's best cars.</p><h2>Fleet</h2><ul><li>Porsche 911 GT3 RS</li><li>Ferrari F8 Tributo</li><li>Lamborghini Huracan STO</li></ul><p>Includes reception and professional photography.</p>",
+          htmlContent: "<p>A unique opportunity to test the world's best cars.</p><h2>Fleet</h2><ul><li>Porsche 911 GT3 RS</li><li>Ferrari F8 Tributo</li><li>Lamborghini Huracan STO</li></ul><p>Includes reception and professional photography.</p>",
+        },
+      },
     },
   ];
 
@@ -1213,6 +1446,7 @@ async function main() {
         maxParticipants: event.maxParticipants,
         price: event.price,
         currency: event.currency,
+        translations: event.translations,
       },
       create: event,
     });

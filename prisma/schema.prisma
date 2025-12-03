@@ -16,6 +16,26 @@ datasource db {
     // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
 }
 
+// ========================================
+// Internationalization (i18n) Support
+// ========================================
+
+// Supported Language model - Dynamic language configuration
+model Language {
+    id          String   @id @default(cuid())
+    code        String   @unique // ISO 639-1 code (e.g., "en", "ru")
+    name        String   // Display name (e.g., "English", "Русский")
+    nativeName  String?  // Native name (e.g., "English", "Русский")
+    isDefault   Boolean  @default(false)
+    isActive    Boolean  @default(true)
+    order       Int      @default(0)
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    @@index([code])
+    @@index([isActive])
+}
+
 // Blog Post model
 model BlogPost {
     id          String   @id @default(cuid())
@@ -30,6 +50,12 @@ model BlogPost {
     publishedAt DateTime?
     views       Int      @default(0)
     minTier     Int      @default(0) // 0 = free/everyone, higher value = higher tier required
+    
+    // i18n: Default language is stored in main fields, translations in JSON
+    // Structure: { "en": { "title": "...", "excerpt": "...", "content": "...", "htmlContent": "..." }, "ru": {...} }
+    defaultLocale String  @default("ru") // The locale of the main fields
+    translations  Json?   // Translations for other locales
+    
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
 
@@ -47,6 +73,7 @@ model BlogPost {
     @@index([categoryId])
     @@index([published, publishedAt])
     @@index([minTier])
+    @@index([defaultLocale])
 }
 
 // News model - Separated from BlogPost
@@ -62,6 +89,11 @@ model News {
     publishedAt DateTime?
     views       Int      @default(0)
     minTier     Int      @default(0) // 0 = free/everyone, higher value = higher tier required
+    
+    // i18n: Default language is stored in main fields, translations in JSON
+    defaultLocale String  @default("ru")
+    translations  Json?   // { "en": { "title": "...", "excerpt": "...", "content": "...", "htmlContent": "..." } }
+    
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
 
@@ -80,6 +112,7 @@ model News {
     @@index([categoryId])
     @@index([published, publishedAt])
     @@index([minTier])
+    @@index([defaultLocale])
 }
 
 // Category model - Racing disciplines (drift, drag, ring, etc.)
@@ -95,6 +128,11 @@ model Category {
     featured    Boolean    @default(false) // Show in featured sections
     order       Int        @default(0) // Display order in navigation
     showInNav   Boolean    @default(true) // Show in main navigation
+    
+    // i18n: Default language is stored in main fields, translations in JSON
+    defaultLocale String  @default("ru")
+    translations  Json?   // { "en": { "name": "...", "description": "..." } }
+    
     createdAt   DateTime   @default(now())
     updatedAt   DateTime   @updatedAt
     
@@ -107,6 +145,7 @@ model Category {
     @@index([featured])
     @@index([order])
     @@index([showInNav])
+    @@index([defaultLocale])
 }
 
 // Tag model
@@ -114,11 +153,17 @@ model Tag {
     id        String        @id @default(cuid())
     name      String        @unique
     slug      String        @unique
+    
+    // i18n: Default language is stored in main fields, translations in JSON
+    defaultLocale String  @default("ru")
+    translations  Json?   // { "en": { "name": "..." } }
+    
     createdAt DateTime      @default(now())
     posts     BlogPostTag[]
     news      NewsTag[]
 
     @@index([slug])
+    @@index([defaultLocale])
 }
 
 // Junction table for many-to-many relationship between BlogPost and Tag
@@ -225,11 +270,29 @@ model Event {
     views           Int      @default(0)
     minTier         Int      @default(0) // 0 = free/everyone, higher value = higher tier required
     
+    // i18n: Default language is stored in main fields, translations in JSON
+    defaultLocale String  @default("ru")
+    translations  Json?   // { "en": { "title": "...", "excerpt": "...", "content": "...", "htmlContent": "..." } }
+    
     // Event-specific fields
     startDate       DateTime
     endDate         DateTime
-    location        String?
-    locationUrl     String?  // For online events or maps
+    
+    // Location fields - Enhanced for geolocation support
+    location        String?    // Human-readable address
+    locationUrl     String?    // For online events or maps link
+    latitude        Float?     // GPS latitude for distance calculations
+    longitude       Float?     // GPS longitude for distance calculations
+    city            String?    // City name for filtering
+    country         String?    // Country code (ISO 3166-1 alpha-2)
+    timezone        String?    // Event timezone (e.g., "Europe/Moscow")
+    isOnline        Boolean    @default(false) // Flag for online events
+    onlineUrl       String?    // URL for online event stream/meeting
+    
+    // Venue reference (optional, for reusable venues)
+    venueId         String?
+    venue           Venue?     @relation(fields: [venueId], references: [id], onDelete: SetNull)
+    
     maxParticipants Int?     // null = unlimited
     price           Decimal  @default(0)
     currency        String   @default("USD")
@@ -251,6 +314,55 @@ model Event {
     @@index([published, startDate])
     @@index([startDate, endDate])
     @@index([minTier])
+    @@index([defaultLocale])
+    @@index([city])
+    @@index([country])
+    @@index([isOnline])
+    @@index([venueId])
+    @@index([latitude, longitude])
+}
+
+// Venue model - Reusable event locations
+model Venue {
+    id          String   @id @default(cuid())
+    name        String
+    slug        String   @unique
+    description String?
+    
+    // Location details
+    address     String?  // Full street address
+    city        String
+    country     String   // ISO 3166-1 alpha-2 code
+    postalCode  String?
+    latitude    Float
+    longitude   Float
+    timezone    String?  // Venue timezone
+    
+    // Venue metadata
+    capacity    Int?     // Maximum capacity
+    website     String?
+    phone       String?
+    email       String?
+    mapUrl      String?  // Google Maps or other map URL
+    coverImage  String?
+    images      Json?    // Array of image URLs
+    amenities   Json?    // Array of amenity strings
+    
+    // i18n support
+    defaultLocale String  @default("ru")
+    translations  Json?   // { "en": { "name": "...", "description": "...", "address": "..." } }
+    
+    isActive    Boolean  @default(true)
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    
+    events      Event[]
+    
+    @@index([slug])
+    @@index([city])
+    @@index([country])
+    @@index([latitude, longitude])
+    @@index([isActive])
 }
 
 // Event Registration model - Tracks who registered for events
@@ -370,6 +482,11 @@ model SubscriptionPlan {
     maxUsers         Int?     // null = unlimited
     maxStorage       Int?     // in MB, null = unlimited
     order            Int      @default(0) // Display order
+    
+    // i18n support
+    defaultLocale String  @default("ru")
+    translations  Json?   // { "en": { "name": "...", "description": "..." } }
+    
     createdAt        DateTime @default(now())
     updatedAt        DateTime @updatedAt
 
@@ -379,6 +496,7 @@ model SubscriptionPlan {
 
     @@index([slug])
     @@index([isActive])
+    @@index([defaultLocale])
 }
 
 // Feature model - Dynamic features
@@ -388,12 +506,18 @@ model Feature {
     slug        String   @unique
     description String?
     featureType String   @default("boolean") // boolean, numeric, text
+    
+    // i18n support
+    defaultLocale String  @default("ru")
+    translations  Json?   // { "en": { "name": "...", "description": "..." } }
+    
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
 
     planFeatures PlanFeature[]
 
     @@index([slug])
+    @@index([defaultLocale])
 }
 
 // Junction table for Plan-Feature with values
@@ -537,6 +661,18 @@ model User {
     emailVerified DateTime?
     image         String?
     password      String?   // Hashed password for credentials provider
+    
+    // Language preferences
+    preferredLocale String  @default("ru") // User's preferred language (ISO 639-1)
+    
+    // Location preferences for personalized event recommendations
+    city            String?  // User's city
+    country         String?  // User's country (ISO 3166-1 alpha-2)
+    latitude        Float?   // User's location latitude
+    longitude       Float?   // User's location longitude
+    timezone        String?  // User's timezone (e.g., "Europe/Moscow")
+    maxEventDistance Int?    // Maximum distance in km for event recommendations (null = no limit)
+    
     createdAt     DateTime  @default(now())
     updatedAt     DateTime  @updatedAt
     
@@ -554,6 +690,9 @@ model User {
     checkoutSessions    CheckoutSession[]
     
     @@index([email])
+    @@index([preferredLocale])
+    @@index([city])
+    @@index([country])
 }
 
 // User category preferences - User's favorite categories for personalized content
