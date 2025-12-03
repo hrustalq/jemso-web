@@ -1,101 +1,54 @@
 "use client";
 
-import { useEffect } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
+import { useEffect, useRef, useState } from "react";
 
 interface AnimatedHeaderWrapperProps {
   children: React.ReactNode;
 }
 
 export function AnimatedHeaderWrapper({ children }: AnimatedHeaderWrapperProps) {
+  const [isNavHidden, setIsNavHidden] = useState(false);
+  const [isInitialAnimationDone, setIsInitialAnimationDone] = useState(false);
+  const lastScrollRef = useRef(0);
+
   useEffect(() => {
-    const header = document.querySelector("header");
-    const navBar = header?.querySelector("[data-nav-bar]") as HTMLElement | null;
-    if (!header) return;
+    // Initial animation
+    const timer = setTimeout(() => {
+      setIsInitialAnimationDone(true);
+    }, 100);
 
-    let scrollTriggerInstance: ScrollTrigger | null = null;
-    let showAnim: gsap.core.Tween | null = null;
+    // Scroll handler for nav hide/show
+    const handleScroll = () => {
+      const currentScroll = window.scrollY;
 
-    // Initial header animation
-    gsap.fromTo(
-      header,
-      {
-        y: -100,
-        opacity: 0,
-      },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 0.6,
-        ease: "power3.out",
-        clearProps: "all",
+      // Scrolling down and past 100px
+      if (currentScroll > 100 && currentScroll > lastScrollRef.current) {
+        setIsNavHidden(true);
       }
-    );
+      // Scrolling up or at top
+      else if (currentScroll < lastScrollRef.current || currentScroll < 50) {
+        setIsNavHidden(false);
+      }
 
-    // Hide/show navigation bar on scroll
-    if (navBar) {
-      let lastScroll = 0;
-      showAnim = gsap.fromTo(
-        navBar,
-        {
-          height: navBar.offsetHeight,
-          opacity: 1,
-        },
-        {
-          height: 0,
-          opacity: 0,
-          duration: 0.3,
-          ease: "power2.inOut",
-          paused: true,
-        }
-      );
+      lastScrollRef.current = currentScroll;
+    };
 
-      scrollTriggerInstance = ScrollTrigger.create({
-        start: "top top",
-        end: "max",
-        onUpdate: (self) => {
-          const currentScroll = self.scroll();
-          
-          // Scrolling down and past 100px
-          if (currentScroll > 100 && currentScroll > lastScroll) {
-            showAnim?.play();
-          } 
-          // Scrolling up or at top
-          else if (currentScroll < lastScroll || currentScroll < 50) {
-            showAnim?.reverse();
-          }
-          
-          lastScroll = currentScroll;
-        },
-      });
-    }
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
-      // Kill only this component's tweens and ScrollTrigger
-      gsap.killTweensOf(header);
-      if (navBar) {
-        gsap.killTweensOf(navBar);
-      }
-      if (showAnim) {
-        showAnim.kill();
-      }
-      if (scrollTriggerInstance) {
-        scrollTriggerInstance.kill();
-      }
-      
-      // Ensure elements are in default state on cleanup
-      if (header) {
-        gsap.set(header, { clearProps: "all" });
-      }
-      if (navBar) {
-        gsap.set(navBar, { clearProps: "all" });
-      }
+      clearTimeout(timer);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
-  return <>{children}</>;
+  return (
+    <div
+      className={`transition-all duration-500 ease-out ${
+        isInitialAnimationDone ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full"
+      }`}
+      data-nav-hidden={isNavHidden}
+    >
+      {children}
+    </div>
+  );
 }
-

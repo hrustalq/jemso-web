@@ -1,8 +1,6 @@
 "use client";
 
-import { useRef } from "react";
-import { useGSAP } from "@gsap/react";
-import { gsap } from "gsap";
+import { useEffect, useRef, useState } from "react";
 
 interface AnimatedFooterWrapperProps {
   children: React.ReactNode;
@@ -10,29 +8,17 @@ interface AnimatedFooterWrapperProps {
 
 export function AnimatedFooterWrapper({ children }: AnimatedFooterWrapperProps) {
   const footerRef = useRef<HTMLDivElement>(null);
-  const hasAnimated = useRef(false);
+  const [isVisible, setIsVisible] = useState(false);
 
-  useGSAP(() => {
-    if (!footerRef.current || hasAnimated.current) return;
-
+  useEffect(() => {
     const footer = footerRef.current;
-    const sections = footer.querySelectorAll(".footer-section");
+    if (!footer) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && !hasAnimated.current) {
-            hasAnimated.current = true;
-
-            // Animate footer sections with stagger
-            gsap.from(sections, {
-              opacity: 0,
-              y: 30,
-              duration: 0.6,
-              ease: "power3.out",
-              stagger: 0.1,
-            });
-
+          if (entry.isIntersecting) {
+            setIsVisible(true);
             observer.unobserve(footer);
           }
         });
@@ -47,6 +33,14 @@ export function AnimatedFooterWrapper({ children }: AnimatedFooterWrapperProps) 
     };
   }, []);
 
-  return <div ref={footerRef}>{children}</div>;
+  return (
+    <div
+      ref={footerRef}
+      className={`transition-all duration-600 ease-out ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+      }`}
+    >
+      {children}
+    </div>
+  );
 }
-
