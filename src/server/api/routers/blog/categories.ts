@@ -5,6 +5,10 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
+import { 
+  applyTranslations,
+  type Translations,
+} from "~/server/api/utils";
 import { requirePermission } from "~/server/api/rbac";
 import {
   createCategoryDto,
@@ -21,7 +25,7 @@ export const categoriesRouter = createTRPCRouter({
       ...(input?.featured !== undefined && { featured: input.featured }),
     };
 
-    return await ctx.db.category.findMany({
+    const categories = await ctx.db.category.findMany({
       where,
       orderBy: { order: "asc" },
       include: {
@@ -30,22 +34,63 @@ export const categoriesRouter = createTRPCRouter({
         },
       },
     });
+
+    // Apply translations if locale is specified
+    const locale = input?.locale;
+    if (locale) {
+      return categories.map((category) => {
+        if (category.translations) {
+          return applyTranslations(
+            category,
+            category.translations as Translations,
+            locale,
+            ["name", "description"]
+          );
+        }
+        return category;
+      });
+    }
+
+    return categories;
   }),
 
   // Public: Get navigation categories
-  navigation: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.db.category.findMany({
-      where: { showInNav: true },
-      orderBy: { order: "asc" },
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-        icon: true,
-        color: true,
-      },
-    });
-  }),
+  navigation: publicProcedure
+    .input(z.object({ 
+      locale: z.string().optional() 
+    }).optional())
+    .query(async ({ ctx, input }) => {
+      const categories = await ctx.db.category.findMany({
+        where: { showInNav: true },
+        orderBy: { order: "asc" },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          icon: true,
+          color: true,
+          translations: true,
+        },
+      });
+
+      // Apply translations if locale is specified
+      const locale = input?.locale;
+      if (locale) {
+        return categories.map((category) => {
+          if (category.translations) {
+            return applyTranslations(
+              category,
+              category.translations as Translations,
+              locale,
+              ["name"]
+            );
+          }
+          return category;
+        });
+      }
+
+      return categories;
+    }),
 
   // Public: Get category by slug or id
   get: publicProcedure
@@ -65,6 +110,17 @@ export const categoriesRouter = createTRPCRouter({
           code: "NOT_FOUND",
           message: "Category not found",
         });
+      }
+
+      // Apply translations if locale is specified
+      const locale = input.locale;
+      if (locale && category.translations) {
+        return applyTranslations(
+          category,
+          category.translations as Translations,
+          locale,
+          ["name", "description"]
+        );
       }
 
       return category;

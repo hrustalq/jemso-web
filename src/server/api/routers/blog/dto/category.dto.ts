@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { SUPPORTED_LOCALES } from "~/server/api/utils";
 
 export const createCategoryDto = z.object({
   name: z.string().min(1).max(100),
@@ -30,6 +31,7 @@ export const updateCategoryDto = z.object({
 export const getCategoryDto = z.object({
   id: z.string().optional(),
   slug: z.string().optional(),
+  locale: z.enum(SUPPORTED_LOCALES as [string, ...string[]]).optional(),
 }).refine((data) => data.id ?? data.slug, {
   message: "Either id or slug must be provided",
 });
@@ -37,6 +39,7 @@ export const getCategoryDto = z.object({
 export const listCategoriesDto = z.object({
   showInNav: z.boolean().optional(),
   featured: z.boolean().optional(),
+  locale: z.enum(SUPPORTED_LOCALES as [string, ...string[]]).optional(),
 });
 
 export type CreateCategoryDto = z.infer<typeof createCategoryDto>;

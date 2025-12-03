@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 import { HydrateClient, api } from "~/trpc/server";
 import { CategoryCard } from "~/components/category-card";
 import { PageWrapper } from "~/components/page-wrapper";
@@ -32,8 +32,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function CategoriesPage() {
+  // Get current locale
+  const locale = await getLocale();
   const t = await getTranslations("Categories");
-  const categories = await api.blog.categories.list();
+  const categories = await api.blog.categories.list({ locale }); // Pass locale for translations
 
   return (
     <HydrateClient>

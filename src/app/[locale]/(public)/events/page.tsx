@@ -48,6 +48,7 @@ export default async function EventsPage() {
     published: true,
     upcoming: true,
     pageSize: 10,
+    locale, // Pass locale for translations
   });
 
   return (

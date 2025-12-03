@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { getLocale } from "next-intl/server";
 import { HydrateClient, api } from "~/trpc/server";
 import { CategoryHero } from "./_components/category-hero";
 import { CategoryNews } from "./_components/category-news";
@@ -18,9 +19,10 @@ export async function generateMetadata({
   params,
 }: CategoryPageProps): Promise<Metadata> {
   const { slug } = await params;
+  const locale = await getLocale();
 
   try {
-    const category = await api.blog.categories.get({ slug });
+    const category = await api.blog.categories.get({ slug, locale });
 
     return {
       title: category.name,
@@ -59,9 +61,10 @@ export async function generateMetadata({
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const { slug } = await params;
+  const locale = await getLocale();
 
   try {
-    const category = await api.blog.categories.get({ slug });
+    const category = await api.blog.categories.get({ slug, locale });
 
     return (
       <HydrateClient>

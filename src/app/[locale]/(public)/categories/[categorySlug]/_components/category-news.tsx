@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { format } from "date-fns";
+import { getLocale } from "next-intl/server";
 import { api } from "~/trpc/server";
 
 interface CategoryNewsProps {
@@ -8,11 +9,15 @@ interface CategoryNewsProps {
 }
 
 export async function CategoryNews({ categoryId }: CategoryNewsProps) {
+  // Get current locale
+  const locale = await getLocale();
+  
   const { items: posts } = await api.blog.posts.list({
     page: 1,
     pageSize: 6,
     published: true,
     categoryId,
+    locale, // Pass locale for translations
   });
 
   if (posts.length === 0) {

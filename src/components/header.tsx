@@ -4,7 +4,7 @@ import { auth } from "~/server/auth";
 import { HeaderNav } from "./header-nav";
 import { UserMenu } from "./user-menu";
 import { Button } from "~/components/ui/button";
-import { AnimatedHeaderWrapper } from "./animated-header";
+import { AnimatedNavBar } from "./animated-header";
 import { User } from "lucide-react";
 import { api } from "~/trpc/server";
 import { Link } from "~/i18n/navigation";
@@ -59,119 +59,115 @@ export async function Header() {
   ];
 
   return (
-    <AnimatedHeaderWrapper>
-      <header className="fixed top-0 z-50 w-full bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 pt-(--safe-top)">
-        {/* Top Bar */}
-        <div 
-          className="border-b border-border/40"
-        >
-          <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:h-20 pl-[max(1rem,var(--safe-left))] pr-[max(1rem,var(--safe-right))]">
-            {/* Left Section: Burger Menu (mobile) / Social Links (desktop) */}
-            <div className="flex items-center gap-2">
-              {/* Hamburger Menu - Left on mobile, right on desktop */}
-              <div className="md:hidden">
-                <HeaderNav 
-                  categories={categories}
-                  staticNavItems={staticNavItems}
-                  session={session} 
-                />
-              </div>
-              
-              {/* Social Links - Hidden on mobile, visible on tablet+ */}
-              {socialLinks.map((social) => (
-                <Link
-                  key={social.icon}
-                  href={social.href}
-                  className="group hidden h-9 w-9 items-center justify-center rounded-full border border-border/40 transition-all duration-300 hover:scale-110 hover:border-primary hover:bg-primary/10 hover:text-primary md:flex"
-                  aria-label={social.label}
-                >
-                  <SocialIcon icon={social.icon} />
-                </Link>
-              ))}
-            </div>
-
-            {/* Center Section: Logo */}
-            <Link
-              href="/"
-              className="absolute left-1/2 -translate-x-1/2 transition-all duration-300 hover:scale-105 hover:opacity-90"
-            >
-              <Image
-                src="/logo.png"
-                alt="JEMSO"
-                width={110}
-                height={37}
-                className="h-[16px] w-auto sm:h-[19px]"
-                priority
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 pt-(--safe-top)">
+      {/* Top Bar - Always visible */}
+      <div className="border-b border-border/40">
+        <div className="container relative mx-auto flex h-16 items-center justify-between px-4 sm:h-20 pl-[max(1rem,var(--safe-left))] pr-[max(1rem,var(--safe-right))]">
+          {/* Left Section: Burger Menu (mobile) / Social Links (desktop) */}
+          <div className="relative z-10 flex items-center gap-2">
+            {/* Hamburger Menu - Left on mobile, right on desktop */}
+            <div className="md:hidden">
+              <HeaderNav 
+                categories={categories}
+                staticNavItems={staticNavItems}
+                session={session} 
               />
-            </Link>
+            </div>
+            
+            {/* Social Links - Hidden on mobile, visible on tablet+ */}
+            {socialLinks.map((social) => (
+              <Link
+                key={social.icon}
+                href={social.href}
+                className="group hidden h-9 w-9 items-center justify-center rounded-full border border-border/40 transition-all duration-300 hover:scale-110 hover:border-primary hover:bg-primary/10 hover:text-primary md:flex"
+                aria-label={social.label}
+              >
+                <SocialIcon icon={social.icon} />
+              </Link>
+            ))}
+          </div>
 
-            {/* Right Section: User Actions */}
-            <div className="flex items-center gap-2">
-              {/* Language Switcher */}
-              <LanguageSwitcherCompact />
+          {/* Center Section: Logo */}
+          <Link
+            href="/"
+            className="absolute left-1/2 z-0 -translate-x-1/2 transition-all duration-300 hover:scale-105 hover:opacity-90"
+          >
+            <Image
+              src="/logo.png"
+              alt="JEMSO"
+              width={110}
+              height={37}
+              className="h-[16px] w-auto sm:h-[19px]"
+              priority
+            />
+          </Link>
 
-              {/* My Page / Auth */}
-              {session?.user ? (
-                <UserMenu user={session.user} />
-              ) : (
-                <>
-                  {/* Mobile: Icon only */}
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="flex h-9 w-9 items-center justify-center p-0 transition-colors duration-300 hover:bg-primary hover:text-primary-foreground sm:hidden" 
-                    asChild
-                  >
-                    <Link href="/auth/sign-in">
-                      <User className="h-4 w-4" />
-                      <span className="sr-only">{t("myProfile")}</span>
-                    </Link>
-                  </Button>
-                  
-                  {/* Desktop: Icon + Text */}
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="hidden h-9 gap-2 transition-colors duration-300 hover:bg-primary hover:text-primary-foreground sm:flex" 
-                    asChild
-                  >
-                    <Link href="/auth/sign-in">
-                      <User className="h-4 w-4" />
-                      <span className="text-sm">{t("myProfile")}</span>
-                    </Link>
-                  </Button>
-                </>
-              )}
+          {/* Right Section: User Actions */}
+          <div className="relative z-10 flex items-center gap-2">
+            {/* Language Switcher */}
+            <LanguageSwitcherCompact />
 
-              {/* Hamburger Menu - Hidden on mobile (shown on left), visible on desktop */}
-              <div className="hidden md:block">
-                <HeaderNav 
-                  categories={categories}
-                  staticNavItems={staticNavItems}
-                  session={session} 
-                />
-              </div>
+            {/* My Page / Auth */}
+            {session?.user ? (
+              <UserMenu user={session.user} />
+            ) : (
+              <>
+                {/* Mobile: Icon only */}
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="flex h-9 w-9 items-center justify-center p-0 transition-colors duration-300 hover:bg-primary hover:text-primary-foreground sm:hidden" 
+                  asChild
+                >
+                  <Link href="/auth/sign-in">
+                    <User className="h-4 w-4" />
+                    <span className="sr-only">{t("myProfile")}</span>
+                  </Link>
+                </Button>
+                
+                {/* Desktop: Icon + Text */}
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="hidden h-9 gap-2 transition-colors duration-300 hover:bg-primary hover:text-primary-foreground sm:flex" 
+                  asChild
+                >
+                  <Link href="/auth/sign-in">
+                    <User className="h-4 w-4" />
+                    <span className="text-sm">{t("myProfile")}</span>
+                  </Link>
+                </Button>
+              </>
+            )}
+
+            {/* Hamburger Menu - Hidden on mobile (shown on left), visible on desktop */}
+            <div className="hidden md:block">
+              <HeaderNav 
+                categories={categories}
+                staticNavItems={staticNavItems}
+                session={session} 
+              />
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Navigation Bar - Second Layer - Hidden on mobile (< md) */}
-        <div className="hidden md:block border-b border-border/40 overflow-hidden" data-nav-bar>
-          <div className="container mx-auto px-4 pl-[max(1rem,var(--safe-left))] pr-[max(1rem,var(--safe-right))]">
-            <nav className="flex items-center justify-center gap-6 py-3 sm:gap-8 sm:py-4">
-              {staticNavItems.map((item) => (
-                <Link
-                  key={item.title}
-                  href={item.href}
-                  className="relative text-sm font-medium uppercase tracking-wide transition-all duration-300 hover:scale-105 hover:text-primary after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full"
-                >
-                  {item.title}
-                </Link>
-              ))}
-            </nav>
-          </div>
+      {/* Navigation Bar - Second Layer - Hides on scroll */}
+      <AnimatedNavBar>
+        <div className="container mx-auto px-4 pl-[max(1rem,var(--safe-left))] pr-[max(1rem,var(--safe-right))]">
+          <nav className="flex items-center justify-center gap-6 py-3 sm:gap-8 sm:py-4">
+            {staticNavItems.map((item) => (
+              <Link
+                key={item.title}
+                href={item.href}
+                className="relative text-sm font-medium uppercase tracking-wide transition-all duration-300 hover:scale-105 hover:text-primary after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full"
+              >
+                {item.title}
+              </Link>
+            ))}
+          </nav>
         </div>
-      </header>
-    </AnimatedHeaderWrapper>
+      </AnimatedNavBar>
+    </header>
   );
 }

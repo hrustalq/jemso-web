@@ -1,12 +1,14 @@
 import { z } from "zod";
-import { paginatedQuerySchema } from "~/server/api/utils";
+import { paginatedQuerySchema, SUPPORTED_LOCALES } from "~/server/api/utils";
 
 export const getPostBySlugDto = z.object({
   slug: z.string(),
+  locale: z.enum(SUPPORTED_LOCALES as [string, ...string[]]).optional(),
 });
 
 export const getPostByIdDto = z.object({
   id: z.string(),
+  locale: z.enum(SUPPORTED_LOCALES as [string, ...string[]]).optional(),
 });
 
 export const listPostsDto = paginatedQuerySchema.extend({
@@ -15,6 +17,7 @@ export const listPostsDto = paginatedQuerySchema.extend({
   tagId: z.string().optional(),
   authorId: z.string().optional(),
   search: z.string().optional(),
+  locale: z.enum(SUPPORTED_LOCALES as [string, ...string[]]).optional(),
 });
 
 export type GetPostBySlugDto = z.infer<typeof getPostBySlugDto>;

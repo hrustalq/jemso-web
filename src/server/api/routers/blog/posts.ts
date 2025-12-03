@@ -6,7 +6,11 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
-import { calculatePagination } from "~/server/api/utils";
+import { 
+  calculatePagination, 
+  applyTranslations,
+  type Translations,
+} from "~/server/api/utils";
 import { requirePermission, hasPermission, getUserTier } from "~/server/api/rbac";
 import { createBlogPostDto } from "./dto/create-post.dto";
 import { updateBlogPostDto } from "./dto/update-post.dto";
@@ -75,12 +79,24 @@ export const postsRouter = createTRPCRouter({
         data: { views: { increment: 1 } },
       });
 
+      // Apply translations if locale is specified
+      const locale = input.locale;
+      if (locale && post.translations) {
+        const translatedPost = applyTranslations(
+          post,
+          post.translations as Translations,
+          locale,
+          ["title", "excerpt", "content", "htmlContent"]
+        );
+        return translatedPost;
+      }
+
       return post;
     }),
 
   // Public: List posts
   list: publicProcedure.input(listPostsDto).query(async ({ ctx, input }) => {
-    const { page, pageSize, published, categoryId, tagId, authorId, search } =
+    const { page, pageSize, published, categoryId, tagId, authorId, search, locale } =
       input;
     const { skip, take } = calculatePagination(page, pageSize, 0);
 
@@ -141,8 +157,21 @@ export const postsRouter = createTRPCRouter({
       }),
     ]);
 
+    // Apply translations if locale is specified
+    const translatedItems = items.map((post) => {
+      if (locale && post.translations) {
+        return applyTranslations(
+          post,
+          post.translations as Translations,
+          locale,
+          ["title", "excerpt", "content", "htmlContent"]
+        );
+      }
+      return post;
+    });
+
     return {
-      items,
+      items: translatedItems,
       page,
       pageSize,
       total,

@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 import { api } from "~/trpc/server";
 import { PromoBannerHero } from "~/components/promo-banner-hero";
 import { CardGrid } from "~/components/card-grid";
@@ -66,7 +66,7 @@ function PromoBannerHeroSkeleton() {
 // News Section Skeleton
 function NewsSectionSkeleton() {
   return (
-    <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16 relative min-h-(--content-height)">
+    <section className="py-8 sm:py-12 md:py-16 relative">
       <div className="container mx-auto px-3 sm:px-4 w-full relative z-10">
         <div className="mb-6 sm:mb-8 flex items-center justify-between">
           <Skeleton className="h-8 w-48" />
@@ -99,7 +99,7 @@ function NewsSectionSkeleton() {
 // Plans Section Skeleton
 function PlansSectionSkeleton() {
   return (
-    <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16 relative min-h-(--content-height)">
+    <section className="py-8 sm:py-12 md:py-16 relative">
       <div className="container mx-auto px-3 sm:px-4 w-full relative z-10">
         <div className="mb-8 sm:mb-12 text-center">
           <Skeleton className="mx-auto h-10 w-64 mb-4" />
@@ -134,7 +134,7 @@ function PlansSectionSkeleton() {
 // Shop Section Skeleton
 function ShopSectionSkeleton() {
   return (
-    <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16 relative min-h-(--content-height)">
+    <section className="py-8 sm:py-12 md:py-16 relative">
       <div className="container mx-auto px-3 sm:px-4 w-full relative z-10">
         <div className="mb-6 sm:mb-8 flex items-center justify-between">
           <Skeleton className="h-8 w-48" />
@@ -166,17 +166,21 @@ function ShopSectionSkeleton() {
 
 // Server components for each section
 async function NewsSection() {
+  // Get current locale
+  const locale = await getLocale();
+  
   const [t, latestPosts] = await Promise.all([
     getTranslations("HomePage"),
     api.blog.posts.list({
       page: 1,
       pageSize: 6,
       published: true,
+      locale, // Pass locale for translations
     }),
   ]);
 
   return (
-    <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16 relative min-h-(--content-height)">
+    <section className="py-8 sm:py-12 md:py-16 relative">
       <SectionBackground variant="slate" intensity="low" />
       <div className="container mx-auto px-3 sm:px-4 w-full relative z-10">
         <SectionHeader
@@ -212,7 +216,7 @@ async function PlansSection() {
   }
 
   return (
-    <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16 relative min-h-(--content-height)">
+    <section className="py-8 sm:py-12 md:py-16 relative">
       <SectionBackground variant="purple" intensity="low" />
       <div className="container mx-auto px-3 sm:px-4 w-full relative z-10">
         <div className="animate animate-scaleIn mb-8 sm:mb-12 text-center px-2">
@@ -240,7 +244,7 @@ async function ShopSection() {
   const t = await getTranslations("HomePage");
 
   return (
-    <section className="snap-start flex items-center justify-center py-8 sm:py-12 md:py-16 relative min-h-(--content-height)">
+    <section className="py-8 sm:py-12 md:py-16 relative">
       <SectionBackground variant="pink" intensity="low" />
       <div className="container mx-auto px-3 sm:px-4 w-full relative z-10">
         <SectionHeader
@@ -257,9 +261,9 @@ async function ShopSection() {
 
 export default async function Home() {
   return (
-    <PageWrapper className="snap-y snap-mandatory overflow-y-auto">
+    <PageWrapper>
       {/* Promotional Banner Hero Section */}
-      <section className="snap-start flex items-center justify-center py-6 sm:py-8 md:py-12 relative min-h-(--content-height)">
+      <section className="py-6 sm:py-8 md:py-12 relative">
         <SectionBackground variant="multi" intensity="low" />
         <div className="container mx-auto px-3 sm:px-4 w-full relative z-10">
           <Suspense fallback={<PromoBannerHeroSkeleton />}>

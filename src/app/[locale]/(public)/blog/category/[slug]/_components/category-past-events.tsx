@@ -1,7 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { format } from "date-fns";
-import { ru } from "date-fns/locale";
+import { ru, enUS } from "date-fns/locale";
+import { getLocale } from "next-intl/server";
 import { Badge } from "~/components/ui/badge";
 import { Card, CardContent } from "~/components/ui/card";
 import { Calendar, MapPin, Users } from "lucide-react";
@@ -14,12 +15,17 @@ interface CategoryPastEventsProps {
 export async function CategoryPastEvents({
   categoryId,
 }: CategoryPastEventsProps) {
+  // Get current locale
+  const locale = await getLocale();
+  const dateLocale = locale === "ru" ? ru : enUS;
+  
   const { items: events } = await api.event.events.list({
     page: 1,
     pageSize: 6,
     published: true,
     categoryId,
     past: true,
+    locale, // Pass locale for translations
   });
 
   if (events.length === 0) {
@@ -90,7 +96,7 @@ export async function CategoryPastEvents({
                       <Calendar className="h-4 w-4" />
                       <span>
                         {format(new Date(event.startDate), "d MMMM yyyy, HH:mm", {
-                          locale: ru,
+                          locale: dateLocale,
                         })}
                       </span>
                     </div>
