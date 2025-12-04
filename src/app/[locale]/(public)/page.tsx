@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { getTranslations, getLocale } from "next-intl/server";
 import { api } from "~/trpc/server";
+import { auth } from "~/server/auth";
 import { PromoBannerHero } from "~/components/promo-banner-hero";
 import { CardGrid } from "~/components/card-grid";
 import { SectionHeader } from "~/components/section-header";
@@ -24,7 +25,7 @@ function PromoBannerHeroSkeleton() {
       {/* Main Banner Skeleton */}
       <div className="overflow-hidden rounded-2xl border border-border/50 bg-card shadow-xl">
         <div className="flex flex-col lg:flex-row">
-          <Skeleton className="aspect-video lg:aspect-[21/9] w-full lg:w-2/3" />
+          <Skeleton className="aspect-video lg:aspect-21/9 w-full lg:w-2/3" />
           <div className="flex flex-col justify-center p-6 sm:p-8 lg:w-1/2 lg:p-10 bg-card">
             <Skeleton className="mb-2 h-5 w-28 rounded-full" />
             <Skeleton className="mb-2 h-4 w-24" />
@@ -50,7 +51,7 @@ function PromoBannerHeroSkeleton() {
             key={i}
             className="flex overflow-hidden rounded-xl border border-border/50 bg-card shadow-md"
           >
-            <Skeleton className="w-1/3 min-w-[120px] sm:min-w-[160px] aspect-[4/3]" />
+            <Skeleton className="w-1/3 min-w-[120px] sm:min-w-[160px] aspect-4/3" />
             <div className="flex-1 p-4 sm:p-5 space-y-3">
               <Skeleton className="h-3 w-24" />
               <Skeleton className="h-5 w-full" />
@@ -209,17 +210,31 @@ async function NewsSection() {
 }
 
 async function PlansSection() {
-  const [t, plans] = await Promise.all([
+  // Fetch plans, translations, and current user's subscription in parallel
+  const [t, plans, session] = await Promise.all([
     getTranslations("HomePage"),
     api.subscriptions.plans.list({
       page: 1,
       pageSize: 10,
       isActive: true,
     }),
+    auth(),
   ]);
 
   if (plans.items.length === 0) {
     return null;
+  }
+
+  // Fetch current subscription if user is logged in (server-side)
+  let currentPlanId: string | null = null;
+  if (session?.user) {
+    try {
+      const subscription = await api.subscriptions.subscriptions.myCurrent();
+      currentPlanId = subscription?.planId ?? null;
+    } catch {
+      // User doesn't have a subscription, that's fine
+      currentPlanId = null;
+    }
   }
 
   return (
@@ -241,6 +256,7 @@ async function PlansSection() {
             price: Number(plan.price),
             isPopular: plan.slug === "advanced",
           }))}
+          currentPlanId={currentPlanId}
         />
       </div>
     </section>

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 interface Category {
   id: string;
@@ -20,10 +21,12 @@ export function AnimatedCategoryTags({
   categories,
   currentCategory,
 }: AnimatedCategoryTagsProps) {
+  const t = useTranslations("Blog");
+  
   return (
     <div className="mb-12">
       <h2 className="mb-4 text-xl font-bold uppercase tracking-tight">
-        Категории
+        {t("categories")}
       </h2>
       <div className="flex flex-wrap gap-3">
         <Link
@@ -34,7 +37,7 @@ export function AnimatedCategoryTags({
               : "border-border/40 bg-card hover:border-primary hover:text-primary"
           }`}
         >
-          Все статьи
+          {t("allPosts")}
         </Link>
         {categories.map((category, index) => (
           <Link

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { cn } from "~/lib/utils";
 
 interface AnimatedNavBarProps {
@@ -10,21 +10,31 @@ interface AnimatedNavBarProps {
 export function AnimatedNavBar({ children }: AnimatedNavBarProps) {
   const [isNavHidden, setIsNavHidden] = useState(false);
   const lastScrollRef = useRef(0);
+  const ticking = useRef(false);
+
+  const updateNavState = useCallback(() => {
+    const currentScroll = window.scrollY;
+
+    // Scrolling down and past 100px - hide nav bar
+    if (currentScroll > 100 && currentScroll > lastScrollRef.current) {
+      setIsNavHidden(true);
+    }
+    // Scrolling up or at top - show nav bar
+    else if (currentScroll < lastScrollRef.current || currentScroll < 50) {
+      setIsNavHidden(false);
+    }
+
+    lastScrollRef.current = currentScroll;
+    ticking.current = false;
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
-      const currentScroll = window.scrollY;
-
-      // Scrolling down and past 100px - hide nav bar
-      if (currentScroll > 100 && currentScroll > lastScrollRef.current) {
-        setIsNavHidden(true);
+      // Use requestAnimationFrame for throttling
+      if (!ticking.current) {
+        requestAnimationFrame(updateNavState);
+        ticking.current = true;
       }
-      // Scrolling up or at top - show nav bar
-      else if (currentScroll < lastScrollRef.current || currentScroll < 50) {
-        setIsNavHidden(false);
-      }
-
-      lastScrollRef.current = currentScroll;
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -32,7 +42,7 @@ export function AnimatedNavBar({ children }: AnimatedNavBarProps) {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [updateNavState]);
 
   return (
     <div

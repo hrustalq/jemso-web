@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useTransition, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { Mail, User, CheckCircle2 } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -18,6 +19,7 @@ export function CategoryNewsletterForm({
   categoryName,
   categoryColor 
 }: CategoryNewsletterFormProps) {
+  const t = useTranslations("CategoryNewsletter");
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [success, setSuccess] = useState(false);
@@ -62,7 +64,7 @@ export function CategoryNewsletterForm({
       const data = (await response.json()) as { error?: string };
 
       if (!response.ok) {
-        throw new Error(data.error ?? "Failed to subscribe");
+        throw new Error(data.error ?? t("errorMessage"));
       }
 
       startTransition(() => {
@@ -71,9 +73,9 @@ export function CategoryNewsletterForm({
         setName("");
       });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to subscribe to category newsletter");
+      setError(err instanceof Error ? err.message : t("errorMessage"));
     }
-  }, [email, name, categoryId, startTransition]);
+  }, [email, name, categoryId, startTransition, t]);
 
   return (
     <Card 
@@ -87,10 +89,10 @@ export function CategoryNewsletterForm({
           className="text-xl sm:text-2xl"
           style={{ color: categoryColor ?? undefined }}
         >
-          Подписка на новости {categoryName}
+          {t("title", { category: categoryName })}
         </CardTitle>
         <CardDescription>
-          Получайте последние новости и события по категории {categoryName}
+          {t("description", { category: categoryName })}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -99,10 +101,10 @@ export function CategoryNewsletterForm({
             <CheckCircle2 className="mx-auto h-12 w-12 text-primary" />
             <div className="space-y-2">
               <h3 className="text-lg font-bold text-primary">
-                Спасибо за подписку!
+                {t("successTitle")}
               </h3>
               <p className="text-sm text-muted-foreground">
-                Вы успешно подписались на новости категории {categoryName}.
+                {t("successMessage", { category: categoryName })}
               </p>
             </div>
           </div>
@@ -111,14 +113,14 @@ export function CategoryNewsletterForm({
             {/* Name Input - Optional */}
             <div className="space-y-2">
               <Label htmlFor="category-newsletter-name">
-                Имя (необязательно)
+                {t("nameLabel")}
               </Label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   id="category-newsletter-name"
                   type="text"
-                  placeholder="Ваше имя"
+                  placeholder={t("namePlaceholder")}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="pl-10"
@@ -130,7 +132,7 @@ export function CategoryNewsletterForm({
             {/* Email Input - Required */}
             <div className="space-y-2">
               <Label htmlFor="category-newsletter-email">
-                Email <span className="text-destructive">*</span>
+                {t("emailLabel")} <span className="text-destructive">*</span>
               </Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -166,7 +168,7 @@ export function CategoryNewsletterForm({
                 backgroundColor: categoryColor ?? undefined,
               }}
             >
-              {isPending ? "Отправка..." : "Подписаться"}
+              {isPending ? t("submitting") : t("submitButton")}
             </Button>
           </form>
         )}

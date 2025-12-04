@@ -1,3 +1,4 @@
+import { cache } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -17,11 +18,16 @@ interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
 }
 
+// Cache the post fetch to deduplicate between generateMetadata and page component
+const getPost = cache(async (slug: string) => {
+  return api.blog.posts.getBySlug({ slug });
+});
+
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params;
 
   try {
-    const post = await api.blog.posts.getBySlug({ slug });
+    const post = await getPost(slug);
 
     return {
       title: post.title,
@@ -72,7 +78,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
 
   try {
-    const post = await api.blog.posts.getBySlug({ slug });
+    const post = await getPost(slug);
 
     return (
       <HydrateClient>

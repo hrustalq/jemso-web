@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { format } from "date-fns";
 import { ru, enUS } from "date-fns/locale";
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Badge } from "~/components/ui/badge";
 import { Card, CardContent } from "~/components/ui/card";
 import { Calendar, MapPin, Users } from "lucide-react";
@@ -15,8 +15,9 @@ interface CategoryUpcomingEventsProps {
 export async function CategoryUpcomingEvents({
   categoryId,
 }: CategoryUpcomingEventsProps) {
-  // Get current locale
+  // Get current locale and translations
   const locale = await getLocale();
+  const t = await getTranslations("Blog.categoryUpcomingEvents");
   const dateLocale = locale === "ru" ? ru : enUS;
   
   const { items: events } = await api.event.events.list({
@@ -37,17 +38,17 @@ export async function CategoryUpcomingEvents({
       <div className="mb-6 flex flex-col gap-4 md:mb-8 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight md:text-3xl">
-            Предстоящие события
+            {t("title")}
           </h2>
           <p className="mt-2 text-sm text-muted-foreground md:text-base">
-            Скоро начнутся эти мероприятия
+            {t("description")}
           </p>
         </div>
         <Link
           href={`/events?category=${categoryId}`}
           className="text-sm font-semibold text-primary hover:underline md:text-base"
         >
-          Смотреть все →
+          {t("viewAll")}
         </Link>
       </div>
 
@@ -74,7 +75,7 @@ export async function CategoryUpcomingEvents({
                   <div className="mb-3 flex flex-wrap gap-2">
                     {event.price.toNumber() === 0 ? (
                       <Badge variant="outline" className="bg-green-500/10">
-                        Бесплатно
+                        {t("free")}
                       </Badge>
                     ) : (
                       <Badge variant="outline">
@@ -83,7 +84,7 @@ export async function CategoryUpcomingEvents({
                     )}
                     {isFull && (
                       <Badge variant="outline" className="bg-red-500/10">
-                        Нет мест
+                        {t("soldOut")}
                       </Badge>
                     )}
                   </div>

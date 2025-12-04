@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { api } from "~/trpc/server";
 
 interface CategoryNewsProps {
@@ -8,8 +8,9 @@ interface CategoryNewsProps {
 }
 
 export async function CategoryNews({ categoryId }: CategoryNewsProps) {
-  // Get current locale
+  // Get current locale and translations
   const locale = await getLocale();
+  const t = await getTranslations("Blog.categoryNews");
   
   const { items: posts } = await api.blog.posts.list({
     page: 1,
@@ -23,12 +24,15 @@ export async function CategoryNews({ categoryId }: CategoryNewsProps) {
     return null;
   }
 
+  // Get locale for date formatting
+  const dateLocale = locale === "ru" ? "ru-RU" : "en-US";
+
   return (
     <section>
       <div className="mb-6 md:mb-8">
-        <h2 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">Новости</h2>
+        <h2 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">{t("title")}</h2>
         <p className="mt-2 text-sm text-muted-foreground md:text-base">
-          Последние статьи и новости в этой категории
+          {t("description")}
         </p>
       </div>
 
@@ -53,7 +57,7 @@ export async function CategoryNews({ categoryId }: CategoryNewsProps) {
             <div className="p-6">
               <div className="mb-4 text-sm text-foreground/70">
                 {post.publishedAt
-                  ? new Date(post.publishedAt).toLocaleDateString("ru-RU")
+                  ? new Date(post.publishedAt).toLocaleDateString(dateLocale)
                   : ""}
               </div>
               <h2 className="mb-3 text-2xl font-bold text-foreground transition-colors group-hover:text-primary">
@@ -63,9 +67,9 @@ export async function CategoryNews({ categoryId }: CategoryNewsProps) {
                 <p className="mb-6 text-base text-foreground/80">{post.excerpt}</p>
               )}
               <div className="flex items-center gap-4 text-sm text-foreground/70">
-                <span>{post.views} просмотров</span>
+                <span>{t("views", { count: post.views })}</span>
                 <span>•</span>
-                <span>{post._count.comments} комментариев</span>
+                <span>{t("comments", { count: post._count.comments })}</span>
               </div>
             </div>
           </Link>

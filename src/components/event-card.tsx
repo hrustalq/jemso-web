@@ -1,5 +1,6 @@
 "use client";
 
+import { memo, useCallback, useMemo } from "react";
 import Link from "next/link";
 import { Calendar, MapPin, Users, Globe, Navigation } from "lucide-react";
 import { Badge } from "~/components/ui/badge";
@@ -42,31 +43,31 @@ interface EventCardProps {
   events: Event[];
 }
 
-export function EventCard({ events }: EventCardProps) {
+export const EventCard = memo(function EventCard({ events }: EventCardProps) {
   const t = useTranslations("Events");
   const locale = useLocale();
   
-  const formatDate = (date: Date) => {
+  const formatDate = useCallback((date: Date) => {
     return new Date(date).toLocaleDateString(locale, {
       day: "numeric",
       month: "short",
       year: "numeric",
     });
-  };
+  }, [locale]);
   
-  const formatDistance = (distance: number) => {
+  const formatDistance = useCallback((distance: number) => {
     if (distance < 1) {
-      return `${Math.round(distance * 1000)} м`;
+      return `${Math.round(distance * 1000)} ${t("meters")}`;
     }
-    return `${distance.toFixed(1)} км`;
-  };
+    return `${distance.toFixed(1)} ${t("kilometers")}`;
+  }, [t]);
 
-  const isPastEvent = (endDate: Date) => {
+  const isPastEvent = useCallback((endDate: Date) => {
     return new Date(endDate) < new Date();
-  };
+  }, []);
 
   // Generate calendar file (.ics) for adding event to calendar
-  const generateCalendarEvent = (event: Event) => {
+  const generateCalendarEvent = useCallback((event: Event) => {
     const formatICSDate = (date: Date) => {
       return new Date(date)
         .toISOString()
@@ -96,9 +97,9 @@ export function EventCard({ events }: EventCardProps) {
     ].join("\r\n");
 
     return `data:text/calendar;charset=utf-8,${encodeURIComponent(icsContent)}`;
-  };
+  }, []);
 
-  const handleAddToCalendar = (e: React.MouseEvent, event: Event) => {
+  const handleAddToCalendar = useCallback((e: React.MouseEvent, event: Event) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -109,15 +110,26 @@ export function EventCard({ events }: EventCardProps) {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  };
+  }, [generateCalendarEvent]);
 
-  const handleMapClick = (e: React.MouseEvent, location: string) => {
+  const handleMapClick = useCallback((e: React.MouseEvent, location: string) => {
     e.preventDefault();
     e.stopPropagation();
 
     const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
     window.open(mapsUrl, "_blank", "noopener,noreferrer");
-  };
+  }, []);
+
+  // Memoize category badge styles
+  const getCategoryStyle = useMemo(() => {
+    const styleCache = new Map<string | null, React.CSSProperties>();
+    return (color: string | null) => {
+      if (!styleCache.has(color)) {
+        styleCache.set(color, { backgroundColor: color ?? undefined });
+      }
+      return styleCache.get(color)!;
+    };
+  }, []);
 
   return (
     <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -135,14 +147,13 @@ export function EventCard({ events }: EventCardProps) {
                 alt={event.title}
                 width={800}
                 height={450}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="h-full w-full object-cover"
               />
               {event.category && (
                 <Badge
                   className="absolute right-2 top-2 sm:right-3 sm:top-3 text-xs"
-                  style={{
-                    backgroundColor: event.category.color ?? undefined,
-                  }}
+                  style={getCategoryStyle(event.category.color)}
                 >
                   {event.category.name}
                 </Badge>
@@ -153,9 +164,7 @@ export function EventCard({ events }: EventCardProps) {
               {event.category && (
                 <Badge
                   className="absolute right-2 top-2 sm:right-3 sm:top-3 text-xs"
-                  style={{
-                    backgroundColor: event.category.color ?? undefined,
-                  }}
+                  style={getCategoryStyle(event.category.color)}
                 >
                   {event.category.name}
                 </Badge>
@@ -241,4 +250,4 @@ export function EventCard({ events }: EventCardProps) {
       ))}
     </div>
   );
-}
+});

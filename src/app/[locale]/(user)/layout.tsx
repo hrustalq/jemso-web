@@ -23,13 +23,13 @@ export default async function UserLayout({
         <UserHeader user={session.user} />
 
         {/* Sidebar - hidden on mobile, visible on desktop */}
-        <aside className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col border-r border-border bg-card/50 backdrop-blur-sm pt-16">
+        <aside className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col border-r border-border bg-card/50 backdrop-blur-sm pt-[calc(4rem+var(--safe-top))]">
           <UserSidebar />
         </aside>
 
         {/* Main content area */}
-        <main className="flex-1 lg:pl-64 min-h-screen pb-20 lg:pb-0 pt-16">
-          <div className="container mx-auto px-4 py-6 md:px-6 lg:px-8">
+        <main className="flex-1 lg:pl-64 min-h-screen pb-20 lg:pb-[var(--safe-bottom)] pt-[calc(4rem+var(--safe-top))]">
+          <div className="container mx-auto px-4 py-6 md:px-6 lg:px-8 max-w-7xl">
             {children}
           </div>
         </main>

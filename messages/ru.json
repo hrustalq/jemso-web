@@ -197,6 +197,176 @@
       "ogrn": "ОГРНИП"
     }
   },
+  "Newsletter": {
+    "title": "Подписка на рассылку",
+    "subtitle": "Получайте последние новости и обновления.",
+    "nameLabel": "Имя (необязательно)",
+    "namePlaceholder": "Ваше имя",
+    "emailLabel": "Email",
+    "submitButton": "Подписаться",
+    "submitting": "Отправка...",
+    "successTitle": "Спасибо за подписку!",
+    "successMessage": "Вы успешно подписались на нашу рассылку.",
+    "errorMessage": "Не удалось подписаться на рассылку"
+  },
+  "ShopPreview": {
+    "features": {
+      "original": {
+        "title": "Оригинальная продукция",
+        "description": "Официальные товары и мерч JEMSO"
+      },
+      "delivery": {
+        "title": "Быстрая доставка",
+        "description": "Доставка по всей России за 2-5 дней"
+      },
+      "quality": {
+        "title": "Гарантия качества",
+        "description": "100% гарантия на всю продукцию"
+      }
+    },
+    "cta": {
+      "title": "Магазин JEMSO",
+      "description": "Эксклюзивная одежда, аксессуары и снаряжение для автоспорта. Станьте частью команды JEMSO!",
+      "shopButton": "Перейти в магазин",
+      "collectionsButton": "Посмотреть коллекции"
+    }
+  },
+  "Plans": {
+    "popular": "Популярный",
+    "perMonth": "в месяц",
+    "perYear": "в год",
+    "lifetime": "навсегда",
+    "trialPeriod": "Пробный период {days} дней",
+    "currentPlan": "Текущий план",
+    "selectPlan": "Выбрать план"
+  },
+  "CardGrid": {
+    "views": "просмотров",
+    "comments": "комментариев"
+  },
+  "UserMenu": {
+    "profile": "Профиль",
+    "settings": "Настройки",
+    "subscription": "Подписка",
+    "adminPanel": "Админ панель",
+    "signOut": "Выйти"
+  },
+  "HeaderNav": {
+    "openMenu": "Открыть меню",
+    "menu": "Меню",
+    "menuDescription": "Навигационное меню с категориями, страницами и действиями пользователя",
+    "categories": "Направления",
+    "user": "Пользователь",
+    "personalCabinet": "Личный кабинет",
+    "dashboard": "Главная",
+    "myEvents": "Мои события",
+    "content": "Контент",
+    "news": "Новости",
+    "settings": "Настройки",
+    "profile": "Профиль",
+    "subscription": "Подписка",
+    "signOut": "Выйти",
+    "signIn": "Войти",
+    "signUp": "Регистрация"
+  },
+  "CategoryNewsletter": {
+    "title": "Подписка на новости {category}",
+    "description": "Получайте последние новости и события по категории {category}",
+    "nameLabel": "Имя (необязательно)",
+    "namePlaceholder": "Ваше имя",
+    "emailLabel": "Email",
+    "submitButton": "Подписаться",
+    "submitting": "Отправка...",
+    "successTitle": "Спасибо за подписку!",
+    "successMessage": "Вы успешно подписались на новости категории {category}.",
+    "errorMessage": "Не удалось подписаться на рассылку категории"
+  },
+  "Payment": {
+    "title": "Оплата",
+    "description": "Введите платежные данные для подписки на {item}.",
+    "total": "Итого: {amount} {currency}",
+    "cardNumber": "Номер карты",
+    "expiry": "Срок действия",
+    "cvc": "CVC",
+    "payButton": "Оплатить {amount} {currency}",
+    "error": "Ошибка оплаты",
+    "testNote": "Тестовая оплата: Используйте любой номер карты. Используйте 4000... для имитации ошибки."
+  },
+  "UserHeader": {
+    "dashboard": "Главная",
+    "myEvents": "Мои события",
+    "content": "Контент",
+    "news": "Новости",
+    "profile": "Профиль",
+    "security": "Безопасность",
+    "notifications": "Уведомления",
+    "subscription": "Подписка",
+    "personalCabinet": "Личный кабинет"
+  },
+  "Checkout": {
+    "billingDetails": "Платёжные данные",
+    "billingDescription": "Информация для оформления подписки",
+    "name": "Имя",
+    "email": "Email",
+    "address": "Адрес",
+    "city": "Город",
+    "country": "Страна",
+    "postalCode": "Индекс",
+    "paymentMethod": "Способ оплаты",
+    "paymentDescription": "Данные банковской карты",
+    "cardNumber": "Номер карты",
+    "cardExpiry": "Срок действия",
+    "cardCvc": "CVC",
+    "dataProtected": "Ваши данные защищены шифрованием",
+    "testPaymentNote": "Тестовая оплата: Используйте любой номер карты. Используйте 4000... для имитации ошибки.",
+    "yourOrder": "Ваш заказ",
+    "included": "Включено:",
+    "promoCode": "Промокод",
+    "enterCode": "Введите код",
+    "apply": "Применить",
+    "planPrice": "Стоимость плана",
+    "discount": "Скидка",
+    "total": "Итого",
+    "perMonth": "мес",
+    "perYear": "год",
+    "lifetime": "навсегда",
+    "firstDaysFree": "Первые {days} дней бесплатно",
+    "processing": "Обработка...",
+    "payAmount": "Оплатить {amount}",
+    "subscribe": "Оформить подписку",
+    "termsAgreement": "Нажимая кнопку, вы соглашаетесь с",
+    "termsOfService": "условиями использования",
+    "and": "и",
+    "privacyPolicy": "политикой конфиденциальности",
+    "promoApplied": "Промокод применён",
+    "promoRemoved": "Промокод удалён",
+    "subscriptionSuccess": "Подписка успешно оформлена!",
+    "sessionNotFound": "Сессия оформления не найдена",
+    "enterName": "Введите имя",
+    "enterEmail": "Введите email",
+    "fillCardDetails": "Заполните данные карты",
+    "loadingError": "Не удалось загрузить данные оформления",
+    "backToPricing": "Вернуться к тарифам",
+    "tryAgain": "Попробовать снова",
+    "popular": "Популярный",
+    "namePlaceholder": "Иван Иванов",
+    "emailPlaceholder": "ivan@example.com",
+    "addressPlaceholder": "ул. Примерная, д. 1",
+    "cityPlaceholder": "Москва",
+    "countryPlaceholder": "Россия",
+    "postalPlaceholder": "123456"
+  },
+  "PricingPage": {
+    "popular": "Популярный",
+    "current": "Текущий",
+    "free": "Бесплатно",
+    "perMonth": "мес",
+    "perYear": "год",
+    "lifetime": "навсегда",
+    "trialPeriod": "Пробный период {days} дней",
+    "currentPlan": "Текущий план",
+    "selectPlan": "Выбрать план"
+  },
   "Events": {
     "title": "СОБЫТИЯ",
     "subtitle": "Находите и участвуйте в интересных событиях",
@@ -218,7 +388,9 @@
     "openInMaps": "Открыть на карте",
     "away": "от вас",
     "addToCalendar": "Добавить в календарь",
-    "participants": "участников"
+    "participants": "участников",
+    "meters": "м",
+    "kilometers": "км"
   },
   "News": {
     "title": "Новости",
@@ -233,6 +405,7 @@
   "Blog": {
     "title": "Блог",
     "categories": "Категории",
+    "allPosts": "Все статьи",
     "noPosts": "Записи не найдены",
     "byAuthor": "Автор: {author}",
     "publishedAt": "Опубликовано: {date}",
@@ -244,7 +417,36 @@
     "emptyStateText": "Скоро здесь появятся интересные материалы!",
     "followContentTitle": "Следите за нашим контентом",
     "followContentText": "Подписывайтесь на наш YouTube канал для освещения мероприятий, закулисного контента и видео об автомобильном образе жизни.",
-    "youtubeChannel": "Наш YouTube канал"
+    "youtubeChannel": "Наш YouTube канал",
+    "categoryPage": {
+      "exploreContent": "Изучайте контент по направлению \"{category}\": новости, события и статьи на JEMSO.",
+      "notFound": "Направление не найдено",
+      "notFoundDescription": "Запрашиваемое направление не найдено.",
+      "backToBlog": "Назад к блогу",
+      "postsCount": "{count} статей",
+      "eventsCount": "{count} событий"
+    },
+    "categoryNews": {
+      "title": "Новости",
+      "description": "Последние статьи и новости в этой категории",
+      "views": "{count} просмотров",
+      "comments": "{count} комментариев"
+    },
+    "categoryUpcomingEvents": {
+      "title": "Предстоящие события",
+      "description": "Скоро начнутся эти мероприятия",
+      "viewAll": "Смотреть все →",
+      "free": "Бесплатно",
+      "soldOut": "Нет мест"
+    },
+    "categoryPastEvents": {
+      "title": "Прошедшие события",
+      "description": "Мероприятия, которые уже состоялись",
+      "viewAll": "Смотреть все →",
+      "completed": "Завершено",
+      "free": "Бесплатно",
+      "soldOut": "Нет мест"
+    }
   },
   "Shop": {
     "title": "Магазин",

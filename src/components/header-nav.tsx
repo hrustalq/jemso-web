@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { 
   Menu, 
   User, 
@@ -10,22 +12,19 @@ import {
   Newspaper,
   BookOpen,
   Settings,
-  CreditCard,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  SheetClose,
 } from "~/components/ui/sheet";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "~/components/ui/accordion";
 import { Separator } from "~/components/ui/separator";
 import type { Session } from "next-auth";
 
@@ -42,6 +41,9 @@ interface HeaderNavProps {
 }
 
 export function HeaderNav({ categories, staticNavItems, session }: HeaderNavProps) {
+  const t = useTranslations("HeaderNav");
+  const [categoriesOpen, setCategoriesOpen] = useState(false);
+  
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -49,163 +51,172 @@ export function HeaderNav({ categories, staticNavItems, session }: HeaderNavProp
           variant="ghost" 
           size="icon" 
           className="h-9 w-9 transition-colors duration-300 hover:bg-primary hover:text-primary-foreground" 
-          aria-label="Открыть меню"
+          aria-label={t("openMenu")}
         >
           <Menu className="h-5 w-5" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="w-[300px] sm:w-[350px] flex flex-col">
-        <SheetHeader className="border-b border-border pb-4">
+      <SheetContent side="right" className="w-[280px] sm:w-[320px] flex flex-col p-0">
+        <SheetHeader className="border-b border-border px-4 py-3 shrink-0">
           <SheetTitle className="text-left text-lg font-bold uppercase tracking-wider">
-            Меню
+            {t("menu")}
           </SheetTitle>
+          <SheetDescription className="sr-only">
+            {t("menuDescription")}
+          </SheetDescription>
         </SheetHeader>
 
-        {/* Navigation Links */}
-        <nav className="flex flex-col flex-1">
-          {/* Collapsible Categories Section */}
-          {categories.length > 0 && (
-            <>
-              <Accordion type="single" collapsible className="w-full">
-                <AccordionItem value="categories" className="border-none">
-                  <AccordionTrigger className="rounded-md px-4 py-4 text-sm font-bold uppercase tracking-wide hover:bg-accent hover:no-underline">
-                    Направления
-                  </AccordionTrigger>
-                  <AccordionContent className="pb-0">
-                    <div className="flex flex-col gap-1 pt-2">
-                      {categories.map((category) => (
+        {/* Scrollable Navigation Container */}
+        <div className="flex-1 overflow-y-auto min-h-0">
+          <nav className="flex flex-col">
+            {/* Collapsible Categories Section */}
+            {categories.length > 0 && (
+              <div className="w-full">
+                <button
+                  onClick={() => setCategoriesOpen(!categoriesOpen)}
+                  className="flex w-full items-center justify-between px-4 py-3 text-sm font-bold uppercase tracking-wide hover:bg-accent transition-colors"
+                >
+                  <span>{t("categories")}</span>
+                  {categoriesOpen ? (
+                    <ChevronUp className="h-4 w-4" />
+                  ) : (
+                    <ChevronDown className="h-4 w-4" />
+                  )}
+                </button>
+                {categoriesOpen && (
+                  <div className="flex flex-col bg-accent/30">
+                    {categories.map((category) => (
+                      <SheetClose key={category.slug} asChild>
                         <Link
-                          key={category.slug}
                           href={`/categories/${category.slug}`}
-                          className="block rounded-md px-4 py-3 text-sm transition-colors hover:bg-accent hover:text-primary"
+                          className="block px-6 py-2.5 text-sm transition-colors hover:bg-accent hover:text-primary"
                         >
                           {category.name}
                         </Link>
-                      ))}
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
+                      </SheetClose>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Static Navigation Items */}
+            {staticNavItems.map((item) => (
+              <SheetClose key={item.title} asChild>
+                <Link
+                  href={item.href}
+                  className="px-4 py-3 text-sm font-bold uppercase tracking-wide transition-colors hover:bg-accent hover:text-primary"
+                >
+                  {item.title}
+                </Link>
+              </SheetClose>
+            ))}
+          </nav>
+
+          {/* User Dashboard Links - Scrollable with nav when logged in */}
+          {session?.user && (
+            <>
+              <Separator />
+              <div>
+                <p className="px-4 py-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  {t("personalCabinet")}
+                </p>
+                <SheetClose asChild>
+                  <Link 
+                    href="/dashboard" 
+                    className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-accent transition-colors"
+                  >
+                    <LayoutDashboard className="h-4 w-4" />
+                    {t("dashboard")}
+                  </Link>
+                </SheetClose>
+                <SheetClose asChild>
+                  <Link 
+                    href="/dashboard/events" 
+                    className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-accent transition-colors"
+                  >
+                    <Calendar className="h-4 w-4" />
+                    {t("myEvents")}
+                  </Link>
+                </SheetClose>
+                <SheetClose asChild>
+                  <Link 
+                    href="/dashboard/content" 
+                    className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-accent transition-colors"
+                  >
+                    <BookOpen className="h-4 w-4" />
+                    {t("content")}
+                  </Link>
+                </SheetClose>
+                <SheetClose asChild>
+                  <Link 
+                    href="/dashboard/news" 
+                    className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-accent transition-colors"
+                  >
+                    <Newspaper className="h-4 w-4" />
+                    {t("news")}
+                  </Link>
+                </SheetClose>
+              </div>
             </>
           )}
+        </div>
 
-          {/* Static Navigation Items */}
-          {staticNavItems.map((item) => (
-            <Link
-              key={item.title}
-              href={item.href}
-              className="rounded-md px-4 py-4 text-sm font-bold uppercase tracking-wide transition-colors hover:bg-accent hover:text-primary"
-            >
-              {item.title}
-            </Link>
-          ))}
-        </nav>
-
-        <Separator className="mt-auto" />
-
-        {/* User Info or Auth Buttons */}
-        {session?.user ? (
-          <div className="space-y-4 pb-[calc(var(--safe-bottom)+1rem)]">
-            <div className="flex items-center gap-3 rounded-lg bg-accent/50 p-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                <User className="h-6 w-6" />
+        {/* Fixed Footer Section */}
+        <div className="shrink-0 border-t border-border pb-[var(--safe-bottom)]">
+          {session?.user ? (
+            <>
+              {/* User Info */}
+              <div className="flex items-center gap-3 px-4 py-3 bg-accent/30">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                  <User className="h-4 w-4" />
+                </div>
+                <div className="flex-1 overflow-hidden">
+                  <p className="truncate text-sm font-medium">
+                    {session.user.name ?? t("user")}
+                  </p>
+                  <p className="truncate text-xs text-muted-foreground">
+                    {session.user.email}
+                  </p>
+                </div>
               </div>
-              <div className="flex-1 overflow-hidden">
-                <p className="truncate text-sm font-medium">
-                  {session.user.name ?? "Пользователь"}
-                </p>
-                <p className="truncate text-xs text-muted-foreground">
-                  {session.user.email}
-                </p>
-              </div>
-            </div>
-            
-            {/* User Space Links */}
-            <div className="space-y-1">
-              <p className="px-2 py-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Личный кабинет
-              </p>
-              <Link 
-                href="/dashboard" 
-                className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm hover:bg-accent transition-colors"
-              >
-                <LayoutDashboard className="h-4 w-4" />
-                Главная
-              </Link>
-              <Link 
-                href="/dashboard/events" 
-                className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm hover:bg-accent transition-colors"
-              >
-                <Calendar className="h-4 w-4" />
-                Мои события
-              </Link>
-              <Link 
-                href="/dashboard/content" 
-                className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm hover:bg-accent transition-colors"
-              >
-                <BookOpen className="h-4 w-4" />
-                Контент
-              </Link>
-              <Link 
-                href="/dashboard/news" 
-                className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm hover:bg-accent transition-colors"
-              >
-                <Newspaper className="h-4 w-4" />
-                Новости
-              </Link>
-            </div>
-
-            <Separator />
-            
-            {/* Settings Links */}
-            <div className="space-y-1">
-              <p className="px-2 py-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                <Settings className="inline-block h-3 w-3 mr-1" />
-                Настройки
-              </p>
-              <Link 
-                href="/dashboard/settings/profile" 
-                className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm hover:bg-accent transition-colors"
-              >
-                <User className="h-4 w-4" />
-                Профиль
-              </Link>
-              <Link 
-                href="/dashboard/settings/subscription" 
-                className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm hover:bg-accent transition-colors"
-              >
-                <CreditCard className="h-4 w-4" />
-                Подписка
-              </Link>
-            </div>
-
-            <Separator />
-
-            <div className="flex flex-col gap-2">
-              <Button 
-                variant="ghost" 
-                className="w-full h-11 justify-start gap-2 text-destructive hover:bg-destructive/10 hover:text-destructive" 
-                asChild
-              >
-                <Link href="/api/auth/signout">
+              
+              {/* Settings Links */}
+              <div className="border-t border-border">
+                <SheetClose asChild>
+                  <Link 
+                    href="/dashboard/settings/profile" 
+                    className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-accent transition-colors"
+                  >
+                    <Settings className="h-4 w-4" />
+                    {t("settings")}
+                  </Link>
+                </SheetClose>
+                <Link 
+                  href="/api/auth/signout"
+                  className="flex items-center gap-3 px-4 py-2.5 text-sm text-destructive hover:bg-destructive/10 transition-colors"
+                >
                   <LogOut className="h-4 w-4" />
-                  Выйти
+                  {t("signOut")}
                 </Link>
-              </Button>
+              </div>
+            </>
+          ) : (
+            <div className="flex flex-col gap-2 p-4">
+              <SheetClose asChild>
+                <Button className="w-full h-10" asChild>
+                  <Link href="/auth/sign-in">{t("signIn")}</Link>
+                </Button>
+              </SheetClose>
+              <SheetClose asChild>
+                <Button variant="outline" className="w-full h-10" asChild>
+                  <Link href="/auth/sign-up">{t("signUp")}</Link>
+                </Button>
+              </SheetClose>
             </div>
-          </div>
-        ) : (
-          <div className="flex flex-col gap-3 mt-6 px-4 pb-[calc(var(--safe-bottom)+1rem)]">
-            <Button className="w-full h-12" asChild>
-              <Link href="/auth/sign-in">Войти</Link>
-            </Button>
-            <Button variant="outline" className="w-full h-12" asChild>
-              <Link href="/auth/sign-up">Регистрация</Link>
-            </Button>
-          </div>
-        )}
+          )}
+        </div>
       </SheetContent>
     </Sheet>
   );
 }
-

@@ -1,14 +1,13 @@
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
-import { auth } from "~/server/auth";
 import { HeaderNav } from "./header-nav";
 import { UserMenu } from "./user-menu";
 import { Button } from "~/components/ui/button";
 import { AnimatedNavBar } from "./animated-header";
 import { User } from "lucide-react";
-import { api } from "~/trpc/server";
 import { Link } from "~/i18n/navigation";
 import { LanguageSwitcherCompact } from "./language-switcher";
+import type { Session } from "next-auth";
 
 // Social media links
 const socialLinks = [
@@ -42,12 +41,23 @@ const SocialIcon = ({ icon }: { icon: string }) => {
   );
 };
 
-export async function Header() {
+interface HeaderProps {
+  session?: Session | null;
+  categories?: Array<{
+    id: string;
+    name: string;
+    slug: string;
+    icon: string | null;
+    color: string | null;
+  }>;
+}
+
+export async function Header({ session: propSession, categories: propCategories }: HeaderProps = {}) {
   const t = await getTranslations("Navigation");
-  const session = await auth();
   
-  // Load dynamic categories for navigation
-  const categories = await api.blog.categories.navigation();
+  // Use passed props or defaults
+  const session = propSession ?? null;
+  const categories = propCategories ?? [];
 
   // Translated static navigation items
   const staticNavItems = [
@@ -59,13 +69,14 @@ export async function Header() {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 pt-(--safe-top)">
-      {/* Top Bar - Always visible */}
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 pt-[var(--safe-top)]">
+      {/* Top Bar */}
       <div className="border-b border-border/40">
-        <div className="container relative mx-auto flex h-16 items-center justify-between px-4 sm:h-20 pl-[max(1rem,var(--safe-left))] pr-[max(1rem,var(--safe-right))]">
-          {/* Left Section: Burger Menu (mobile) / Social Links (desktop) */}
-          <div className="relative z-10 flex items-center gap-2">
-            {/* Hamburger Menu - Left on mobile, right on desktop */}
+        <div className="container mx-auto flex h-16 items-center px-4 sm:h-20 pl-[max(1rem,var(--safe-left))] pr-[max(1rem,var(--safe-right))]">
+          
+          {/* Left Section */}
+          <div className="flex items-center gap-2 flex-1">
+            {/* Mobile: Hamburger Menu */}
             <div className="md:hidden">
               <HeaderNav 
                 categories={categories}
@@ -74,23 +85,25 @@ export async function Header() {
               />
             </div>
             
-            {/* Social Links - Hidden on mobile, visible on tablet+ */}
-            {socialLinks.map((social) => (
-              <Link
-                key={social.icon}
-                href={social.href}
-                className="group hidden h-9 w-9 items-center justify-center rounded-full border border-border/40 transition-all duration-300 hover:scale-110 hover:border-primary hover:bg-primary/10 hover:text-primary md:flex"
-                aria-label={social.label}
-              >
-                <SocialIcon icon={social.icon} />
-              </Link>
-            ))}
+            {/* Desktop: Social Links */}
+            <div className="hidden md:flex items-center gap-2">
+              {socialLinks.map((social) => (
+                <Link
+                  key={social.icon}
+                  href={social.href}
+                  className="group flex h-9 w-9 items-center justify-center rounded-full border border-border/40 transition-all duration-300 hover:scale-110 hover:border-primary hover:bg-primary/10 hover:text-primary"
+                  aria-label={social.label}
+                >
+                  <SocialIcon icon={social.icon} />
+                </Link>
+              ))}
+            </div>
           </div>
 
           {/* Center Section: Logo */}
           <Link
             href="/"
-            className="absolute left-1/2 z-0 -translate-x-1/2 transition-all duration-300 hover:scale-105 hover:opacity-90"
+            className="shrink-0 transition-all duration-300 hover:scale-105 hover:opacity-90"
           >
             <Image
               src="/logo.png"
@@ -102,45 +115,30 @@ export async function Header() {
             />
           </Link>
 
-          {/* Right Section: User Actions */}
-          <div className="relative z-10 flex items-center gap-2">
+          {/* Right Section */}
+          <div className="flex items-center justify-end gap-2 flex-1">
             {/* Language Switcher */}
             <LanguageSwitcherCompact />
 
-            {/* My Page / Auth */}
+            {/* Auth / User Menu */}
             {session?.user ? (
               <UserMenu user={session.user} />
             ) : (
-              <>
-                {/* Mobile: Icon only */}
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="flex h-9 w-9 items-center justify-center p-0 transition-colors duration-300 hover:bg-primary hover:text-primary-foreground sm:hidden" 
-                  asChild
-                >
-                  <Link href="/auth/sign-in">
-                    <User className="h-4 w-4" />
-                    <span className="sr-only">{t("myProfile")}</span>
-                  </Link>
-                </Button>
-                
-                {/* Desktop: Icon + Text */}
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="hidden h-9 gap-2 transition-colors duration-300 hover:bg-primary hover:text-primary-foreground sm:flex" 
-                  asChild
-                >
-                  <Link href="/auth/sign-in">
-                    <User className="h-4 w-4" />
-                    <span className="text-sm">{t("myProfile")}</span>
-                  </Link>
-                </Button>
-              </>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-9 gap-2 transition-colors duration-300 hover:bg-primary hover:text-primary-foreground" 
+                asChild
+              >
+                <Link href="/auth/sign-in">
+                  <User className="h-4 w-4" />
+                  <span className="hidden sm:inline text-sm">{t("myProfile")}</span>
+                  <span className="sr-only sm:hidden">{t("myProfile")}</span>
+                </Link>
+              </Button>
             )}
 
-            {/* Hamburger Menu - Hidden on mobile (shown on left), visible on desktop */}
+            {/* Desktop: Hamburger Menu */}
             <div className="hidden md:block">
               <HeaderNav 
                 categories={categories}
@@ -152,9 +150,9 @@ export async function Header() {
         </div>
       </div>
 
-      {/* Navigation Bar - Second Layer - Hides on scroll */}
+      {/* Navigation Bar - Second Layer - Hidden on mobile, hides on scroll */}
       <AnimatedNavBar>
-        <div className="container mx-auto px-4 pl-[max(1rem,var(--safe-left))] pr-[max(1rem,var(--safe-right))]">
+        <div className="hidden md:block container mx-auto px-4 pl-[max(1rem,var(--safe-left))] pr-[max(1rem,var(--safe-right))]">
           <nav className="flex items-center justify-center gap-6 py-3 sm:gap-8 sm:py-4">
             {staticNavItems.map((item) => (
               <Link

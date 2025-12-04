@@ -1,5 +1,9 @@
+"use client";
+
+import { memo } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useTranslations, useLocale } from "next-intl";
 
 interface BlogPost {
   id: string;
@@ -29,7 +33,10 @@ interface CardGridProps {
   showTags?: boolean;
 }
 
-export function CardGrid({ posts, showTags = false }: CardGridProps) {
+export const CardGrid = memo(function CardGrid({ posts, showTags = false }: CardGridProps) {
+  const t = useTranslations("CardGrid");
+  const locale = useLocale();
+  
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {posts.map((post, index) => (
@@ -46,6 +53,7 @@ export function CardGrid({ posts, showTags = false }: CardGridProps) {
                 alt={post.title}
                 width={800}
                 height={450}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="h-full w-full object-cover"
               />
             </div>
@@ -54,7 +62,7 @@ export function CardGrid({ posts, showTags = false }: CardGridProps) {
             <div className="mb-4 flex items-center justify-between text-sm">
               <span className="text-foreground/70">
                 {post.publishedAt
-                  ? new Date(post.publishedAt).toLocaleDateString("ru-RU")
+                  ? new Date(post.publishedAt).toLocaleDateString(locale === "ru" ? "ru-RU" : "en-US")
                   : ""}
               </span>
               {post.category && (
@@ -70,9 +78,9 @@ export function CardGrid({ posts, showTags = false }: CardGridProps) {
               <p className="mb-6 text-base text-foreground/80">{post.excerpt}</p>
             )}
             <div className="flex items-center gap-4 text-sm text-foreground/70">
-              <span>{post.views} просмотров</span>
+              <span>{post.views} {t("views")}</span>
               <span>•</span>
-              <span>{post._count.comments} комментариев</span>
+              <span>{post._count.comments} {t("comments")}</span>
             </div>
             {showTags && post.tags && post.tags.length > 0 && (
               <div className="mt-4 flex flex-wrap gap-2">
@@ -91,5 +99,5 @@ export function CardGrid({ posts, showTags = false }: CardGridProps) {
       ))}
     </div>
   );
-}
+});
 

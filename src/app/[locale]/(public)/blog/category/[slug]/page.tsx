@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { HydrateClient, api } from "~/trpc/server";
 import { CategoryHero } from "./_components/category-hero";
 import { CategoryNews } from "./_components/category-news";
@@ -20,41 +20,36 @@ export async function generateMetadata({
 }: CategoryPageProps): Promise<Metadata> {
   const { slug } = await params;
   const locale = await getLocale();
+  const t = await getTranslations("Blog.categoryPage");
 
   try {
     const category = await api.blog.categories.get({ slug, locale });
+    const description = category.description ?? t("exploreContent", { category: category.name });
 
     return {
       title: category.name,
-      description:
-        category.description ??
-        `Изучайте контент по направлению "${category.name}": новости, события и статьи на JEMSO.`,
+      description,
       keywords: [
-        "направление",
-        "категория",
-        "блог",
+        "category",
+        "blog",
         "JEMSO",
         category.name,
       ],
       openGraph: {
         title: `${category.name} | JEMSO`,
-        description:
-          category.description ??
-          `Изучайте контент по направлению "${category.name}": новости, события и статьи на JEMSO.`,
+        description,
         type: "website",
       },
       twitter: {
         card: "summary",
         title: `${category.name} | JEMSO`,
-        description:
-          category.description ??
-          `Изучайте контент по направлению "${category.name}" на JEMSO.`,
+        description,
       },
     };
   } catch {
     return {
-      title: "Направление не найдено",
-      description: "Запрашиваемое направление не найдено.",
+      title: t("notFound"),
+      description: t("notFoundDescription"),
     };
   }
 }

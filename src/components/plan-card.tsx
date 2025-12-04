@@ -1,7 +1,9 @@
 "use client";
 
+import { memo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useTranslations, useLocale } from "next-intl";
 import { Check, Sparkles } from "lucide-react";
 import { Card } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
@@ -36,22 +38,31 @@ interface PlanCardProps {
   currentPlanId?: string | null;
 }
 
-export function PlanCard({ plans, currentPlanId: propCurrentPlanId }: PlanCardProps) {
+export const PlanCard = memo(function PlanCard({ plans, currentPlanId: propCurrentPlanId }: PlanCardProps) {
   const router = useRouter();
   const { data: session, status } = useSession();
+  const t = useTranslations("Plans");
+  const locale = useLocale();
 
-  // Fetch current subscription if user is authenticated and no currentPlanId prop provided
+  // Only fetch current subscription if:
+  // 1. User is authenticated
+  // 2. No currentPlanId prop was provided
+  // 3. Session has loaded (status is not "loading")
+  const shouldFetchSubscription = status === "authenticated" && propCurrentPlanId === undefined;
+  
   const { data: currentSubscription } = api.subscriptions.subscriptions.myCurrent.useQuery(
     undefined,
     {
-      enabled: typeof window !== "undefined" && !!session && propCurrentPlanId === undefined,
+      enabled: shouldFetchSubscription,
+      staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+      refetchOnWindowFocus: false, // Don't refetch on focus
     }
   );
 
   // Use prop or fetched subscription
   const currentPlanId = propCurrentPlanId ?? currentSubscription?.planId ?? null;
 
-  const handlePlanSelect = (plan: Plan) => {
+  const handlePlanSelect = useCallback((plan: Plan) => {
     // If not authenticated, redirect to login
     if (status !== "authenticated" || !session) {
       router.push(`/auth/sign-in?callbackUrl=/checkout?plan=${plan.id}`);
@@ -60,24 +71,28 @@ export function PlanCard({ plans, currentPlanId: propCurrentPlanId }: PlanCardPr
 
     // If user is authenticated, go to checkout
     router.push(`/checkout?plan=${plan.id}`);
-  };
+  }, [router, session, status]);
 
-  const formatPrice = (price: number, currency: string) => {
-    return new Intl.NumberFormat("ru-RU", {
+  const formatPrice = useCallback((price: number, currency: string) => {
+    return new Intl.NumberFormat(locale === "ru" ? "ru-RU" : "en-US", {
       style: "currency",
       currency: currency,
       minimumFractionDigits: 0,
     }).format(price);
-  };
+  }, [locale]);
 
-  const getBillingText = (interval: string) => {
-    const map: Record<string, string> = {
-      month: "в месяц",
-      year: "в год",
-      lifetime: "навсегда",
-    };
-    return map[interval] ?? interval;
-  };
+  const getBillingText = useCallback((interval: string) => {
+    switch (interval) {
+      case "month":
+        return t("perMonth");
+      case "year":
+        return t("perYear");
+      case "lifetime":
+        return t("lifetime");
+      default:
+        return interval;
+    }
+  }, [t]);
 
   return (
     <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -93,7 +108,7 @@ export function PlanCard({ plans, currentPlanId: propCurrentPlanId }: PlanCardPr
             <div className="absolute right-4 top-4 z-10">
               <Badge className="gap-1 bg-primary text-primary-foreground">
                 <Sparkles className="h-3 w-3" />
-                Популярный
+                {t("popular")}
               </Badge>
             </div>
           )}
@@ -121,7 +136,7 @@ export function PlanCard({ plans, currentPlanId: propCurrentPlanId }: PlanCardPr
               </div>
               {plan.trialDays && plan.trialDays > 0 && (
                 <p className="text-sm text-primary">
-                  Пробный период {plan.trialDays} дней
+                  {t("trialPeriod", { days: plan.trialDays })}
                 </p>
               )}
             </div>
@@ -152,7 +167,7 @@ export function PlanCard({ plans, currentPlanId: propCurrentPlanId }: PlanCardPr
                   size="lg"
                   disabled
                 >
-                  Текущий план
+                  {t("currentPlan")}
                 </Button>
               ) : (
                 <Button
@@ -161,7 +176,7 @@ export function PlanCard({ plans, currentPlanId: propCurrentPlanId }: PlanCardPr
                   size="lg"
                   onClick={() => handlePlanSelect(plan)}
                 >
-                  Выбрать план
+                  {t("selectPlan")}
                 </Button>
               )}
             </div>
@@ -175,5 +190,5 @@ export function PlanCard({ plans, currentPlanId: propCurrentPlanId }: PlanCardPr
       ))}
     </div>
   );
-}
+});
 

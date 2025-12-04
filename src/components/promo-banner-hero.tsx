@@ -157,6 +157,7 @@ function MainEventBanner({
               src={event.coverImage}
               alt={event.title}
               fill
+              sizes="(max-width: 1024px) 100vw, 66vw"
               className="object-cover transition-transform duration-700 group-hover:scale-105"
               priority
             />
@@ -278,8 +279,8 @@ function MainNewsBanner({
               src={news.coverImage}
               alt={news.title}
               fill
+              sizes="(max-width: 1024px) 100vw, 66vw"
               className="object-cover transition-transform duration-700 group-hover:scale-105"
-              priority
             />
           ) : (
             <div className="h-full w-full bg-linear-to-br from-primary/30 via-primary/15 to-primary/5 flex items-center justify-center">
@@ -388,6 +389,7 @@ function SecondaryEventCard({
             src={event.coverImage}
             alt={event.title}
             fill
+            sizes="(max-width: 768px) 33vw, 20vw"
             className="object-cover transition-transform duration-500 group-hover:scale-110"
           />
         ) : (
@@ -479,6 +481,7 @@ function SecondaryNewsCard({
             src={news.coverImage}
             alt={news.title}
             fill
+            sizes="(max-width: 768px) 33vw, 20vw"
             className="object-cover transition-transform duration-500 group-hover:scale-110"
           />
         ) : (

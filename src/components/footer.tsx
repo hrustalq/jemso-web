@@ -1,11 +1,10 @@
 import { Facebook, Twitter, Youtube, Instagram } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Separator } from "~/components/ui/separator";
-import { auth } from "~/server/auth";
-import { api } from "~/trpc/server";
 import { AnimatedFooterWrapper } from "./animated-footer";
 import { NewsletterForm } from "./newsletter-form";
 import { Link } from "~/i18n/navigation";
+import type { Session } from "next-auth";
 
 const socialLinks = [
   { icon: Instagram, href: "https://www.instagram.com/jemso_drive/", label: "Instagram" },
@@ -14,12 +13,23 @@ const socialLinks = [
   { icon: Twitter, href: "https://t.me/jemsodrive", label: "Telegram" },
 ];
 
-export async function Footer() {
+interface FooterProps {
+  session?: Session | null;
+  categories?: Array<{
+    id: string;
+    name: string;
+    slug: string;
+    icon: string | null;
+    color: string | null;
+  }>;
+}
+
+export async function Footer({ session: propSession, categories: propCategories }: FooterProps = {}) {
   const t = await getTranslations("Footer");
-  const session = await auth();
   
-  // Load dynamic categories
-  const categories = await api.blog.categories.navigation();
+  // Use passed props or defaults (for backwards compatibility)
+  const session = propSession ?? null;
+  const categories = propCategories ?? [];
 
   // Dynamic categories section
   const categoriesSection = {

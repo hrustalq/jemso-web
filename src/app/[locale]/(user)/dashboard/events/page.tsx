@@ -27,23 +27,23 @@ export default function UserEventsPage() {
   const past = registrations?.filter(reg => new Date(reg.event.startDate) <= now) ?? [];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
-        <p className="mt-2 text-muted-foreground">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t("title")}</h1>
+        <p className="mt-1.5 sm:mt-2 text-sm sm:text-base text-muted-foreground">
           {t("subtitle")}
         </p>
       </div>
 
-      <Tabs defaultValue="upcoming" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 max-w-md">
-          <TabsTrigger value="upcoming" className="gap-2">
-            <CalendarCheck className="h-4 w-4" />
-            {t("upcoming")} ({upcoming.length})
+      <Tabs defaultValue="upcoming" className="space-y-4 sm:space-y-6">
+        <TabsList className="grid w-full grid-cols-2 max-w-md h-auto">
+          <TabsTrigger value="upcoming" className="gap-1.5 sm:gap-2 text-xs sm:text-sm py-2 px-2 sm:px-3">
+            <CalendarCheck className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+            <span className="truncate">{t("upcoming")} ({upcoming.length})</span>
           </TabsTrigger>
-          <TabsTrigger value="past" className="gap-2">
-            <CalendarX className="h-4 w-4" />
-            {t("past")} ({past.length})
+          <TabsTrigger value="past" className="gap-1.5 sm:gap-2 text-xs sm:text-sm py-2 px-2 sm:px-3">
+            <CalendarX className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+            <span className="truncate">{t("past")} ({past.length})</span>
           </TabsTrigger>
         </TabsList>
 
@@ -149,31 +149,40 @@ function EventCard({ registration, isPast }: EventCardProps) {
 
   return (
     <Card className={`border-border/40 bg-card/50 backdrop-blur ${isPast ? "opacity-75" : ""}`}>
-      <CardContent className="pt-6">
-        <div className="flex gap-4">
-          {/* Date Badge */}
-          <div className="shrink-0 w-20 h-20 rounded-lg bg-primary/10 flex flex-col items-center justify-center text-center">
-            <span className="text-2xl font-bold text-primary">
-              {new Date(registration.event.startDate).getDate()}
-            </span>
-            <span className="text-xs text-muted-foreground uppercase">
-              {new Date(registration.event.startDate).toLocaleDateString(locale, { month: "short" })}
-            </span>
+      <CardContent className="pt-4 sm:pt-6">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+          {/* Date Badge - smaller on mobile, row layout */}
+          <div className="flex sm:flex-col items-center gap-3 sm:gap-0">
+            <div className="shrink-0 w-14 h-14 sm:w-20 sm:h-20 rounded-lg bg-primary/10 flex flex-col items-center justify-center text-center">
+              <span className="text-xl sm:text-2xl font-bold text-primary">
+                {new Date(registration.event.startDate).getDate()}
+              </span>
+              <span className="text-[10px] sm:text-xs text-muted-foreground uppercase">
+                {new Date(registration.event.startDate).toLocaleDateString(locale, { month: "short" })}
+              </span>
+            </div>
+            {/* Mobile-only: Status badge next to date */}
+            <Badge 
+              variant="outline" 
+              className={`sm:hidden text-xs ${statusColors[registration.status] ?? ""}`}
+            >
+              {getStatusLabel(registration.status)}
+            </Badge>
           </div>
 
           {/* Event Info */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-4">
-              <div>
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-4">
+              <div className="min-w-0">
                 <Link 
                   href={`/events/${registration.event.slug}`}
-                  className="font-semibold hover:text-primary transition-colors line-clamp-1"
+                  className="font-semibold hover:text-primary transition-colors line-clamp-2 sm:line-clamp-1 text-sm sm:text-base"
                 >
                   {registration.event.title}
                 </Link>
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-sm text-muted-foreground">
+                <div className="flex flex-wrap items-center gap-x-3 sm:gap-x-4 gap-y-1 mt-1.5 sm:mt-2 text-xs sm:text-sm text-muted-foreground">
                   <span className="flex items-center gap-1">
-                    <Clock className="h-3.5 w-3.5" />
+                    <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                     {new Date(registration.event.startDate).toLocaleTimeString(locale, {
                       hour: "2-digit",
                       minute: "2-digit",
@@ -181,15 +190,16 @@ function EventCard({ registration, isPast }: EventCardProps) {
                   </span>
                   {registration.event.location && (
                     <span className="flex items-center gap-1">
-                      <MapPin className="h-3.5 w-3.5" />
-                      {registration.event.location}
+                      <MapPin className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                      <span className="truncate max-w-[150px] sm:max-w-none">{registration.event.location}</span>
                     </span>
                   )}
                 </div>
               </div>
+              {/* Desktop-only: Status badge */}
               <Badge 
                 variant="outline" 
-                className={statusColors[registration.status] ?? ""}
+                className={`hidden sm:inline-flex shrink-0 ${statusColors[registration.status] ?? ""}`}
               >
                 {getStatusLabel(registration.status)}
               </Badge>

@@ -97,15 +97,15 @@ export function ProfileSettings() {
         </Alert>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
         {/* Avatar */}
-        <div className="flex items-center gap-4">
-          <Avatar className="h-20 w-20">
+        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+          <Avatar className="h-16 w-16 sm:h-20 sm:w-20 shrink-0">
             <AvatarImage src={image ?? user.image} alt={user.name ?? ""} />
-            <AvatarFallback className="text-lg">{initials}</AvatarFallback>
+            <AvatarFallback className="text-base sm:text-lg">{initials}</AvatarFallback>
           </Avatar>
-          <div className="flex-1 space-y-2">
-            <Label htmlFor="image">URL изображения профиля</Label>
+          <div className="w-full space-y-2">
+            <Label htmlFor="image" className="text-sm">URL изображения профиля</Label>
             <div className="flex gap-2">
               <Input
                 id="image"
@@ -117,8 +117,9 @@ export function ProfileSettings() {
                   handleChange();
                 }}
                 disabled={updateProfile.isPending}
+                className="text-sm"
               />
-              <Button type="button" variant="outline" disabled>
+              <Button type="button" variant="outline" disabled className="shrink-0">
                 <Upload className="h-4 w-4" />
               </Button>
             </div>
@@ -172,18 +173,18 @@ export function ProfileSettings() {
         </div>
 
         {/* Account Info */}
-        <div className="rounded-lg border border-border bg-muted/50 p-4 space-y-2">
+        <div className="rounded-lg border border-border bg-muted/50 p-3 sm:p-4 space-y-2">
           <h4 className="text-sm font-medium">Информация об аккаунте</h4>
-          <div className="grid gap-2 text-sm">
-            <div className="flex justify-between">
+          <div className="grid gap-2 text-xs sm:text-sm">
+            <div className="flex flex-col sm:flex-row sm:justify-between gap-0.5 sm:gap-2">
               <span className="text-muted-foreground">Аккаунт создан</span>
               <span>{new Date(user.createdAt).toLocaleDateString('ru-RU')}</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex flex-col sm:flex-row sm:justify-between gap-0.5 sm:gap-2">
               <span className="text-muted-foreground">Роли</span>
-              <div className="flex gap-1">
+              <div className="flex flex-wrap gap-1">
                 {user.roles.map((role) => (
-                  <Badge key={role.id} variant="outline">
+                  <Badge key={role.id} variant="outline" className="text-xs">
                     {role.name}
                   </Badge>
                 ))}
@@ -193,7 +194,7 @@ export function ProfileSettings() {
         </div>
 
         {/* Submit Button */}
-        <div className="flex justify-end gap-4">
+        <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-4">
           <Button
             type="button"
             variant="outline"
@@ -205,12 +206,14 @@ export function ProfileSettings() {
               updateProfile.reset();
             }}
             disabled={!hasChanges || updateProfile.isPending}
+            className="w-full sm:w-auto"
           >
             Отмена
           </Button>
           <Button
             type="submit"
             disabled={!hasChanges || updateProfile.isPending}
+            className="w-full sm:w-auto"
           >
             {updateProfile.isPending ? (
               <>

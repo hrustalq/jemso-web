@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -27,6 +28,7 @@ interface PricingCardProps {
 export function PricingCard({ plan, currentSubscription }: PricingCardProps) {
   const router = useRouter();
   const { data: session, status } = useSession();
+  const t = useTranslations("PricingPage");
 
   const isCurrentPlan = currentSubscription?.planId === plan.id;
   const price = new Decimal(plan.price).toNumber();
@@ -38,6 +40,17 @@ export function PricingCard({ plan, currentSubscription }: PricingCardProps) {
       return;
     }
     router.push(`/checkout?plan=${planId}`);
+  };
+
+  const getBillingText = (interval: string) => {
+    switch (interval) {
+      case "month":
+        return t("perMonth");
+      case "year":
+        return t("perYear");
+      default:
+        return t("lifetime");
+    }
   };
 
   return (
@@ -56,7 +69,7 @@ export function PricingCard({ plan, currentSubscription }: PricingCardProps) {
         <div className="absolute right-4 top-4 z-10">
           <Badge className="gap-1 bg-primary text-primary-foreground">
             <Sparkles className="h-3 w-3" />
-            Популярный
+            {t("popular")}
           </Badge>
         </div>
       )}
@@ -66,7 +79,7 @@ export function PricingCard({ plan, currentSubscription }: PricingCardProps) {
         <div className="absolute right-4 top-4 z-10">
           <Badge variant="outline" className="gap-1 border-primary text-primary">
             <Check className="h-3 w-3" />
-            Текущий
+            {t("current")}
           </Badge>
         </div>
       )}
@@ -78,22 +91,18 @@ export function PricingCard({ plan, currentSubscription }: PricingCardProps) {
       <CardContent className="flex-1">
         <div className="mb-6">
           <span className="text-4xl font-bold">
-            {price > 0 ? `${price} ${plan.currency}` : "Бесплатно"}
+            {price > 0 ? `${price} ${plan.currency}` : t("free")}
           </span>
           {plan.billingInterval && price > 0 && (
             <span className="text-muted-foreground">
-              /{plan.billingInterval === "month"
-                ? "мес"
-                : plan.billingInterval === "year"
-                  ? "год"
-                  : "навсегда"}
+              /{getBillingText(plan.billingInterval)}
             </span>
           )}
         </div>
 
         {plan.trialDays > 0 && (
           <p className="mb-4 text-sm text-primary">
-            Пробный период {plan.trialDays} дней
+            {t("trialPeriod", { days: plan.trialDays })}
           </p>
         )}
 
@@ -118,7 +127,7 @@ export function PricingCard({ plan, currentSubscription }: PricingCardProps) {
           disabled={isCurrentPlan}
           onClick={() => handleSubscribe(plan.id)}
         >
-          {isCurrentPlan ? "Текущий план" : "Выбрать план"}
+          {isCurrentPlan ? t("currentPlan") : t("selectPlan")}
         </Button>
       </CardFooter>
     </Card>

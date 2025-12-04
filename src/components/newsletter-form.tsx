@@ -1,39 +1,36 @@
 "use client";
 
-import { useState, useCallback, useTransition, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { Mail, User, CheckCircle2 } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 
 export function NewsletterForm() {
+  const t = useTranslations("Newsletter");
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isPending, startTransition] = useTransition();
+  const [isLoading, setIsLoading] = useState(false);
 
   // Reset success message after 5 seconds
   useEffect(() => {
     if (success) {
       const timer = setTimeout(() => {
-        startTransition(() => {
-          setSuccess(false);
-        });
+        setSuccess(false);
       }, 5000);
       return () => clearTimeout(timer);
     }
-  }, [success, startTransition]);
+  }, [success]);
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!email || isLoading) return;
 
     setError(null);
-
-    startTransition(() => {
-      // Mark the start of transition
-    });
+    setIsLoading(true);
 
     try {
       const response = await fetch("/api/newsletter/subscribe", {
@@ -50,18 +47,18 @@ export function NewsletterForm() {
       const data = (await response.json()) as { error?: string };
 
       if (!response.ok) {
-        throw new Error(data.error ?? "Failed to subscribe");
+        throw new Error(data.error ?? t("errorMessage"));
       }
 
-      startTransition(() => {
-        setSuccess(true);
-        setEmail("");
-        setName("");
-      });
+      setSuccess(true);
+      setEmail("");
+      setName("");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to subscribe to newsletter");
+      setError(err instanceof Error ? err.message : t("errorMessage"));
+    } finally {
+      setIsLoading(false);
     }
-  }, [email, name, startTransition]);
+  }, [email, name, isLoading, t]);
 
   if (success) {
     return (
@@ -69,10 +66,10 @@ export function NewsletterForm() {
         <CheckCircle2 className="mx-auto h-10 w-10 text-primary sm:h-12 sm:w-12" />
         <div className="space-y-1">
           <h3 className="text-base font-bold text-primary sm:text-lg">
-            Спасибо за подписку!
+            {t("successTitle")}
           </h3>
           <p className="text-xs text-muted-foreground sm:text-sm">
-            Вы успешно подписались на нашу рассылку.
+            {t("successMessage")}
           </p>
         </div>
       </div>
@@ -83,10 +80,10 @@ export function NewsletterForm() {
     <div className="space-y-3 sm:space-y-4">
       <div className="space-y-1 sm:space-y-2">
         <h3 className="text-sm font-semibold uppercase tracking-wider sm:text-base">
-          Подписка на рассылку
+          {t("title")}
         </h3>
         <p className="text-xs text-muted-foreground sm:text-sm">
-          Получайте последние новости и обновления.
+          {t("subtitle")}
         </p>
       </div>
 
@@ -94,18 +91,18 @@ export function NewsletterForm() {
         {/* Name Input - Optional */}
         <div className="space-y-1.5 sm:space-y-2">
           <Label htmlFor="newsletter-name" className="text-xs sm:text-sm">
-            Имя (необязательно)
+            {t("nameLabel")}
           </Label>
           <div className="relative">
             <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               id="newsletter-name"
               type="text"
-              placeholder="Ваше имя"
+              placeholder={t("namePlaceholder")}
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="pl-10 text-sm"
-              disabled={isPending}
+              disabled={isLoading}
             />
           </div>
         </div>
@@ -113,7 +110,7 @@ export function NewsletterForm() {
         {/* Email Input - Required */}
         <div className="space-y-1.5 sm:space-y-2">
           <Label htmlFor="newsletter-email" className="text-xs sm:text-sm">
-            Email <span className="text-destructive">*</span>
+            {t("emailLabel")} <span className="text-destructive">*</span>
           </Label>
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -125,7 +122,7 @@ export function NewsletterForm() {
               onChange={(e) => setEmail(e.target.value)}
               className="pl-10 text-sm"
               required
-              disabled={isPending}
+              disabled={isLoading}
             />
           </div>
         </div>
@@ -142,11 +139,11 @@ export function NewsletterForm() {
         {/* Submit Button */}
         <Button
           type="submit"
-          disabled={isPending || !email}
+          disabled={isLoading || !email}
           className="w-full text-xs font-semibold uppercase tracking-wide sm:text-sm"
           size="default"
         >
-          {isPending ? "Отправка..." : "Подписаться"}
+          {isLoading ? t("submitting") : t("submitButton")}
         </Button>
       </form>
     </div>

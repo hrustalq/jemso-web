@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   Dialog,
   DialogContent,
@@ -31,6 +32,7 @@ export function PaymentModal({
   itemName,
   onSubmit,
 }: PaymentModalProps) {
+  const t = useTranslations("Payment");
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
   const [cvc, setCvc] = useState("");
@@ -52,7 +54,7 @@ export function PaymentModal({
       await onSubmit(mockPaymentMethodId);
       onOpenChange(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Ошибка оплаты");
+      setError(err instanceof Error ? err.message : t("error"));
     } finally {
       setIsLoading(false);
     }
@@ -62,11 +64,11 @@ export function PaymentModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Оплата</DialogTitle>
+          <DialogTitle>{t("title")}</DialogTitle>
           <DialogDescription>
-            Введите платежные данные для подписки на {itemName}.
+            {t("description", { item: itemName })}
             <br />
-            <strong>Итого: {amount} {currency}</strong>
+            <strong>{t("total", { amount, currency })}</strong>
           </DialogDescription>
         </DialogHeader>
 
@@ -78,7 +80,7 @@ export function PaymentModal({
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="cardNumber">Номер карты</Label>
+            <Label htmlFor="cardNumber">{t("cardNumber")}</Label>
             <div className="relative">
               <CreditCard className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
@@ -94,7 +96,7 @@ export function PaymentModal({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="expiry">Срок действия</Label>
+              <Label htmlFor="expiry">{t("expiry")}</Label>
               <Input
                 id="expiry"
                 value={expiry}
@@ -104,7 +106,7 @@ export function PaymentModal({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="cvc">CVC</Label>
+              <Label htmlFor="cvc">{t("cvc")}</Label>
               <Input
                 id="cvc"
                 value={cvc}
@@ -117,11 +119,11 @@ export function PaymentModal({
 
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Оплатить {amount} {currency}
+            {t("payButton", { amount, currency })}
           </Button>
 
           <p className="text-xs text-center text-muted-foreground">
-            Тестовая оплата: Используйте любой номер карты. Используйте 4000... для имитации ошибки.
+            {t("testNote")}
           </p>
         </form>
       </DialogContent>

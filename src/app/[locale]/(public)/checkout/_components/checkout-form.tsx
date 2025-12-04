@@ -2,8 +2,10 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { Link } from "~/i18n/navigation";
 import { api } from "~/trpc/react";
 import { useSession } from "next-auth/react";
+import { useTranslations, useLocale } from "next-intl";
 import { toast } from "sonner";
 import {
   Card,
@@ -35,6 +37,8 @@ interface CheckoutFormProps {
 export function CheckoutForm({ planId }: CheckoutFormProps) {
   const router = useRouter();
   const { data: session } = useSession();
+  const t = useTranslations("Checkout");
+  const locale = useLocale();
 
   // Billing form state
   const [billingName, setBillingName] = useState("");
@@ -69,7 +73,7 @@ export function CheckoutForm({ planId }: CheckoutFormProps) {
   // Apply promo code
   const applyPromo = api.subscriptions.checkout.applyPromoCode.useMutation({
     onSuccess: () => {
-      toast.success("Промокод применён");
+      toast.success(t("promoApplied"));
       setIsApplyingPromo(false);
     },
     onError: (err) => {
@@ -81,14 +85,14 @@ export function CheckoutForm({ planId }: CheckoutFormProps) {
   // Remove promo code
   const removePromo = api.subscriptions.checkout.removePromoCode.useMutation({
     onSuccess: () => {
-      toast.success("Промокод удалён");
+      toast.success(t("promoRemoved"));
     },
   });
 
   // Complete checkout
   const completeCheckout = api.subscriptions.checkout.complete.useMutation({
     onSuccess: () => {
-      toast.success("Подписка успешно оформлена!");
+      toast.success(t("subscriptionSuccess"));
       router.push("/account");
     },
     onError: (err) => {
@@ -163,17 +167,17 @@ export function CheckoutForm({ planId }: CheckoutFormProps) {
     setError("");
 
     if (!sessionData?.id) {
-      setError("Сессия оформления не найдена");
+      setError(t("sessionNotFound"));
       return;
     }
 
     // Validate required fields
     if (!billingName.trim()) {
-      setError("Введите имя");
+      setError(t("enterName"));
       return;
     }
     if (!billingEmail.trim()) {
-      setError("Введите email");
+      setError(t("enterEmail"));
       return;
     }
 
@@ -181,7 +185,7 @@ export function CheckoutForm({ planId }: CheckoutFormProps) {
     let paymentMethodId: string | undefined;
     if (sessionData.finalPrice > 0) {
       if (!cardNumber.trim() || !cardExpiry.trim() || !cardCvc.trim()) {
-        setError("Заполните данные карты");
+        setError(t("fillCardDetails"));
         return;
       }
       paymentMethodId = cardNumber.startsWith("4000")
@@ -204,7 +208,7 @@ export function CheckoutForm({ planId }: CheckoutFormProps) {
   };
 
   const formatPrice = (price: number, currency: string) => {
-    return new Intl.NumberFormat("ru-RU", {
+    return new Intl.NumberFormat(locale === "ru" ? "ru-RU" : "en-US", {
       style: "currency",
       currency: currency,
       minimumFractionDigits: 0,
@@ -265,15 +269,15 @@ export function CheckoutForm({ planId }: CheckoutFormProps) {
         <CardContent className="pt-6">
           <Alert variant="destructive">
             <AlertDescription>
-              {createSession.error?.message ?? "Не удалось загрузить данные оформления"}
+              {createSession.error?.message ?? t("loadingError")}
             </AlertDescription>
           </Alert>
           <div className="mt-4 flex gap-4">
             <Button onClick={() => router.push("/pricing")} variant="outline">
-              Вернуться к тарифам
+              {t("backToPricing")}
             </Button>
             <Button onClick={() => createSession.mutate({ planId })}>
-              Попробовать снова
+              {t("tryAgain")}
             </Button>
           </div>
         </CardContent>
@@ -289,72 +293,72 @@ export function CheckoutForm({ planId }: CheckoutFormProps) {
           {/* Billing Details */}
           <Card className="border-border/40 bg-card/50 backdrop-blur">
             <CardHeader>
-              <CardTitle className="text-xl">Платёжные данные</CardTitle>
+              <CardTitle className="text-xl">{t("billingDetails")}</CardTitle>
               <CardDescription>
-                Информация для оформления подписки
+                {t("billingDescription")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="billingName">Имя *</Label>
+                  <Label htmlFor="billingName">{t("name")} *</Label>
                   <Input
                     id="billingName"
                     value={billingName}
                     onChange={(e) => setBillingName(e.target.value)}
-                    placeholder="Иван Иванов"
+                    placeholder={t("namePlaceholder")}
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="billingEmail">Email *</Label>
+                  <Label htmlFor="billingEmail">{t("email")} *</Label>
                   <Input
                     id="billingEmail"
                     type="email"
                     value={billingEmail}
                     onChange={(e) => setBillingEmail(e.target.value)}
-                    placeholder="ivan@example.com"
+                    placeholder={t("emailPlaceholder")}
                     required
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="billingAddress">Адрес</Label>
+                <Label htmlFor="billingAddress">{t("address")}</Label>
                 <Input
                   id="billingAddress"
                   value={billingAddress}
                   onChange={(e) => setBillingAddress(e.target.value)}
-                  placeholder="ул. Примерная, д. 1"
+                  placeholder={t("addressPlaceholder")}
                 />
               </div>
 
               <div className="grid gap-4 sm:grid-cols-3">
                 <div className="space-y-2">
-                  <Label htmlFor="billingCity">Город</Label>
+                  <Label htmlFor="billingCity">{t("city")}</Label>
                   <Input
                     id="billingCity"
                     value={billingCity}
                     onChange={(e) => setBillingCity(e.target.value)}
-                    placeholder="Москва"
+                    placeholder={t("cityPlaceholder")}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="billingCountry">Страна</Label>
+                  <Label htmlFor="billingCountry">{t("country")}</Label>
                   <Input
                     id="billingCountry"
                     value={billingCountry}
                     onChange={(e) => setBillingCountry(e.target.value)}
-                    placeholder="Россия"
+                    placeholder={t("countryPlaceholder")}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="billingPostal">Индекс</Label>
+                  <Label htmlFor="billingPostal">{t("postalCode")}</Label>
                   <Input
                     id="billingPostal"
                     value={billingPostal}
                     onChange={(e) => setBillingPostal(e.target.value)}
-                    placeholder="123456"
+                    placeholder={t("postalPlaceholder")}
                   />
                 </div>
               </div>
@@ -367,15 +371,15 @@ export function CheckoutForm({ planId }: CheckoutFormProps) {
               <CardHeader>
                 <CardTitle className="text-xl flex items-center gap-2">
                   <CreditCard className="h-5 w-5" />
-                  Способ оплаты
+                  {t("paymentMethod")}
                 </CardTitle>
                 <CardDescription>
-                  Данные банковской карты
+                  {t("paymentDescription")}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="cardNumber">Номер карты *</Label>
+                  <Label htmlFor="cardNumber">{t("cardNumber")} *</Label>
                   <Input
                     id="cardNumber"
                     value={cardNumber}
@@ -388,7 +392,7 @@ export function CheckoutForm({ planId }: CheckoutFormProps) {
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="cardExpiry">Срок действия *</Label>
+                    <Label htmlFor="cardExpiry">{t("cardExpiry")} *</Label>
                     <Input
                       id="cardExpiry"
                       value={cardExpiry}
@@ -399,7 +403,7 @@ export function CheckoutForm({ planId }: CheckoutFormProps) {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="cardCvc">CVC *</Label>
+                    <Label htmlFor="cardCvc">{t("cardCvc")} *</Label>
                     <Input
                       id="cardCvc"
                       value={cardCvc}
@@ -413,11 +417,11 @@ export function CheckoutForm({ planId }: CheckoutFormProps) {
 
                 <div className="flex items-center gap-2 text-sm text-muted-foreground pt-2">
                   <ShieldCheck className="h-4 w-4 text-primary" />
-                  Ваши данные защищены шифрованием
+                  {t("dataProtected")}
                 </div>
 
                 <p className="text-xs text-muted-foreground">
-                  Тестовая оплата: Используйте любой номер карты. Используйте 4000... для имитации ошибки.
+                  {t("testPaymentNote")}
                 </p>
               </CardContent>
             </Card>
@@ -429,7 +433,7 @@ export function CheckoutForm({ planId }: CheckoutFormProps) {
           {/* Plan Summary */}
           <Card className="border-border/40 bg-card/50 backdrop-blur">
             <CardHeader>
-              <CardTitle className="text-lg">Ваш заказ</CardTitle>
+              <CardTitle className="text-lg">{t("yourOrder")}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-start justify-between">
@@ -444,7 +448,7 @@ export function CheckoutForm({ planId }: CheckoutFormProps) {
                 {sessionData.plan.slug === "advanced" && (
                   <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
                     <Sparkles className="h-3 w-3" />
-                    Популярный
+                    {t("popular")}
                   </span>
                 )}
               </div>
@@ -453,7 +457,7 @@ export function CheckoutForm({ planId }: CheckoutFormProps) {
 
               {/* Features */}
               <div className="space-y-2">
-                <p className="text-sm font-medium text-muted-foreground">Включено:</p>
+                <p className="text-sm font-medium text-muted-foreground">{t("included")}</p>
                 {sessionData.plan.features.map((pf, index) => (
                   <div key={index} className="flex items-start gap-2 text-sm">
                     <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
@@ -475,7 +479,7 @@ export function CheckoutForm({ planId }: CheckoutFormProps) {
               <div className="space-y-3">
                 <Label htmlFor="promoCode" className="flex items-center gap-2">
                   <Tag className="h-4 w-4" />
-                  Промокод
+                  {t("promoCode")}
                 </Label>
                 
                 {sessionData.promoCode ? (
@@ -505,7 +509,7 @@ export function CheckoutForm({ planId }: CheckoutFormProps) {
                       id="promoCode"
                       value={promoCode}
                       onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
-                      placeholder="Введите код"
+                      placeholder={t("enterCode")}
                       className="uppercase"
                     />
                     <Button
@@ -517,7 +521,7 @@ export function CheckoutForm({ planId }: CheckoutFormProps) {
                       {isApplyingPromo ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
                       ) : (
-                        "Применить"
+                        t("apply")
                       )}
                     </Button>
                   </div>
@@ -530,13 +534,13 @@ export function CheckoutForm({ planId }: CheckoutFormProps) {
           <Card className="border-border/40 bg-card/50 backdrop-blur">
             <CardContent className="pt-6 space-y-4">
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Стоимость плана</span>
+                <span className="text-muted-foreground">{t("planPrice")}</span>
                 <span>{formatPrice(sessionData.originalPrice, sessionData.currency)}</span>
               </div>
 
               {sessionData.discountAmount > 0 && (
                 <div className="flex justify-between text-sm text-primary">
-                  <span>Скидка</span>
+                  <span>{t("discount")}</span>
                   <span>-{formatPrice(sessionData.discountAmount, sessionData.currency)}</span>
                 </div>
               )}
@@ -544,21 +548,21 @@ export function CheckoutForm({ planId }: CheckoutFormProps) {
               <Separator />
 
               <div className="flex justify-between items-baseline">
-                <span className="font-semibold">Итого</span>
+                <span className="font-semibold">{t("total")}</span>
                 <div className="text-right">
                   <span className="text-2xl font-bold">
                     {formatPrice(sessionData.finalPrice, sessionData.currency)}
                   </span>
                   <span className="text-sm text-muted-foreground block">
-                    /{sessionData.plan.billingInterval === "month" ? "мес" : 
-                      sessionData.plan.billingInterval === "year" ? "год" : "навсегда"}
+                    /{sessionData.plan.billingInterval === "month" ? t("perMonth") : 
+                      sessionData.plan.billingInterval === "year" ? t("perYear") : t("lifetime")}
                   </span>
                 </div>
               </div>
 
               {sessionData.plan.trialDays > 0 && (
                 <p className="text-sm text-primary text-center">
-                  Первые {sessionData.plan.trialDays} дней бесплатно
+                  {t("firstDaysFree", { days: sessionData.plan.trialDays })}
                 </p>
               )}
 
@@ -577,24 +581,24 @@ export function CheckoutForm({ planId }: CheckoutFormProps) {
                 {completeCheckout.isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Обработка...
+                    {t("processing")}
                   </>
                 ) : sessionData.finalPrice > 0 ? (
-                  `Оплатить ${formatPrice(sessionData.finalPrice, sessionData.currency)}`
+                  t("payAmount", { amount: formatPrice(sessionData.finalPrice, sessionData.currency) })
                 ) : (
-                  "Оформить подписку"
+                  t("subscribe")
                 )}
               </Button>
 
               <p className="text-xs text-center text-muted-foreground">
-                Нажимая кнопку, вы соглашаетесь с{" "}
-                <a href="/terms" className="underline hover:text-foreground">
-                  условиями использования
-                </a>{" "}
-                и{" "}
-                <a href="/privacy" className="underline hover:text-foreground">
-                  политикой конфиденциальности
-                </a>
+                {t("termsAgreement")}{" "}
+                <Link href="/terms" className="underline hover:text-foreground">
+                  {t("termsOfService")}
+                </Link>{" "}
+                {t("and")}{" "}
+                <Link href="/privacy" className="underline hover:text-foreground">
+                  {t("privacyPolicy")}
+                </Link>
               </p>
             </CardContent>
           </Card>

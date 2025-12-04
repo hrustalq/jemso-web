@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { signOut } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import {
   LogOut,
   Settings,
@@ -39,6 +40,8 @@ function getUserInitials(name?: string | null): string {
 }
 
 export function UserMenu({ user }: UserMenuProps) {
+  const t = useTranslations("UserMenu");
+  
   const handleSignOut = async () => {
     await signOut({ callbackUrl: "/" });
   };
@@ -72,25 +75,25 @@ export function UserMenu({ user }: UserMenuProps) {
           <DropdownMenuItem asChild>
             <Link href="/account" className="cursor-pointer">
               <User />
-              Профиль
+              {t("profile")}
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link href="/account?tab=settings" className="cursor-pointer">
               <Settings />
-              Настройки
+              {t("settings")}
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link href="/account?tab=subscription" className="cursor-pointer">
               <CreditCard />
-              Подписка
+              {t("subscription")}
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link href="/admin/posts" className="cursor-pointer">
               <Shield />
-              Админ панель
+              {t("adminPanel")}
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
@@ -101,7 +104,7 @@ export function UserMenu({ user }: UserMenuProps) {
           onClick={handleSignOut}
         >
           <LogOut />
-          Выйти
+          {t("signOut")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

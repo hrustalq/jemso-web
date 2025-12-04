@@ -89,16 +89,16 @@ export function SecuritySettings() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Change Password Section */}
-      <div className="space-y-6">
-        <div className="flex items-start gap-4">
-          <div className="rounded-lg bg-primary/10 p-3">
-            <Key className="h-5 w-5 text-primary" />
+      <div className="space-y-4 sm:space-y-6">
+        <div className="flex items-start gap-3 sm:gap-4">
+          <div className="rounded-lg bg-primary/10 p-2 sm:p-3 shrink-0">
+            <Key className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
           </div>
-          <div className="flex-1">
-            <h3 className="text-lg font-medium">Изменить пароль</h3>
-            <p className="text-sm text-muted-foreground">
+          <div className="flex-1 min-w-0">
+            <h3 className="text-base sm:text-lg font-medium">Изменить пароль</h3>
+            <p className="text-xs sm:text-sm text-muted-foreground">
               Обновите пароль для защиты вашего аккаунта
             </p>
           </div>
@@ -109,7 +109,7 @@ export function SecuritySettings() {
         {changePassword.isSuccess && (
           <Alert variant="success">
             <CheckCircle2 className="h-4 w-4" />
-            <AlertDescription>
+            <AlertDescription className="text-sm">
               Пароль успешно изменен. Пожалуйста, войдите снова с новым паролем.
             </AlertDescription>
           </Alert>
@@ -118,13 +118,13 @@ export function SecuritySettings() {
         {passwordError && (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription>{passwordError}</AlertDescription>
+            <AlertDescription className="text-sm">{passwordError}</AlertDescription>
           </Alert>
         )}
 
-        <form onSubmit={handlePasswordChange} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="currentPassword">Текущий пароль</Label>
+        <form onSubmit={handlePasswordChange} className="space-y-3 sm:space-y-4">
+          <div className="space-y-1.5 sm:space-y-2">
+            <Label htmlFor="currentPassword" className="text-sm">Текущий пароль</Label>
             <Input
               id="currentPassword"
               type="password"
@@ -133,11 +133,12 @@ export function SecuritySettings() {
               onChange={(e) => setCurrentPassword(e.target.value)}
               disabled={changePassword.isPending}
               required
+              className="text-sm"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="newPassword">Новый пароль</Label>
+          <div className="space-y-1.5 sm:space-y-2">
+            <Label htmlFor="newPassword" className="text-sm">Новый пароль</Label>
             <Input
               id="newPassword"
               type="password"
@@ -146,14 +147,15 @@ export function SecuritySettings() {
               onChange={(e) => setNewPassword(e.target.value)}
               disabled={changePassword.isPending}
               required
+              className="text-sm"
             />
-            <p className="text-xs text-muted-foreground">
+            <p className="text-[11px] sm:text-xs text-muted-foreground">
               Минимум 8 символов, включая заглавную букву, строчную букву и цифру
             </p>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Подтвердите новый пароль</Label>
+          <div className="space-y-1.5 sm:space-y-2">
+            <Label htmlFor="confirmPassword" className="text-sm">Подтвердите новый пароль</Label>
             <Input
               id="confirmPassword"
               type="password"
@@ -162,11 +164,12 @@ export function SecuritySettings() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               disabled={changePassword.isPending}
               required
+              className="text-sm"
             />
           </div>
 
-          <div className="flex justify-end">
-            <Button type="submit" disabled={changePassword.isPending}>
+          <div className="flex justify-end pt-2">
+            <Button type="submit" disabled={changePassword.isPending} className="w-full sm:w-auto">
               {changePassword.isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -180,17 +183,17 @@ export function SecuritySettings() {
         </form>
       </div>
 
-      <Separator className="my-8" />
+      <Separator className="my-6 sm:my-8" />
 
       {/* Delete Account Section */}
-      <div className="space-y-6">
-        <div className="flex items-start gap-4">
-          <div className="rounded-lg bg-destructive/10 p-3">
-            <Trash2 className="h-5 w-5 text-destructive" />
+      <div className="space-y-4 sm:space-y-6">
+        <div className="flex items-start gap-3 sm:gap-4">
+          <div className="rounded-lg bg-destructive/10 p-2 sm:p-3 shrink-0">
+            <Trash2 className="h-4 w-4 sm:h-5 sm:w-5 text-destructive" />
           </div>
-          <div className="flex-1">
-            <h3 className="text-lg font-medium">Удалить аккаунт</h3>
-            <p className="text-sm text-muted-foreground">
+          <div className="flex-1 min-w-0">
+            <h3 className="text-base sm:text-lg font-medium">Удалить аккаунт</h3>
+            <p className="text-xs sm:text-sm text-muted-foreground">
               Безвозвратно удалить ваш аккаунт и все связанные данные
             </p>
           </div>
@@ -199,12 +202,14 @@ export function SecuritySettings() {
         <Separator />
 
         <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Предупреждение: Это действие необратимо</AlertTitle>
-          <AlertDescription>
-            Удаление аккаунта навсегда удалит все ваши данные, включая статьи блога, 
-            комментарии и подписки. Это действие нельзя отменить.
-          </AlertDescription>
+          <AlertCircle className="h-4 w-4 shrink-0" />
+          <div>
+            <AlertTitle className="text-sm sm:text-base">Предупреждение: Это действие необратимо</AlertTitle>
+            <AlertDescription className="text-xs sm:text-sm">
+              Удаление аккаунта навсегда удалит все ваши данные, включая статьи блога, 
+              комментарии и подписки. Это действие нельзя отменить.
+            </AlertDescription>
+          </div>
         </Alert>
 
         {!showDeleteConfirm ? (
@@ -212,24 +217,25 @@ export function SecuritySettings() {
             <Button
               variant="destructive"
               onClick={() => setShowDeleteConfirm(true)}
+              className="w-full sm:w-auto"
             >
               <Trash2 className="mr-2 h-4 w-4" />
               Удалить аккаунт
             </Button>
           </div>
         ) : (
-          <form onSubmit={handleDeleteAccount} className="space-y-4">
+          <form onSubmit={handleDeleteAccount} className="space-y-3 sm:space-y-4">
             {deleteAccount.isError && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
-                <AlertDescription>
+                <AlertDescription className="text-sm">
                   {deleteAccount.error.message}
                 </AlertDescription>
               </Alert>
             )}
 
-            <div className="space-y-2">
-              <Label htmlFor="deletePassword">
+            <div className="space-y-1.5 sm:space-y-2">
+              <Label htmlFor="deletePassword" className="text-sm">
                 Введите пароль для подтверждения
               </Label>
               <Input
@@ -240,11 +246,12 @@ export function SecuritySettings() {
                 onChange={(e) => setDeletePassword(e.target.value)}
                 disabled={deleteAccount.isPending}
                 required
+                className="text-sm"
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="confirmDelete">
+            <div className="space-y-1.5 sm:space-y-2">
+              <Label htmlFor="confirmDelete" className="text-sm">
                 Введите <strong>DELETE</strong> для подтверждения
               </Label>
               <Input
@@ -255,10 +262,11 @@ export function SecuritySettings() {
                 onChange={(e) => setConfirmDelete(e.target.value)}
                 disabled={deleteAccount.isPending}
                 required
+                className="text-sm"
               />
             </div>
 
-            <div className="flex justify-end gap-4">
+            <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-4 pt-2">
               <Button
                 type="button"
                 variant="outline"
@@ -269,6 +277,7 @@ export function SecuritySettings() {
                   deleteAccount.reset();
                 }}
                 disabled={deleteAccount.isPending}
+                className="w-full sm:w-auto"
               >
                 Отмена
               </Button>
@@ -278,6 +287,7 @@ export function SecuritySettings() {
                 disabled={
                   confirmDelete !== "DELETE" || deleteAccount.isPending
                 }
+                className="w-full sm:w-auto"
               >
                 {deleteAccount.isPending ? (
                   <>
@@ -287,7 +297,7 @@ export function SecuritySettings() {
                 ) : (
                   <>
                     <Trash2 className="mr-2 h-4 w-4" />
-                    Удалить аккаунт навсегда
+                    <span className="truncate">Удалить аккаунт навсегда</span>
                   </>
                 )}
               </Button>

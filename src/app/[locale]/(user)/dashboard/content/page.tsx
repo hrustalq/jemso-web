@@ -56,35 +56,37 @@ export default function UserContentPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
-        <p className="mt-2 text-muted-foreground">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t("title")}</h1>
+        <p className="mt-1.5 sm:mt-2 text-sm sm:text-base text-muted-foreground">
           {t("subtitle", { tier: userTier })}
         </p>
       </div>
 
       {/* User Tier Info */}
       <Card className="border-primary/50 bg-primary/5">
-        <CardContent className="flex items-center gap-4 py-4">
-          <div className="rounded-lg bg-primary/10 p-2">
-            <Star className="h-5 w-5 text-primary" />
-          </div>
-          <div className="flex-1">
-            <p className="font-semibold">
-              {t("yourAccessLevel", { tier: userTier })}
-            </p>
-            <p className="text-sm text-muted-foreground">
-              {user?.subscription 
-                ? t("plan", { plan: user.subscription.planName })
-                : t("subscribeHint")
-              }
-            </p>
+        <CardContent className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 py-4">
+          <div className="flex items-center gap-3">
+            <div className="rounded-lg bg-primary/10 p-2 shrink-0">
+              <Star className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-sm sm:text-base">
+                {t("yourAccessLevel", { tier: userTier })}
+              </p>
+              <p className="text-xs sm:text-sm text-muted-foreground">
+                {user?.subscription 
+                  ? t("plan", { plan: user.subscription.planName })
+                  : t("subscribeHint")
+                }
+              </p>
+            </div>
           </div>
           {!user?.subscription && (
             <Link 
               href="/pricing"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors text-sm"
+              className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors text-sm w-full sm:w-auto shrink-0"
             >
               {t("upgrade")}
               <ArrowRight className="h-3 w-3" />
@@ -95,12 +97,12 @@ export default function UserContentPage() {
 
       {/* Accessible Content */}
       {accessiblePosts.length > 0 && (
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold flex items-center gap-2">
-            <BookOpen className="h-5 w-5" />
+        <div className="space-y-3 sm:space-y-4">
+          <h2 className="text-lg sm:text-xl font-semibold flex items-center gap-2">
+            <BookOpen className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" />
             {t("accessibleContent")} ({accessiblePosts.length})
           </h2>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {accessiblePosts.map((post) => (
               <PostCard key={post.id} post={post} isAccessible locale={locale} />
             ))}
@@ -110,15 +112,15 @@ export default function UserContentPage() {
 
       {/* Locked Content Preview */}
       {lockedPosts.length > 0 && (
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold flex items-center gap-2 text-muted-foreground">
-            <Lock className="h-5 w-5" />
+        <div className="space-y-3 sm:space-y-4">
+          <h2 className="text-lg sm:text-xl font-semibold flex items-center gap-2 text-muted-foreground">
+            <Lock className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" />
             {t("premiumContent")} ({lockedPosts.length})
           </h2>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-xs sm:text-sm text-muted-foreground">
             {t("upgradeHint")}
           </p>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {lockedPosts.slice(0, 6).map((post) => (
               <PostCard key={post.id} post={post} isAccessible={false} locale={locale} />
             ))}
@@ -128,10 +130,10 @@ export default function UserContentPage() {
 
       {accessiblePosts.length === 0 && lockedPosts.length === 0 && (
         <Card className="border-border/40 bg-card/50 backdrop-blur">
-          <CardContent className="py-12 text-center">
-            <BookOpen className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
-            <h3 className="text-lg font-semibold mb-2">{t("noContent")}</h3>
-            <p className="text-muted-foreground">
+          <CardContent className="py-8 sm:py-12 text-center">
+            <BookOpen className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-3 sm:mb-4 text-muted-foreground opacity-50" />
+            <h3 className="text-base sm:text-lg font-semibold mb-2">{t("noContent")}</h3>
+            <p className="text-sm text-muted-foreground">
               {t("noContentHint")}
             </p>
           </CardContent>

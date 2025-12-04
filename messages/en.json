@@ -197,6 +197,176 @@
       "ogrn": "OGRNIP"
     }
   },
+  "Newsletter": {
+    "title": "Newsletter Subscription",
+    "subtitle": "Get the latest news and updates.",
+    "nameLabel": "Name (optional)",
+    "namePlaceholder": "Your name",
+    "emailLabel": "Email",
+    "submitButton": "Subscribe",
+    "submitting": "Sending...",
+    "successTitle": "Thank you for subscribing!",
+    "successMessage": "You have successfully subscribed to our newsletter.",
+    "errorMessage": "Failed to subscribe to newsletter"
+  },
+  "ShopPreview": {
+    "features": {
+      "original": {
+        "title": "Original Products",
+        "description": "Official JEMSO merchandise and merch"
+      },
+      "delivery": {
+        "title": "Fast Delivery",
+        "description": "Delivery across Russia in 2-5 days"
+      },
+      "quality": {
+        "title": "Quality Guarantee",
+        "description": "100% guarantee on all products"
+      }
+    },
+    "cta": {
+      "title": "JEMSO Shop",
+      "description": "Exclusive apparel, accessories, and motorsport gear. Become part of the JEMSO team!",
+      "shopButton": "Go to Shop",
+      "collectionsButton": "View Collections"
+    }
+  },
+  "Plans": {
+    "popular": "Popular",
+    "perMonth": "per month",
+    "perYear": "per year",
+    "lifetime": "lifetime",
+    "trialPeriod": "Trial period {days} days",
+    "currentPlan": "Current Plan",
+    "selectPlan": "Select Plan"
+  },
+  "CardGrid": {
+    "views": "views",
+    "comments": "comments"
+  },
+  "UserMenu": {
+    "profile": "Profile",
+    "settings": "Settings",
+    "subscription": "Subscription",
+    "adminPanel": "Admin Panel",
+    "signOut": "Sign Out"
+  },
+  "HeaderNav": {
+    "openMenu": "Open menu",
+    "menu": "Menu",
+    "menuDescription": "Navigation menu with categories, pages, and user actions",
+    "categories": "Categories",
+    "user": "User",
+    "personalCabinet": "Personal Cabinet",
+    "dashboard": "Dashboard",
+    "myEvents": "My Events",
+    "content": "Content",
+    "news": "News",
+    "settings": "Settings",
+    "profile": "Profile",
+    "subscription": "Subscription",
+    "signOut": "Sign Out",
+    "signIn": "Sign In",
+    "signUp": "Sign Up"
+  },
+  "CategoryNewsletter": {
+    "title": "Subscribe to {category} news",
+    "description": "Get the latest news and events for {category}",
+    "nameLabel": "Name (optional)",
+    "namePlaceholder": "Your name",
+    "emailLabel": "Email",
+    "submitButton": "Subscribe",
+    "submitting": "Sending...",
+    "successTitle": "Thank you for subscribing!",
+    "successMessage": "You have successfully subscribed to {category} news.",
+    "errorMessage": "Failed to subscribe to category newsletter"
+  },
+  "Payment": {
+    "title": "Payment",
+    "description": "Enter payment details to subscribe to {item}.",
+    "total": "Total: {amount} {currency}",
+    "cardNumber": "Card number",
+    "expiry": "Expiry date",
+    "cvc": "CVC",
+    "payButton": "Pay {amount} {currency}",
+    "error": "Payment error",
+    "testNote": "Test payment: Use any card number. Use 4000... to simulate an error."
+  },
+  "UserHeader": {
+    "dashboard": "Dashboard",
+    "myEvents": "My Events",
+    "content": "Content",
+    "news": "News",
+    "profile": "Profile",
+    "security": "Security",
+    "notifications": "Notifications",
+    "subscription": "Subscription",
+    "personalCabinet": "Personal Cabinet"
+  },
+  "Checkout": {
+    "billingDetails": "Billing Details",
+    "billingDescription": "Information for subscription checkout",
+    "name": "Name",
+    "email": "Email",
+    "address": "Address",
+    "city": "City",
+    "country": "Country",
+    "postalCode": "Postal code",
+    "paymentMethod": "Payment Method",
+    "paymentDescription": "Bank card details",
+    "cardNumber": "Card number",
+    "cardExpiry": "Expiry date",
+    "cardCvc": "CVC",
+    "dataProtected": "Your data is protected with encryption",
+    "testPaymentNote": "Test payment: Use any card number. Use 4000... to simulate an error.",
+    "yourOrder": "Your Order",
+    "included": "Included:",
+    "promoCode": "Promo code",
+    "enterCode": "Enter code",
+    "apply": "Apply",
+    "planPrice": "Plan price",
+    "discount": "Discount",
+    "total": "Total",
+    "perMonth": "month",
+    "perYear": "year",
+    "lifetime": "lifetime",
+    "firstDaysFree": "First {days} days free",
+    "processing": "Processing...",
+    "payAmount": "Pay {amount}",
+    "subscribe": "Subscribe",
+    "termsAgreement": "By clicking the button, you agree to the",
+    "termsOfService": "terms of service",
+    "and": "and",
+    "privacyPolicy": "privacy policy",
+    "promoApplied": "Promo code applied",
+    "promoRemoved": "Promo code removed",
+    "subscriptionSuccess": "Subscription successful!",
+    "sessionNotFound": "Checkout session not found",
+    "enterName": "Enter name",
+    "enterEmail": "Enter email",
+    "fillCardDetails": "Fill in card details",
+    "loadingError": "Failed to load checkout data",
+    "backToPricing": "Back to pricing",
+    "tryAgain": "Try again",
+    "popular": "Popular",
+    "namePlaceholder": "John Doe",
+    "emailPlaceholder": "john@example.com",
+    "addressPlaceholder": "123 Example St",
+    "cityPlaceholder": "New York",
+    "countryPlaceholder": "USA",
+    "postalPlaceholder": "10001"
+  },
+  "PricingPage": {
+    "popular": "Popular",
+    "current": "Current",
+    "free": "Free",
+    "perMonth": "mo",
+    "perYear": "yr",
+    "lifetime": "lifetime",
+    "trialPeriod": "Trial period {days} days",
+    "currentPlan": "Current Plan",
+    "selectPlan": "Select Plan"
+  },
   "Events": {
     "title": "EVENTS",
     "subtitle": "Find and participate in exciting events",
@@ -218,7 +388,9 @@
     "openInMaps": "Open in Maps",
     "away": "away",
     "addToCalendar": "Add to calendar",
-    "participants": "participants"
+    "participants": "participants",
+    "meters": "m",
+    "kilometers": "km"
   },
   "News": {
     "title": "News",
@@ -233,6 +405,7 @@
   "Blog": {
     "title": "Blog",
     "categories": "Categories",
+    "allPosts": "All Posts",
     "noPosts": "No posts found",
     "byAuthor": "By {author}",
     "publishedAt": "Published: {date}",
@@ -244,7 +417,36 @@
     "emptyStateText": "Interesting content coming soon!",
     "followContentTitle": "Follow our content",
     "followContentText": "Subscribe to our YouTube channel for event coverage, behind-the-scenes content, and automotive lifestyle videos.",
-    "youtubeChannel": "Our YouTube Channel"
+    "youtubeChannel": "Our YouTube Channel",
+    "categoryPage": {
+      "exploreContent": "Explore content in \"{category}\": news, events, and articles on JEMSO.",
+      "notFound": "Category not found",
+      "notFoundDescription": "The requested category was not found.",
+      "backToBlog": "Back to blog",
+      "postsCount": "{count} posts",
+      "eventsCount": "{count} events"
+    },
+    "categoryNews": {
+      "title": "News",
+      "description": "Latest articles and news in this category",
+      "views": "{count} views",
+      "comments": "{count} comments"
+    },
+    "categoryUpcomingEvents": {
+      "title": "Upcoming Events",
+      "description": "These events are coming soon",
+      "viewAll": "View all →",
+      "free": "Free",
+      "soldOut": "Sold out"
+    },
+    "categoryPastEvents": {
+      "title": "Past Events",
+      "description": "Events that have already taken place",
+      "viewAll": "View all →",
+      "completed": "Completed",
+      "free": "Free",
+      "soldOut": "Sold out"
+    }
   },
   "Shop": {
     "title": "Shop",

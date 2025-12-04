@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowLeft, FileText, Calendar } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface CategoryHeroProps {
   category: {
@@ -13,6 +16,8 @@ interface CategoryHeroProps {
 }
 
 export function CategoryHero({ category }: CategoryHeroProps) {
+  const t = useTranslations("Blog.categoryPage");
+  
   return (
     <div className="border-b border-border/40 py-8 md:py-12">
       <div className="container mx-auto px-4 text-center">
@@ -23,7 +28,7 @@ export function CategoryHero({ category }: CategoryHeroProps) {
             className="group inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground transition-all hover:text-primary"
           >
             <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
-            <span>Назад к блогу</span>
+            <span>{t("backToBlog")}</span>
           </Link>
         </div>
 
@@ -43,12 +48,12 @@ export function CategoryHero({ category }: CategoryHeroProps) {
         <div className="flex flex-wrap justify-center gap-3 text-sm text-muted-foreground sm:gap-4">
           <div className="flex items-center gap-2">
             <FileText className="h-4 w-4" />
-            <span>{category._count.posts} статей</span>
+            <span>{t("postsCount", { count: category._count.posts })}</span>
           </div>
           <span>•</span>
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4" />
-            <span>{category._count.events} событий</span>
+            <span>{t("eventsCount", { count: category._count.events })}</span>
           </div>
         </div>
       </div>

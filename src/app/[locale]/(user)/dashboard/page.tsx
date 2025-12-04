@@ -104,27 +104,27 @@ async function DashboardContent() {
       {/* Subscription Status */}
       {user.subscription ? (
         <Card className="border-primary/50 bg-primary/5">
-          <CardContent className="flex items-center justify-between py-4">
+          <CardContent className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 py-4">
             <div className="flex items-center gap-3">
-              <div className="rounded-lg bg-primary/10 p-2">
+              <div className="rounded-lg bg-primary/10 p-2 shrink-0">
                 <Star className="h-5 w-5 text-primary" />
               </div>
-              <div>
-                <p className="font-semibold">{user.subscription.planName}</p>
+              <div className="min-w-0">
+                <p className="font-semibold truncate">{user.subscription.planName}</p>
                 <p className="text-sm text-muted-foreground">
                   {user.subscription.status === "trial" ? t("subscription.trialPeriod") : t("subscription.activeSubscription")}
                 </p>
               </div>
             </div>
-            <Badge variant="default" className="bg-primary">
+            <Badge variant="default" className="bg-primary self-start sm:self-center shrink-0">
               Tier {userTier}
             </Badge>
           </CardContent>
         </Card>
       ) : (
         <Card className="border-border/40 bg-card/50">
-          <CardContent className="flex items-center justify-between py-4">
-            <div>
+          <CardContent className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-4">
+            <div className="min-w-0">
               <p className="font-semibold">{t("subscription.noSubscription")}</p>
               <p className="text-sm text-muted-foreground">
                 {t("subscription.noSubscriptionHint")}
@@ -132,7 +132,7 @@ async function DashboardContent() {
             </div>
             <Link 
               href="/pricing"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shrink-0 w-full sm:w-auto text-sm"
             >
               {t("subscription.choosePlan")}
               <ArrowRight className="h-4 w-4" />
@@ -204,17 +204,17 @@ async function DashboardContent() {
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Upcoming Events */}
         <Card className="border-border/40 bg-card/50 backdrop-blur">
-          <CardHeader className="flex flex-row items-center justify-between">
+          <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div>
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Calendar className="h-5 w-5" />
+              <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+                <Calendar className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" />
                 {t("upcomingEvents.title")}
               </CardTitle>
-              <CardDescription>{t("upcomingEvents.description")}</CardDescription>
+              <CardDescription className="text-xs sm:text-sm">{t("upcomingEvents.description")}</CardDescription>
             </div>
             <Link 
               href="/dashboard/events" 
-              className="text-sm text-primary hover:underline flex items-center gap-1"
+              className="text-xs sm:text-sm text-primary hover:underline flex items-center gap-1 self-start sm:self-center shrink-0"
             >
               {t("upcomingEvents.allEvents")}
               <ArrowRight className="h-3 w-3" />
@@ -267,17 +267,17 @@ async function DashboardContent() {
 
         {/* Latest News */}
         <Card className="border-border/40 bg-card/50 backdrop-blur">
-          <CardHeader className="flex flex-row items-center justify-between">
+          <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div>
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Newspaper className="h-5 w-5" />
+              <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+                <Newspaper className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" />
                 {t("latestNews.title")}
               </CardTitle>
-              <CardDescription>{t("latestNews.description")}</CardDescription>
+              <CardDescription className="text-xs sm:text-sm">{t("latestNews.description")}</CardDescription>
             </div>
             <Link 
               href="/dashboard/news" 
-              className="text-sm text-primary hover:underline flex items-center gap-1"
+              className="text-xs sm:text-sm text-primary hover:underline flex items-center gap-1 self-start sm:self-center shrink-0"
             >
               {t("latestNews.allNews")}
               <ArrowRight className="h-3 w-3" />
